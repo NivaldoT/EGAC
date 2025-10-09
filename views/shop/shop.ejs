@@ -487,3 +487,37 @@
 				</div>
 			</section>
 		</div>
+
+		<!-- Seção do Carrinho -->
+		<div class="cart-section">
+			<div class="cart-header">
+				<h3>Carrinho de Compras</h3>
+				<button class="btn-cart-close">&times;</button>
+			</div>
+			<div class="cart-body">
+				<table class="table-cart table">
+					<thead>
+						<tr>
+							<th></th>
+							<th></th>
+							<th>Produto</th>
+							<th>Preço</th>
+							<th>Quantidade</th>
+							<th>Total</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- itens carrinho aqui -->
+					</tbody>
+				</table>
+			</div>
+			<div class="cart-footer">
+				<div class="cart-total">
+					<h3>Total: R$0.00</h3>
+				</div>
+				<div class="cart-actions">
+					<a href="/cart" class="btn btn-primary">Ver Carrinho Completo</a>
+					<button class="btn btn-success" onclick="finalizarCompra()">Finalizar Compra</button>
+				</div>
+			</div>
+		</div>

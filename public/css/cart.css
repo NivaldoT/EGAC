@@ -1,0 +1,136 @@
+/* Estilos para o carrinho de compras */
+.cart-section {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 400px;
+    height: 100%;
+    background: white;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+    transition: right 0.3s ease;
+    overflow-y: auto;
+}
+
+.cart-section.cart-active {
+    right: 0;
+}
+
+.cart-section.cart-inactive {
+    right: -400px;
+}
+
+.cart-header {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #35b831;
+    color: white;
+}
+
+.cart-header h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.btn-cart-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.cart-body {
+    padding: 20px;
+    flex: 1;
+}
+
+.table-cart {
+    width: 100%;
+    font-size: 12px;
+}
+
+.table-cart th,
+.table-cart td {
+    padding: 8px 4px;
+    text-align: center;
+}
+
+.table-cart img {
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+}
+
+.cart-qty-minus,
+.cart-qty-plus {
+    width: 25px;
+    height: 25px;
+    padding: 0;
+    font-size: 12px;
+}
+
+.cart-qty {
+    margin: 0 5px;
+    font-weight: bold;
+}
+
+.cart-remove {
+    color: #dc3545;
+    text-decoration: none;
+}
+
+.cart-remove:hover {
+    color: #c82333;
+}
+
+.cart-footer {
+    padding: 20px;
+    border-top: 1px solid #eee;
+    background: #f8f9fa;
+}
+
+.cart-total {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.cart-total h3 {
+    color: #35b831;
+    margin: 0;
+}
+
+.cart-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.cart-actions .btn {
+    flex: 1;
+    padding: 10px;
+    font-size: 12px;
+}
+
+.main-content {
+    margin-right: 400px;
+    transition: margin-right 0.3s ease;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .cart-section {
+        width: 100%;
+        right: -100%;
+    }
+    
+    .cart-section.cart-active {
+        right: 0;
+    }
+    
+    .main-content {
+        margin-right: 0;
+    }
+}
