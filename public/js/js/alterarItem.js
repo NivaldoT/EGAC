@@ -17,20 +17,30 @@ document.addEventListener('DOMContentLoaded', function(){
         const preco = document.getElementById('preco');
         const descricao = document.getElementById('descricao');
         const marca = document.getElementById('marca');
+        const categoria = document.getElementById('categoria');
         if(tipoItem.value == 1 || tipoItem.value == 2 || tipoItem.value == 3){
             preco.style.display = 'block';            
             descricao.style.display = 'block';
             marca.style.display = 'none';
+            categoria.style.display = 'block';
         }
         if(tipoItem.value == 4){
             preco.style.display = 'block';  
             descricao.style.display = 'none';
             marca.style.display = 'block';
+            categoria.style.display = 'none';
         }
         if(tipoItem.value == 5){
             preco.style.display = 'none';
             descricao.style.display = 'none';
             marca.style.display = 'none';
+            categoria.style.display = 'none';
+        }
+        if(tipoItem.value == 6){
+            preco.style.display = 'none';
+            descricao.style.display = 'none';
+            marca.style.display = 'none';
+            categoria.style.display = 'none';
         }
     }
 
@@ -115,7 +125,6 @@ document.addEventListener('DOMContentLoaded', function(){
                         return resposta.json(); //converte o corpo da resposta para json (gera uma nova promise)
                     })
                     .then(function(corpo) {//recebe o corpo em formato de obj genérico
-                        alert(corpo.msg);
                 })
                 return
             }
@@ -139,39 +148,38 @@ document.addEventListener('DOMContentLoaded', function(){
                     })
                     .then(function(corpo) {//recebe o corpo em formato de obj genérico
                         alert(corpo.msg);
+                })
+                return
+            }
+        }
+        if(tipoItem.value == 6){
+            if(nome.value){
+                obj = {
+                    id: id.value,
+                    tipoItem : tipoItem.value,
+                    nome : nome.value
+                }
+                fetch('/admin/alterarCategoria',{
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify(obj)
+                    })
+                    .then(function(resposta) {//recebe a resposta como retorno do fetch
+                        return resposta.json(); //converte o corpo da resposta para json (gera uma nova promise)
+                    })
+                    .then(function(corpo) {//recebe o corpo em formato de obj genérico
+                        alert(corpo.msg);
                         window.location.reload();
                 })
                 return
             }
         }
-        if(valido){
-        let obj = {
-            tipoItem : tipoItem.value,
-            nome : nome.value,
-            preco : preco.value,
-            descricao : descricao.value,
-            marca : marca.value
-        };
-
-        fetch('/admin/cadastrarItem',{
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(obj)
-            })
-            .then(function(resposta) {//recebe a resposta como retorno do fetch
-                return resposta.json(); //converte o corpo da resposta para json (gera uma nova promise)
-            })
-            .then(function(corpo) {//recebe o corpo em formato de obj genérico
-                alert(corpo.msg);
-        })
-        }
-        else{
-            alert('Favor Preencher os Campos Obrigatórios!');
-            for(let i=0; i<vetorVal.length; i++){
-                vetorVal[i].style.borderColor = 'red';
-            }
+        alert('Favor Preencher os Campos Obrigatórios!');
+        for(let i=0; i<vetorVal.length; i++){
+            vetorVal[i].style.borderColor = 'red';
+        
         }
     }
 })

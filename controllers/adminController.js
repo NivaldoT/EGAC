@@ -14,9 +14,6 @@ class adminController {
     cadastroView(req, res) {
         res.render('admin/adminCadastro');
     }
-    equipAgriView(req,res){
-        res.render('listar/equipAgricola');
-    }
     async listarView(req,res){
         let listaMarcas = [];
         let marca = new marcaModel();
@@ -69,10 +66,19 @@ class adminController {
             prod = await prod.buscarId(id);
         }
         
+        if(tipo == 6){
+            prod = new categoriaModel();
+            prod = await prod.buscarId(id);
+        }
+        
         let listaMarcas = [];
         let marca = new marcaModel();
         listaMarcas = await marca.listar();
-        res.render('admin/alterarItem', {prod: prod, tipo: tipo, listaMarcas: listaMarcas});
+        
+        let listaCategorias = [];
+        let categoria = new categoriaModel();
+        listaCategorias = await categoria.listar();
+        res.render('admin/alterarItem', {prod: prod, tipo: tipo,listaMarcas: listaMarcas, listaCategorias: listaCategorias});
     }
 
     async excluir(req,res){

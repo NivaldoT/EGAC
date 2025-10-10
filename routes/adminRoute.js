@@ -14,7 +14,7 @@ const equipAgricolaController = new EquipAgricolaController();
 router.get("/", adminController.homeView);
 router.get('/adminLogin', adminController.loginView);
 router.get('/adminCadastro', adminController.cadastroView);
-router.get('/equipAgricola', adminController.equipAgriView);
+
 router.get('/listagem', adminController.listarView);
 router.get('/cadastrarItem', adminController.cadastrarView);
 router.post('/excluir', adminController.excluir);

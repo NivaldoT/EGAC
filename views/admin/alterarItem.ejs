@@ -10,6 +10,7 @@
                 <option value="3" <% if(tipo == 3){%>selected<%}%> disabled>Serviços</option>
                 <option value="4" <% if(tipo == 4){%>selected<%}%> disabled>Equipamento Agricola</option>
                 <option value="5" <% if(tipo == 5){%>selected<%}%> disabled>Marca</option>
+                <option value="6" <% if(tipo == 6){%>selected<%}%> disabled>Categoria</option>
             </select>
             <label for="tipoItem">Tipo de Item</label>
         </div>
@@ -33,7 +34,17 @@
                     <option value="<%=listaMarcas[i].id%>" <% if(listaMarcas[i].id == prod.marca){%>selected<%}%>> <%=listaMarcas[i].nome%></option>
                     <%}%>
             </select>
-            <label for="tipoItem">Marca</label>
+            <label for="tipoItem">Marca:</label>
+        </div>
+
+        <div class="form-floating mb-3" id="categoria">
+            <select name="categoria" id="categoriaval" class="form-control">
+                <option value="0" selected>...</option>
+                <% for(let i=0; i<listaCategorias.length ; i++) {%>
+                    <option value="<%=listaCategorias[i].id%>" <% if(listaCategorias[i].id == prod.categoria){%>selected<%}%>> <%=listaCategorias[i].nome%></option>
+                    <%}%>
+            </select>
+            <label for="tipoItem">Categoria:</label>
         </div>
 
         <button class="btn btn-primary" id="cadastrar">Confirmar Alteração</button>
