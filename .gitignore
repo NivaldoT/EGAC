@@ -23,8 +23,6 @@ node_modules# Compiled source #
 # Logs and databases #
 ######################
 *.log
-*.sql
-*.sqlite
 
 # OS generated files #
 ######################
@@ -39,7 +37,6 @@ Thumbs.db
 .env
 .env.local
 
-*.sql
 *.dump
 *.mysql
 

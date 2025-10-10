@@ -79,7 +79,6 @@ document.addEventListener('DOMContentLoaded', function(){
         else
             tipoItem.style.borderColor = '';
 
-        let valido = false;
         if(tipoItem.value == 1 || tipoItem.value == 2 || tipoItem.value == 3){
             if(nome.value && isFinite(Number(preco.value)) && preco.value && descricao.value){
                 obj = {
@@ -125,6 +124,7 @@ document.addEventListener('DOMContentLoaded', function(){
                         return resposta.json(); //converte o corpo da resposta para json (gera uma nova promise)
                     })
                     .then(function(corpo) {//recebe o corpo em formato de obj genérico
+                        alert(corpo.msg)
                 })
                 return
             }
