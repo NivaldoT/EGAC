@@ -12,8 +12,9 @@ class produtosController{
         const nome = req.body.nome;
         const preco = req.body.preco;
         const descricao = req.body.descricao;
+        const categoria = req.body.categoria;
 
-        let prod = new produtoModel(null,tipoItem,nome,preco,descricao);
+        let prod = new produtoModel(null,tipoItem,nome,preco,descricao,categoria);
         
         let result = await prod.cadastrar();
         if(result)
@@ -27,8 +28,9 @@ class produtosController{
         const nome = req.body.nome;
         const preco = req.body.preco;
         const descricao = req.body.descricao;
+        const categoria = req.body.categoria;
 
-        let prod = new produtoModel(id,tipoItem,nome,preco,descricao);
+        let prod = new produtoModel(id,tipoItem,nome,preco,descricao, categoria);
         
         let result = await prod.alterar();
         if(result)

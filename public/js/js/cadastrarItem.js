@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', function(){
         const descricao = document.getElementById('descricaoval');
         const marca = document.getElementById('marcaval');
         const tipoItem = document.getElementById('tipoItem');
+        const categoria = document.getElementById('categoriaval');
 
         let vetorVal= [];
         if(!nome.value)
@@ -84,7 +85,8 @@ document.addEventListener('DOMContentLoaded', function(){
                     tipoItem : tipoItem.value,
                     nome : nome.value,
                     preco: preco.value,
-                    descricao: descricao.value
+                    descricao: descricao.value,
+                    categoria: categoria.value
                 }
                 fetch('/admin/cadastrarItem',{
                     method: 'POST',

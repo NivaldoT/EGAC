@@ -6,6 +6,7 @@ class produtoModel{
     #nome;
     #preco;
     #descricao
+    #categoria
 
     set id(valor){this.#id = valor};
     get id(){return this.#id};
@@ -17,17 +18,20 @@ class produtoModel{
     get preco(){return this.#preco};
     set descricao(valor){this.#descricao = valor};
     get descricao(){return this.#descricao};
+    set categoria(valor){this.#categoria = valor};
+    get categoria(){return this.#categoria};
 
-    constructor(id,tipo,nome,preco,descricao){
+    constructor(id,tipo,nome,preco,descricao, categoria){
         this.#id = id;
         this.#tipo = tipo;
         this.#nome = nome;
         this.#preco = preco;
         this.#descricao = descricao;
+        this.#categoria = categoria;
     }
     async cadastrar(){
-        const sql = 'insert into tb_Produto(prod_nome,prod_tipo,prod_preco,prod_descricao) values(?,?,?,?)';
-        const valores = [this.#nome, this.#tipo, this.#preco, this.#descricao];
+        const sql = 'insert into tb_Produto(prod_nome,prod_tipo,prod_preco,prod_descricao, prod_categoria) values(?,?,?,?,?)';
+        const valores = [this.#nome, this.#tipo, this.#preco, this.#descricao, this.#categoria];
         const banco = new Database();
 
         let result = await banco.ExecutaComandoNonQuery(sql,valores);
@@ -41,7 +45,7 @@ class produtoModel{
         
         let lista = [];
         for(let i=0; i<rows.length;i++){
-            lista.push(new produtoModel(rows[i]['prod_id'],rows[i]['prod_tipo'], rows[i]['prod_nome'], rows[i]['prod_preco'], rows[i]['prod_descricao'], ));
+            lista.push(new produtoModel(rows[i]['prod_id'],rows[i]['prod_tipo'], rows[i]['prod_nome'], rows[i]['prod_preco'], rows[i]['prod_descricao'], rows[i]['prod_categoria']));
         }
 
         return lista;
@@ -53,13 +57,13 @@ class produtoModel{
         const banco = new Database();
         
         const result = await banco.ExecutaComando(sql,valores);
-        let prod = new produtoModel(result['0']['prod_id'], result['0']['prod_tipo'], result['0']['prod_nome'], result['0']['prod_preco'], result['0']['prod_descricao']);
+        let prod = new produtoModel(result['0']['prod_id'], result['0']['prod_tipo'], result['0']['prod_nome'], result['0']['prod_preco'], result['0']['prod_descricao'], rows[i]['prod_categoria']);
         return prod;
     }
 
     async alterar(){
-        const sql = 'update tb_Produto set prod_nome = ?, prod_tipo = ?, prod_preco = ?, prod_descricao = ? where prod_id = ?';
-        const valores = [this.#nome,this.#tipo,this.#preco,this.#descricao, this.#id];
+        const sql = 'update tb_Produto set prod_nome = ?, prod_tipo = ?, prod_preco = ?, prod_descricao = ?, prod_categoria = ? where prod_id = ?';
+        const valores = [this.#nome,this.#tipo,this.#preco,this.#descricao,this.#categoria, this.#id];
         const banco = new Database();
 
         let result = await banco.ExecutaComandoNonQuery(sql,valores);
