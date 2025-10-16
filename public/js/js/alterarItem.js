@@ -18,11 +18,17 @@ document.addEventListener('DOMContentLoaded', function(){
         const descricao = document.getElementById('descricao');
         const marca = document.getElementById('marca');
         const categoria = document.getElementById('categoria');
-        if(tipoItem.value == 1 || tipoItem.value == 2 || tipoItem.value == 3){
+        if(tipoItem.value == 1 || tipoItem.value == 2){ //PRODUTO INSUMO
             preco.style.display = 'block';            
             descricao.style.display = 'block';
             marca.style.display = 'none';
             categoria.style.display = 'block';
+        }
+        if(tipoItem.value == 3){
+            preco.style.display = 'block';  
+            descricao.style.display = 'block';
+            marca.style.display = 'none';
+            categoria.style.display = 'none';
         }
         if(tipoItem.value == 4){
             preco.style.display = 'block';  
@@ -60,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function(){
         else
             nome.style.borderColor = '';
 
-        if(!isFinite(Number(preco.value)) || !preco.value)
+        if(!isFinite(Number(preco.value)) || !preco.value || preco.value < 0)
             vetorVal.push(preco);
         else
             preco.style.borderColor = '';
@@ -79,9 +85,14 @@ document.addEventListener('DOMContentLoaded', function(){
             vetorVal.push(tipoItem);
         else
             tipoItem.style.borderColor = '';
+        
+        if(categoria.value == 0)
+            vetorVal.push(categoria);
+        else
+            categoria.style.borderColor = '';
 
-        if(tipoItem.value == 1 || tipoItem.value == 2 || tipoItem.value == 3){
-            if(nome.value && isFinite(Number(preco.value)) && preco.value && descricao.value){
+        if(tipoItem.value == 1 || tipoItem.value == 2){ // PRODUTO INSUMO
+            if(nome.value && isFinite(Number(preco.value)) && preco.value && descricao.value && categoria.value){
                 obj = {
                     id: id.value,
                     tipoItem : tipoItem.value,
@@ -106,7 +117,32 @@ document.addEventListener('DOMContentLoaded', function(){
                 return
             }
         }
-        if(tipoItem.value == 4){
+        if(tipoItem.value == 3){ // SERVICO
+            if(nome.value && isFinite(Number(preco.value)) && preco.value && descricao.value != 0){
+                obj = {
+                    id: id.value,
+                    tipoItem : tipoItem.value,
+                    nome : nome.value,
+                    preco: preco.value,
+                    descricao: descricao.value
+                }
+                fetch('/admin/alterarServico',{
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify(obj)
+                    })
+                    .then(function(resposta) {//recebe a resposta como retorno do fetch
+                        return resposta.json(); //converte o corpo da resposta para json (gera uma nova promise)
+                    })
+                    .then(function(corpo) {//recebe o corpo em formato de obj genérico
+                        alert(corpo.msg);
+                })
+                return
+            }
+        }
+        if(tipoItem.value == 4){ //EQUIPAMENTO AGRICOLA
             if(nome.value && isFinite(Number(preco.value)) && preco.value && marca.value != 0){
                 obj = {
                     id: id.value,
@@ -131,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 return
             }
         }
-        if(tipoItem.value == 5){
+        if(tipoItem.value == 5){ // MARCA
             if(nome.value){
                 obj = {
                     id: id.value,
@@ -154,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 return
             }
         }
-        if(tipoItem.value == 6){
+        if(tipoItem.value == 6){ // CATEGORIA
             if(nome.value){
                 obj = {
                     id: id.value,
@@ -181,7 +217,6 @@ document.addEventListener('DOMContentLoaded', function(){
         alert('Favor Preencher os Campos Obrigatórios!');
         for(let i=0; i<vetorVal.length; i++){
             vetorVal[i].style.borderColor = 'red';
-        
         }
     }
 })

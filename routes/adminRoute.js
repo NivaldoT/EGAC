@@ -17,34 +17,30 @@ router.get("/", adminController.homeView);
 router.get('/adminLogin', adminController.loginView);
 router.get('/adminCadastro', adminController.cadastroView);
 
+                // LISTAR ITENS
 router.get('/listagem', adminController.listarView);
+
+                // CADASTRAR ITENS
 router.get('/cadastrarProd', produtosController.cadastrarView);
 router.get('/cadastrarServico', servicoController.cadastrarView);
 router.get('/cadastrarEqAgricola', equipAgricolaController.cadastrarView);
 router.get('/cadastrarMarca', marcaController.cadastrarView);
 router.get('/cadastrarCategoria', categoriaController.cadastrarView);
 
-router.post('/excluir', adminController.excluir);
 router.post('/cadastrarProd', produtosController.cadastrar);
 router.post('/cadastrarServico', servicoController.cadastrar);
 router.post('/cadastrarEqAgricola', equipAgricolaController.cadastrar);
 router.post('/cadastrarMarca', marcaController.cadastrar);
 router.post('/cadastrarCategoria', categoriaController.cadastrar);
 
-
-
-
-
-
+                // ALTERAR ITENS
 router.post('/alterarProduto', produtosController.alterar);
-router.post('/cadastrarMarca', marcaController.cadastrar);
 router.post('/alterarMarca', marcaController.alterar);
-router.post('/cadastrarCategoria', categoriaController.cadastrar);
 router.post('/alterarCategoria', categoriaController.alterar);
-router.post('/cadastrarEquipAgricola', equipAgricolaController.cadastrar);
 router.post('/alterarEquipAgricola', equipAgricolaController.alterar);
 
+                // EXCLUIR
+router.post('/excluir', adminController.excluir);
 
 router.get('/alterarItem/:tipo/:id', adminController.alterarView);
 module.exports = router;
-

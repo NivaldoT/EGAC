@@ -13,7 +13,7 @@ class equipAgricolasController{
         let marca = new marcaModel();
         listaMarcas = await marca.listar();
 
-        res.render('admin/cadastrarEqAgricola',{listaMarcas: listaMarcas});
+        res.render('admin/cadastrarEqAgricola',{listaMarcas: listaMarcas, layout: 'layout2'});
     }
     async cadastrar(req,res){
         const nome = req.body.nome;

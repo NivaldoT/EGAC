@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function(){
         else
             nome.style.borderColor = '';
 
-        if(!isFinite(Number(preco.value)) || !preco.value)
+        if(!isFinite(Number(preco.value)) || !preco.value || preco.value < 0)
             vetorVal.push(preco);
         else
             preco.style.borderColor = '';

@@ -1,4 +1,5 @@
 const produtoModel = require ('../models/produtoModel');
+const categoriaModel = require ('../models/categoriaModel');
 class produtosController{
 
     // TIPO 1 = PRODUTO
@@ -12,7 +13,7 @@ class produtosController{
         let categoria = new categoriaModel();
         listaCategorias = await categoria.listar();
 
-        res.render('admin/cadastrarProd',{listaCategorias: listaCategorias});
+        res.render('admin/cadastrarProd',{listaCategorias: listaCategorias, layout: 'layout2'});
     }
     async cadastrar(req,res){
         const tipoItem = req.body.tipoItem;

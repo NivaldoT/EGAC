@@ -9,7 +9,7 @@ class categoriaController{
     // TIPO 5 = SERVIÇO
 
     async cadastrarView(req,res){
-        res.render('admin/cadastrarCategoria');
+        res.render('admin/cadastrarCategoria', {layout: 'layout2'});
     }
     async cadastrar(req,res){
         const nome = req.body.nome;

@@ -7,13 +7,13 @@ const ServicoModel = require ('../models/servicoModel');
 class adminController {
 
     homeView(req, res) {
-        res.render('admin/adminHome');
+        res.render('admin/adminHome',{layout: 'layout2'});
     }
     loginView(req, res) {
-        res.render('admin/adminLogin');
+        res.render('admin/adminLogin',{layout: 'layout2'});
     }
     cadastroView(req, res) {
-        res.render('admin/adminCadastro');
+        res.render('admin/adminCadastro',{layout: 'layout2'});
     }
     async listarView(req,res){
         let listaMarcas = [];
@@ -38,7 +38,7 @@ class adminController {
         let Servicos = new ServicoModel();
         listaServicos = await Servicos.listar();
 
-        res.render('admin/listagem',{listaMarcas: listaMarcas, listaProdutos: listaProdutos,listaInsumos: listaInsumos, listaEqAg: listaEqAg, listaCategorias: listaCategorias, listaServicos: listaServicos});
+        res.render('admin/listagem',{listaMarcas: listaMarcas, listaProdutos: listaProdutos,listaInsumos: listaInsumos, listaEqAg: listaEqAg, listaCategorias: listaCategorias, listaServicos: listaServicos, layout: 'layout2'});
     }
     async alterarView(req,res){
 
@@ -73,7 +73,7 @@ class adminController {
         let listaCategorias = [];
         let categoria = new categoriaModel();
         listaCategorias = await categoria.listar();
-        res.render('admin/alterarItem', {prod: prod, tipo: tipo,listaMarcas: listaMarcas, listaCategorias: listaCategorias});
+        res.render('admin/alterarItem', {prod: prod, tipo: tipo,listaMarcas: listaMarcas, listaCategorias: listaCategorias, layout: 'layout2'});
     }
 
     async excluir(req,res){

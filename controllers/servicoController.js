@@ -9,7 +9,7 @@ class servicoController{
 
     async cadastrarView(req,res){
 
-        res.render('admin/cadastrarServico');
+        res.render('admin/cadastrarServico',{layout: 'layout2'});
     }
 
     async cadastrar(req,res){
