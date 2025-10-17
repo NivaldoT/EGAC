@@ -54,6 +54,14 @@ class categoriaModel{
         return result;
     }
 
+    async verificarChild(){
+        let sql = 'select count(*), c.categoria_nome from tb_Produto p inner join tb_Categoria c on p.prod_categoria = c.categoria_id where c.categoria_id = ? group by c.categoria_nome;'
+        let valores = [this.#id];
+        let banco = new Database();
+        let result = banco.ExecutaComandoNonQuery(sql, valores)
+        return result;
+    }
+
     async excluir(id){
         const sql = 'delete from tb_Categoria where categoria_id = ?';
         const valores = [id];
