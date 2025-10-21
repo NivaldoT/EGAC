@@ -24,6 +24,7 @@ server.use(express.json());
 
 server.use("/", routerHome);
 server.use('/usuario',routerUsuario);
+
 server.use('/admin',routerAdmin);
 
 server.listen(5550, function() {

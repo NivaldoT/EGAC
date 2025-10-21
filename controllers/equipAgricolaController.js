@@ -1,5 +1,6 @@
 const equipAgricolaModel = require ('../models/equipAgricolaModel');
 const marcaModel = require ('../models/marcaModel');
+const categoriaModel = require('../models/categoriaModel')
 class equipAgricolasController{
 
     // TIPO 1 = PRODUTO
@@ -13,14 +14,21 @@ class equipAgricolasController{
         let marca = new marcaModel();
         listaMarcas = await marca.listar();
 
-        res.render('admin/cadastrarEqAgricola',{listaMarcas: listaMarcas, layout: 'layout2'});
+        let listaCategorias = [];
+        let categoria = new categoriaModel();
+        listaCategorias = await categoria.listar();
+
+        res.render('admin/cadastrarEqAgricola',{listaMarcas: listaMarcas,listaCategorias: listaCategorias, layout: 'layout2'});
     }
     async cadastrar(req,res){
         const nome = req.body.nome;
         const preco = req.body.preco;
         const marca = req.body.marca;
+        const descricao = req.body.descricao;
+        const categoria = req.body.categoria;
 
-        let prod = new equipAgricolaModel(null,nome,preco,marca);
+
+        let prod = new equipAgricolaModel(null,nome,preco,marca,null,descricao,categoria,null);
         
         let result = await prod.cadastrar();
         if(result)
@@ -33,8 +41,10 @@ class equipAgricolasController{
         const nome = req.body.nome;
         const preco = req.body.preco;
         const marca = req.body.marca;
+        const descricao = req.body.descricao;
+        const categoria = req.body.categoria;
 
-        let equip = new equipAgricolaModel(id,nome,preco,marca);
+        let equip = new equipAgricolaModel(id,nome,preco,marca,null,descricao,categoria,null);
         
         let result = await equip.alterar();
         if(result)

@@ -16,6 +16,8 @@ class adminController {
         res.render('admin/adminCadastro',{layout: 'layout2'});
     }
     async listarView(req,res){
+        let tipoListar = req.params.tipo;
+
         let listaMarcas = [];
         let marca = new marcaModel();
         listaMarcas = await marca.listar();
@@ -38,7 +40,7 @@ class adminController {
         let Servicos = new ServicoModel();
         listaServicos = await Servicos.listar();
 
-        res.render('admin/listagem',{listaMarcas: listaMarcas, listaProdutos: listaProdutos,listaInsumos: listaInsumos, listaEqAg: listaEqAg, listaCategorias: listaCategorias, listaServicos: listaServicos, layout: 'layout2'});
+        res.render('admin/listagem',{listaMarcas: listaMarcas, listaProdutos: listaProdutos,listaInsumos: listaInsumos, listaEqAg: listaEqAg, listaCategorias: listaCategorias, listaServicos: listaServicos,tipoListar: tipoListar, layout: 'layout2'});
     }
     async alterarView(req,res){
 

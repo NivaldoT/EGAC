@@ -1,5 +1,11 @@
 document.addEventListener('DOMContentLoaded', function(){
 
+    let voltar = document.getElementById('voltar');
+    let tipo = document.getElementById('tipoItem');
+    tipo.addEventListener('change', function(){
+        voltar.href = '/admin/listagem/'+tipo.value;
+    })
+
     let precomax = document.getElementById('precoval');
     precomax.addEventListener('keydown', function(){
         if(precomax.value>9999999.00)

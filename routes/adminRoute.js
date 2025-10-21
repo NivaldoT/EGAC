@@ -17,8 +17,7 @@ router.get("/", adminController.homeView);
 router.get('/adminLogin', adminController.loginView);
 router.get('/adminCadastro', adminController.cadastroView);
 
-                // LISTAR ITENS
-router.get('/listagem', adminController.listarView);
+                
 
                 // CADASTRAR ITENS
 router.get('/cadastrarProduto', produtosController.cadastrarView);
@@ -42,6 +41,9 @@ router.post('/alterarEquipAgricola', equipAgricolaController.alterar);
 
                 // EXCLUIR
 router.post('/excluir', adminController.excluir);
+
+                // LISTAR ITENS
+router.get('/listagem/:tipo', adminController.listarView);
 
 router.get('/alterarItem/:tipo/:id', adminController.alterarView);
 module.exports = router;

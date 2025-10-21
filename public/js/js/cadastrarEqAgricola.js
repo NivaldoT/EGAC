@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', function(){
         const nome = document.getElementById('nomeval');
         const preco = document.getElementById('precoval');
         const marca = document.getElementById('marcaval');
+        const descricao = document.getElementById('descricaoval');
+        const categoria = document.getElementById('categoriaval');
 
         let vetorVal= [];
         if(!nome.value)
@@ -30,12 +32,23 @@ document.addEventListener('DOMContentLoaded', function(){
         else
             marca.style.borderColor = '';
 
+        if(!descricao.value)
+            vetorVal.push(descricao);
+        else
+            descricao.style.borderColor = '';
+        if(categoria.value == 0)
+            vetorVal.push(categoria);
+        else
+            categoria.style.borderColor = '';
+
         if(vetorVal.length == 0){
             if(nome.value && isFinite(Number(preco.value)) && preco.value && marca.value != 0){
                 obj = {
                     nome : nome.value,
                     preco: preco.value,
-                    marca: marca.value
+                    marca: marca.value,
+                    descricao: descricao.value,
+                    categoria: categoria.value
                 }
                 fetch('/admin/cadastrarEqAgricola',{
                     method: 'POST',
@@ -52,6 +65,8 @@ document.addEventListener('DOMContentLoaded', function(){
                         nome.value='';
                         preco.value='';
                         marca.value='';
+                        descricao.value ='';
+                        categoria.value ='0';
                 })
             }
         }

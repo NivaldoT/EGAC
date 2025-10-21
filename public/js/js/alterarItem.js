@@ -1,5 +1,12 @@
 document.addEventListener('DOMContentLoaded', function(){
 
+    let voltar = document.getElementById('voltar');
+    let tipo = document.getElementById('tipoItem');
+    MudarEnderecoVoltar();
+    function MudarEnderecoVoltar(){
+        voltar.href = '/admin/listagem/'+tipo.value;
+    }
+
     let precomax = document.getElementById('precoval');
     precomax.addEventListener('keydown', function(){
         if(precomax.value>9999999.00)
@@ -24,25 +31,25 @@ document.addEventListener('DOMContentLoaded', function(){
             marca.style.display = 'none';
             categoria.style.display = 'block';
         }
-        if(tipoItem.value == 3){
+        if(tipoItem.value == 3){ //serviço
             preco.style.display = 'block';  
             descricao.style.display = 'block';
             marca.style.display = 'none';
             categoria.style.display = 'none';
         }
-        if(tipoItem.value == 4){
+        if(tipoItem.value == 4){ // equip Agricola
             preco.style.display = 'block';  
-            descricao.style.display = 'none';
+            descricao.style.display = 'block';
             marca.style.display = 'block';
-            categoria.style.display = 'none';
+            categoria.style.display = 'block';
         }
-        if(tipoItem.value == 5){
+        if(tipoItem.value == 5){ // marca 
             preco.style.display = 'none';
             descricao.style.display = 'none';
             marca.style.display = 'none';
             categoria.style.display = 'none';
         }
-        if(tipoItem.value == 6){
+        if(tipoItem.value == 6){ // categoria
             preco.style.display = 'none';
             descricao.style.display = 'none';
             marca.style.display = 'none';
@@ -146,10 +153,11 @@ document.addEventListener('DOMContentLoaded', function(){
             if(nome.value && isFinite(Number(preco.value)) && preco.value && marca.value != 0 && preco.value >= 0){
                 obj = {
                     id: id.value,
-                    tipoItem : tipoItem.value,
                     nome : nome.value,
                     preco: preco.value,
-                    marca: marca.value
+                    marca: marca.value,
+                    descricao: descricao.value,
+                    categoria: categoria.value
                 }
                 fetch('/admin/alterarEquipAgricola',{
                     method: 'POST',
