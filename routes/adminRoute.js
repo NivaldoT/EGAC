@@ -16,11 +16,15 @@ const categoriaController = new CategoriaController();
 const equipAgricolaController = new EquipAgricolaController();
 const funcionarioController = new FuncionarioController();
 router.get("/", adminController.homeView);
-router.get('/adminLogin', adminController.loginView);
-router.get('/adminCadastro', adminController.cadastroView);
+// router.get('/adminLogin', adminController.loginView);
+// router.get('/adminCadastro', adminController.cadastroView);
 
 
-router.post('/cadastrar', funcionarioController.cadastrar);
+// router.post('/cadastrar', funcionarioController.cadastrar);
+// router.post('/adminLogin', funcionarioController.logar);
+
+                // Clientes
+router.get('/clientes', adminController.clientesView)
 
                 // CADASTRAR ITENS
 router.get('/cadastrarProduto', produtosController.cadastrarView);
@@ -43,10 +47,10 @@ router.post('/alterarCategoria', categoriaController.alterar);
 router.post('/alterarEquipAgricola', equipAgricolaController.alterar);
 
                 // EXCLUIR
-router.post('/excluir', adminController.excluir);
+router.post('/excluir', adminController.excluirItem);
 
                 // LISTAR ITENS
-router.get('/listagem/:tipo', adminController.listarView);
+router.get('/listagem/:tipo', adminController.listarItemView);
 
-router.get('/alterarItem/:tipo/:id', adminController.alterarView);
+router.get('/alterarItem/:tipo/:id', adminController.alterarItemView);
 module.exports = router;

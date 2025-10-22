@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `PFS1_10442427754`.`tb_Pessoa` (
   `pessoa_nome` VARCHAR(100) NOT NULL,
   `pessoa_telefone` VARCHAR(11) NOT NULL,
   PRIMARY KEY (`pessoa_id`))
-ENGINE = ndbcluster
+ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci
 COMMENT = '				';

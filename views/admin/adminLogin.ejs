@@ -5,19 +5,15 @@
       <form id="formulario-login" class="bg-white p-5 shadow rounded" style="max-width: 400px; width: 100%;" novalidate method="get" action="/admin/">
         <h3 class="mb-4 text-center">Login - Funcionários</h3><br><br>
 
-        <div class="form-group">
-          <div class="float-container">
+        <div class="form-floating mb-3">
             <input type="email" id="login-email" name="email" class="form-control" placeholder=" " required>
             <label for="login-email">E-mail</label>
-          </div>
           <p id="erro-email" class="erro"></p>
         </div>
 
-        <div class="form-group">
-          <div class="float-container">
+        <div class="form-floating mb-3">
             <input type="password" id="login-senha" name="senha" class="form-control" placeholder=" " required>
             <label for="login-senha">Senha</label>
-          </div>
           <p id="erro-senha" class="erro"></p>
         </div>
 
@@ -26,28 +22,11 @@
         </div>
 
         <div class="text-center mt-3">
-          <p id="mensagem-sucesso" class="text-success" style="display: none;">Login realizado com sucesso!</p>
+          <p id="mensagem-erro" class="text-danger" style="display: none;">Credenciais Incorretas!</p>
         </div>
 
         <div class="text-center mt-3">
-          <small><a href="/admin/adminCadastro">Cadastrar novo Funcionário</a></small>
+          <small><a href="/adminLogin/Cadastro">Cadastrar novo Funcionário</a></small>
         </div>
       </form>
     </div>
-
-    <!-- <div class="container mt-5">
-      <h4 class="mb-3">Usuários Logados</h4>
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th><input type="checkbox" id="ckTodos"></th>
-            <th>Email</th>
-            <th>Ação</th>
-          </tr>
-        </thead>
-        <tbody id="tb-body">
-         
-        </tbody>
-      </table>
-      <button class="btn btn-danger" id="btnExcluirSelecionados">Excluir Selecionados</button>
-    </div> -->

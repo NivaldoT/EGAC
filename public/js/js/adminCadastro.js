@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function(){
         email: email.value,
         senha: senha.value
       }
-      fetch('/admin/cadastrar',{
+      fetch('/adminLogin/Cadastrar',{
         method: 'POST',
         headers: {
             'Content-type': 'application/json'

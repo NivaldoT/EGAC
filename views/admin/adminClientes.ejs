@@ -1,0 +1,44 @@
+<script src="/js/js/adminClientes.js" defer></script>
+<div class="container-sm">
+    <h1>Listagem de Itens</h1>
+    <a href="/admin" class="btn btn-secondary">Voltar</a>
+    <div class="form-floating mt-3">
+        <select name="select" id="select" class="form-control">
+            <option value="1" >Pessoa Física</option>
+            <option value="2" >Pessoa Jurídica</option>
+            <option value="3" >Funcionários</option>
+        </select>
+        <label for="select">Selecione:</label>
+    </div>
+
+    <table class="table table-bordered mt-3" style="color: #000;" id="1"> <!--LISTA PF-->
+        <thead>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>CPF</th>
+            <th>Email</th>
+            <th>Senha</th>
+            <th>Telefone</th>
+            <th>Alterar/Excluir</th>
+            <th><a href="/admin/CadastrarCliente">Cadastrar novo</a></th>
+        </thead>
+        <tbody>
+            <%for(let i=0;i<listaPF.length;i++) {%>
+                <tr>
+                    <td><%=listaPF[i].id%></td>
+                    <td><%=listaPF[i].nome%></td>
+                    <td><%=listaPF[i].cpf%>R$</td>
+                    <td><%=listaPF[i].email%></td>
+                    <td><%=listaPF[i].senha%></td>
+                    <td><%=listaPF[i].telefone%></td>
+                    <td>
+                        <a href="/admin/alterarPF/<%=listaPF[i].id%>" class="btn btn-primary"><i class="bi bi-pencil-square"></i></a>
+                        <button data-id="<%=listaPF[i].id%>" data-tipo="1"  data-nome='<%=listaPF[i].nome%>' class="btn btn-danger btnExcluir"><i class="bi bi-trash-fill"></i></button>
+                    </td>
+                </tr>
+            <%}%>
+        </tbody>
+    </table>
+
+    
+</div>

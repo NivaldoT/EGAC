@@ -15,7 +15,7 @@ class adminController {
     cadastroView(req, res) {
         res.render('admin/adminCadastro',{layout: 'layout2'});
     }
-    async listarView(req,res){
+    async listarItemView(req,res){
         let tipoListar = req.params.tipo;
 
         let listaMarcas = [];
@@ -42,7 +42,7 @@ class adminController {
 
         res.render('admin/listagem',{listaMarcas: listaMarcas, listaProdutos: listaProdutos,listaInsumos: listaInsumos, listaEqAg: listaEqAg, listaCategorias: listaCategorias, listaServicos: listaServicos,tipoListar: tipoListar, layout: 'layout2'});
     }
-    async alterarView(req,res){
+    async alterarItemView(req,res){
 
         let id = req.params.id;
         let tipo = req.params.tipo;
@@ -80,8 +80,7 @@ class adminController {
         listaCategorias = await categoria.listar();
         res.render('admin/alterarItem', {prod: prod, tipo: tipo,listaMarcas: listaMarcas, listaCategorias: listaCategorias, layout: 'layout2'});
     }
-
-    async excluir(req,res){
+    async excluirItem(req,res){
         let tipo = req.body.obj.tipo;
         let id = req.body.obj.id;
 
@@ -127,6 +126,11 @@ class adminController {
             else
                 res.send({ok: false, msg: 'Falha na Exclusão do Categoria!'});
         }
+    }
+
+    clientesView(req,res){
+        
+        res.render('admin/adminClientes',{layout: 'layout2'});
     }
 }
 

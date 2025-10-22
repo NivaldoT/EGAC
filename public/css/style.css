@@ -46,7 +46,8 @@ th{
 #formulario-login input {
   font-size: 1.1875rem;
   color: #404040;
-  padding: 1rem 0 0.5rem 0;
+  padding-top: 2rem;
+  padding-left: 0.5rem;
   width: 100%;
   border: none;
   border-bottom: 1px dotted #a0a0a0;
