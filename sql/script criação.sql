@@ -10,6 +10,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema PFS1_10442427754
 -- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `PFS1_10442427754` ;
 
 -- -----------------------------------------------------
 -- Schema PFS1_10442427754
@@ -18,16 +19,48 @@ CREATE SCHEMA IF NOT EXISTS `PFS1_10442427754` DEFAULT CHARACTER SET utf8mb4 COL
 USE `PFS1_10442427754` ;
 
 -- -----------------------------------------------------
+-- Table `PFS1_10442427754`.`tb_Pessoa`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PFS1_10442427754`.`tb_Pessoa` (
+  `pessoa_id` INT NOT NULL AUTO_INCREMENT,
+  `pessoa_nome` VARCHAR(100) NOT NULL,
+  `pessoa_telefone` VARCHAR(11) NOT NULL,
+  PRIMARY KEY (`pessoa_id`))
+ENGINE = ndbcluster
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci
+COMMENT = '				';
+
+
+-- -----------------------------------------------------
+-- Table `PFS1_10442427754`.`tb_PFisica`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PFS1_10442427754`.`tb_PFisica` (
+  `PF_id` INT NOT NULL,
+  `PF_cpf` VARCHAR(11) NOT NULL,
+  `PF_senha` VARCHAR(30) NOT NULL,
+  `PF_email` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`PF_id`),
+  CONSTRAINT `idPessoa`
+    FOREIGN KEY (`PF_id`)
+    REFERENCES `PFS1_10442427754`.`tb_Pessoa` (`pessoa_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `PFS1_10442427754`.`tb_Funcionario`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PFS1_10442427754`.`tb_Funcionario` (
-  `func_idFuncionario` INT NOT NULL AUTO_INCREMENT,
-  `func_nome` VARCHAR(100) NOT NULL,
+  `func_id` INT NOT NULL,
   `func_cargo` VARCHAR(50) NULL DEFAULT NULL,
-  `func_login` VARCHAR(50) NULL DEFAULT NULL,
-  `func_senha` VARCHAR(100) NOT NULL,
-  PRIMARY KEY (`func_idFuncionario`),
-  UNIQUE INDEX `func_login` (`func_login` ASC) VISIBLE)
+  PRIMARY KEY (`func_id`),
+  CONSTRAINT `FuncIDKey`
+    FOREIGN KEY (`func_id`)
+    REFERENCES `PFS1_10442427754`.`tb_PFisica` (`PF_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
@@ -48,7 +81,7 @@ CREATE TABLE IF NOT EXISTS `PFS1_10442427754`.`tb_Caixa` (
   INDEX `caixa_idFuncionario` (`caixa_idFuncionario` ASC) VISIBLE,
   CONSTRAINT `tb_Caixa_ibfk_1`
     FOREIGN KEY (`caixa_idFuncionario`)
-    REFERENCES `PFS1_10442427754`.`tb_Funcionario` (`func_idFuncionario`))
+    REFERENCES `PFS1_10442427754`.`tb_Funcionario` (`func_id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
@@ -63,22 +96,6 @@ CREATE TABLE IF NOT EXISTS `PFS1_10442427754`.`tb_Categoria` (
   PRIMARY KEY (`categoria_id`))
 ENGINE = InnoDB
 AUTO_INCREMENT = 6
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
-
-
--- -----------------------------------------------------
--- Table `PFS1_10442427754`.`tb_Cliente`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `PFS1_10442427754`.`tb_Cliente` (
-  `cli_idCliente` INT NOT NULL AUTO_INCREMENT,
-  `cli_nome` VARCHAR(100) NOT NULL,
-  `cli_cpf` CHAR(11) NOT NULL,
-  `cli_telefone` VARCHAR(20) NULL DEFAULT NULL,
-  `cli_senha` VARCHAR(20) NOT NULL,
-  PRIMARY KEY (`cli_idCliente`),
-  UNIQUE INDEX `cli_cpf` (`cli_cpf` ASC) VISIBLE)
-ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
@@ -113,7 +130,7 @@ CREATE TABLE IF NOT EXISTS `PFS1_10442427754`.`tb_Compra` (
   INDEX `comp_idFornecedor` (`comp_idFornecedor` ASC) VISIBLE,
   CONSTRAINT `tb_Compra_ibfk_1`
     FOREIGN KEY (`comp_idFuncionario`)
-    REFERENCES `PFS1_10442427754`.`tb_Funcionario` (`func_idFuncionario`),
+    REFERENCES `PFS1_10442427754`.`tb_Funcionario` (`func_id`),
   CONSTRAINT `tb_Compra_ibfk_2`
     FOREIGN KEY (`comp_idFornecedor`)
     REFERENCES `PFS1_10442427754`.`tb_Fornecedor` (`forn_idFornecedor`))
@@ -147,13 +164,13 @@ COLLATE = utf8mb4_0900_ai_ci;
 CREATE TABLE IF NOT EXISTS `PFS1_10442427754`.`tb_Venda` (
   `ven_idVenda` INT NOT NULL AUTO_INCREMENT,
   `ven_data` DATE NOT NULL,
-  `ven_idCliente` INT NULL DEFAULT NULL,
+  `ven_idPessoa` INT NULL DEFAULT NULL,
   `ven_valorTotal` DECIMAL(10,2) NULL DEFAULT NULL,
   PRIMARY KEY (`ven_idVenda`),
-  INDEX `ven_idCliente` (`ven_idCliente` ASC) VISIBLE,
+  INDEX `ven_idCliente` (`ven_idPessoa` ASC) VISIBLE,
   CONSTRAINT `tb_Venda_ibfk_1`
-    FOREIGN KEY (`ven_idCliente`)
-    REFERENCES `PFS1_10442427754`.`tb_Cliente` (`cli_idCliente`))
+    FOREIGN KEY (`ven_idPessoa`)
+    REFERENCES `PFS1_10442427754`.`tb_Pessoa` (`pessoa_id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
@@ -242,12 +259,20 @@ CREATE TABLE IF NOT EXISTS `PFS1_10442427754`.`tb_EquipamentoAgricola` (
   `eq_id` INT NOT NULL AUTO_INCREMENT,
   `eq_nome` VARCHAR(50) NOT NULL,
   `eq_preco` DECIMAL(10,2) NOT NULL,
-  `eq_marcaId` INT NULL DEFAULT NULL,
+  `eq_marcaId` INT NOT NULL,
+  `eq_descricao` VARCHAR(100) NOT NULL,
+  `eq_categoria` INT NOT NULL,
   PRIMARY KEY (`eq_id`),
   INDEX `eq_marcaId` (`eq_marcaId` ASC) VISIBLE,
+  INDEX `categoriakey_idx` (`eq_categoria` ASC) VISIBLE,
   CONSTRAINT `tb_EquipamentoAgricola_ibfk_1`
     FOREIGN KEY (`eq_marcaId`)
-    REFERENCES `PFS1_10442427754`.`tb_Marca` (`marca_id`))
+    REFERENCES `PFS1_10442427754`.`tb_Marca` (`marca_id`),
+  CONSTRAINT `categoriakey`
+    FOREIGN KEY (`eq_categoria`)
+    REFERENCES `PFS1_10442427754`.`tb_Categoria` (`categoria_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 AUTO_INCREMENT = 4
 DEFAULT CHARACTER SET = utf8mb4
@@ -301,8 +326,8 @@ CREATE TABLE IF NOT EXISTS `PFS1_10442427754`.`tb_ItemVenda` (
   `itven_idEquipamentoAgricola` INT NULL DEFAULT NULL,
   PRIMARY KEY (`itven_idVenda`),
   INDEX `tb_ItemVenda_ibfk_3_idx` (`itven_idEquipamentoAgricola` ASC) VISIBLE,
-  INDEX `tb_ItemVenda_ibfk_2` (`itven_idProduto` ASC) VISIBLE,
-  CONSTRAINT `tb_ItemVenda_ibfk_2`
+  INDEX (`itven_idProduto` ASC) VISIBLE,
+  CONSTRAINT ``
     FOREIGN KEY (`itven_idProduto`)
     REFERENCES `PFS1_10442427754`.`tb_Produto` (`prod_id`),
   CONSTRAINT `tb_ItemVenda_ibfk_1`
@@ -317,6 +342,18 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
+-- Table `PFS1_10442427754`.`tb_Servico`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PFS1_10442427754`.`tb_Servico` (
+  `serv_id` INT NOT NULL AUTO_INCREMENT,
+  `serv_nome` VARCHAR(50) NOT NULL,
+  `serv_preco` DECIMAL(10,2) NOT NULL,
+  `serv_descricao` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`serv_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `PFS1_10442427754`.`tb_OrdemDeServico`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `PFS1_10442427754`.`tb_OrdemDeServico` (
@@ -326,16 +363,23 @@ CREATE TABLE IF NOT EXISTS `PFS1_10442427754`.`tb_OrdemDeServico` (
   `ordem_dataAbertura` DATE NOT NULL,
   `ordem_dataConclusao` DATE NULL DEFAULT NULL,
   `ordem_idFuncionario` INT NOT NULL,
-  `ordem_idCliente` INT NOT NULL,
+  `ordem_idPessoa` INT NOT NULL,
+  `ordem_idServico` INT NOT NULL,
   PRIMARY KEY (`ordem_idOS`),
   INDEX `ordem_idFuncionario` (`ordem_idFuncionario` ASC) VISIBLE,
-  INDEX `cliFK_idx` (`ordem_idCliente` ASC) VISIBLE,
+  INDEX `cliFK_idx` (`ordem_idPessoa` ASC) VISIBLE,
+  INDEX `idServico_idx` (`ordem_idServico` ASC) VISIBLE,
   CONSTRAINT `tb_OrdemDeServico_ibfk_1`
     FOREIGN KEY (`ordem_idFuncionario`)
-    REFERENCES `PFS1_10442427754`.`tb_Funcionario` (`func_idFuncionario`),
-  CONSTRAINT `cliFK`
-    FOREIGN KEY (`ordem_idCliente`)
-    REFERENCES `PFS1_10442427754`.`tb_Cliente` (`cli_idCliente`)
+    REFERENCES `PFS1_10442427754`.`tb_Funcionario` (`func_id`),
+  CONSTRAINT `Pessoakey`
+    FOREIGN KEY (`ordem_idPessoa`)
+    REFERENCES `PFS1_10442427754`.`tb_Pessoa` (`pessoa_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `idServico`
+    FOREIGN KEY (`ordem_idServico`)
+    REFERENCES `PFS1_10442427754`.`tb_Servico` (`serv_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -364,6 +408,23 @@ CREATE TABLE IF NOT EXISTS `PFS1_10442427754`.`tb_Pagamento` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `PFS1_10442427754`.`tb_PJuridica`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `PFS1_10442427754`.`tb_PJuridica` (
+  `PJ_id` INT NOT NULL,
+  `PJ_cnpj` VARCHAR(14) NOT NULL,
+  `PJ_senha` VARCHAR(30) NOT NULL,
+  `PJ_email` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`PJ_id`),
+  CONSTRAINT `PJkey`
+    FOREIGN KEY (`PJ_id`)
+    REFERENCES `PFS1_10442427754`.`tb_Pessoa` (`pessoa_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
