@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function(){
     const telefone = document.getElementById('telefoneval');
     const cpf = document.getElementById('cpfval');
     const cnpj = document.getElementById('cnpjval');
+    const cargo = document.getElementById('cargoval');
     const email = document.getElementById('emailval');
     const senha = document.getElementById('senhaval');
     const senha2 = document.getElementById('senha2val');
@@ -21,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function(){
     const erroNome = document.getElementById('erro-nome');
     const erroCpf = document.getElementById('erro-cpf');
     const erroCnpj = document.getElementById('erro-cnpj');
+    const erroCargo = document.getElementById('erro-cargo');
     const erroTelefone = document.getElementById('erro-telefone');
     const erroEmail = document.getElementById('erro-email');
     const erroSenha = document.getElementById('erro-senha');
@@ -37,6 +39,7 @@ document.addEventListener('DOMContentLoaded', function(){
     if(tipo.value == 3){
         titulo.textContent = 'Alterar Funcionário';
         cnpj.style.display = 'none';
+        cargo.style.display = 'block';
     }
 
     let btn = document.getElementById('cadastrar');
@@ -45,6 +48,8 @@ document.addEventListener('DOMContentLoaded', function(){
         // Limpa mensagens anteriores
         erroNome.textContent = '';
         erroCpf.textContent = '';
+        erroCnpj.textContent = '';
+        erroCargo.textContent = '';
         erroTelefone.textContent = '';
         erroEmail.textContent = '';
         erroSenha.textContent = '';
@@ -74,6 +79,12 @@ document.addEventListener('DOMContentLoaded', function(){
                 valido = false;
             }else if(!validaCNPJ(cnpj.value)){
                 erroCnpj.textContent = 'Por favor insira um CNPJ válido.';
+                valido = false;
+            }
+        }
+        if(tipo.value == 3){
+            if(!cargo.value){
+                erroCargo.textContent = 'O campo de Cargo é obrigatório.';
                 valido = false;
             }
         }
@@ -192,9 +203,9 @@ document.addEventListener('DOMContentLoaded', function(){
                     cpf: cpf.value,
                     email: email.value,
                     senha: senha.value,
-                    cargo: 'admin'
+                    cargo: cargo.value
                 }
-                fetch('/admin/alterarPF',{
+                fetch('/admin/alterarFuncionario',{
                     method: 'POST',
                     headers: {
                         'Content-type': 'application/json'
@@ -238,6 +249,9 @@ document.addEventListener('DOMContentLoaded', function(){
     });
     cnpj.addEventListener('keydown', function() {
         erroCnpj.textContent = '';
+    });
+    cargo.addEventListener('keydown', function() {
+        erroCargo.textContent = '';
     });
     telefone.addEventListener('keydown', function() {
         erroTelefone.textContent = '';

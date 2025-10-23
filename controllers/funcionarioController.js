@@ -50,6 +50,42 @@ class funcionarioController{
         }
         else{res.send({ok: false})};
     }
+
+    async alterar(req,res){
+        let ok = true;
+        let msg;
+
+        const id = req.body.id;
+        const nome = req.body.nome;
+        const telefone = req.body.telefone;
+        const cpf = req.body.cpf;
+        const cargo = req.body.cargo;
+        const email = req.body.email;
+        const senha = req.body.senha;
+
+        let pessoa = new funcionarioModel(id,nome,telefone,3,email,senha,cpf,cargo);
+        // varificação email cpf
+        if(await pessoa.procurarCpf() && await pessoa.procurarCpf() != id){ // verifica se ja existe esse cpf cadastrado más deixa passar 
+            ok = false;                                                     // caso seja da pessoa alterando agora
+            msg = 'Já existe um Usuário com Este CPF!';
+        }
+        if(ok == true && await pessoa.procurarEmail() && await pessoa.procurarEmail() != id){// retorna o id do usuario com o email
+            ok = false;                                                     //caso o email ja esta cadastrado ele verifica se é da pessoa
+            msg = 'Já existe um Usuário com Este Email!';                   //alterando agora e passa
+        }
+        if(ok == true){
+            let result = await pessoa.alterar();
+            if(result){
+                ok = true;
+                msg = 'Alteração Concluída com Sucesso!';
+            }
+            else{
+                ok = false;
+                msg = 'Erro ao Realizar Alteração!';
+            }
+        }
+        res.send({ok,msg});
+    }
 }
 
 module.exports = funcionarioController;

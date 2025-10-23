@@ -25,6 +25,11 @@
             <p id="erro-cnpj" class="erro"></p>
         </div>
         <div class="form-floating mb-3">
+            <input value="<%=cliente.cargo%>" type="text" class="form-control" id="cargoval" placeholder=" " maxlength="30" style="display: none;">
+            <label for="cargo">Cargo:</label>
+            <p id="erro-cargo" class="erro"></p>
+        </div>
+        <div class="form-floating mb-3">
             <input value="<%=cliente.email%>" type="text" class="form-control" id="emailval" placeholder=" " maxlength="100">
             <label for="email">Email:</label>
             <p id="erro-email" class="erro"></p>

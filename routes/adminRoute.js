@@ -36,7 +36,7 @@ router.post('/FuncionarioCadastro', funcController.cadastrar);
 router.post('/excluirCliente', adminController.excluirCliente)
 router.post('/alterarPF', pfController.alterar);
 router.post('/alterarPJ', pjController.alterar);
-// router.post('/alterarFuncionario', funcController.alterar);
+router.post('/alterarFuncionario', funcController.alterar);
 
                 // CADASTRAR ITENS
 router.get('/cadastrarProduto', produtosController.cadastrarView);
