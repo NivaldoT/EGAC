@@ -1,15 +1,13 @@
 const pfisicaModel = require ('../models/pfisicaModel');
 const Database = require('../utils/database');
-class funcionarioModel extends pfisicaModel{
+class FuncionarioModel extends pfisicaModel{
     #cargo;
 
-    // get id(){return this.#id}
-    // set id(value){this.#id = value}
     get cargo(){return this.#cargo}
     set cargo(value){this.#cargo = value}
 
-    constructor(id,nome,telefone,cpf,email,senha,cargo){
-        super(id,nome,telefone,cpf,email,senha)
+    constructor(id, nome, telefone, tipo, cpf, email, senha, cargo){
+        super(id, nome, telefone, tipo, cpf, email, senha)
         this.#cargo = cargo;
     }
     async cadastrar(){
@@ -18,8 +16,8 @@ class funcionarioModel extends pfisicaModel{
         let sql = 'start transaction;'
         await banco.ExecutaComandoNonQuery(sql);
 
-        sql = 'insert into tb_Pessoa(pessoa_nome, pessoa_telefone) values(?,?);'
-        let valores = [this.nome, this.telefone];
+        sql = 'insert into tb_Pessoa(pessoa_nome, pessoa_telefone, pessoa_tipo) values(?,?,?);'
+        let valores = [this.nome, this.telefone,this.tipo];
         await banco.ExecutaComandoNonQuery(sql,valores);
 
         sql = 'set @last_id = last_insert_id();';
@@ -45,11 +43,23 @@ class funcionarioModel extends pfisicaModel{
         const banco = new Database();
         let result = await banco.ExecutaComando(sql,valores); 
         if(result.length > 0){
-            let func = new funcionarioModel(result['0']['func_id'],result['0']['pessoa_nome'],result['0']['pessoa_telefone'],result['0']['PF_cpf'],result['0']['PF_email'],result['0']['PF_senha'],result['0']['func_cargo'])
+            let func = new FuncionarioModel(result['0']['func_id'],result['0']['pessoa_nome'],result['0']['pessoa_telefone'],result['0']['pessoa_tipo'],result['0']['PF_cpf'],result['0']['PF_email'],result['0']['PF_senha'],result['0']['func_cargo'])
             return func;
         }
         else
             return null
     }
+
+    async listar(){
+        const sql = 'select * from tb_Funcionario f left join tb_PFisica pf on f.func_id = pf.PF_id left join tb_Pessoa p on pf.PF_id = p.pessoa_id;'
+        const banco = new Database();
+        const rows = await banco.ExecutaComando(sql);
+
+        let lista = [];
+        for(let i=0;i<rows.length;i++){
+            lista.push(new FuncionarioModel(rows[i]['func_id'],rows[i]['pessoa_nome'],rows[i]['pessoa_telefone'],rows[i]['pessoa_tipo'],rows[i]['PF_cpf'],rows[i]['PF_email'],rows[i]['PF_senha'],rows[i]['func_cargo']));
+        }
+        return lista;
+    }
 }
-module.exports = funcionarioModel;
+module.exports = FuncionarioModel;

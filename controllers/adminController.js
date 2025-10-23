@@ -4,6 +4,10 @@ const produtoModel = require('../models/produtoModel');
 const equipAgricolaModel = require ('../models/equipAgricolaModel');
 const ServicoModel = require ('../models/servicoModel');
 
+const PFModel = require('../models/pfisicaModel');
+const PJModel = require('../models/pjuridicaModel');
+const FuncionarioModel = require('../models/funcionarioModel');
+
 class adminController {
 
     homeView(req, res) {
@@ -128,9 +132,21 @@ class adminController {
         }
     }
 
-    clientesView(req,res){
+    async clientesView(req,res){
+        let listaPF = [];
+        let pf = new PFModel();
+        listaPF = await pf.listar();
         
-        res.render('admin/adminClientes',{layout: 'layout2'});
+        let listaPJ = [];
+        let pj = new PJModel();
+        listaPJ = await pj.listar();
+        
+        let listaFunc = [];
+        let func = new FuncionarioModel();
+        listaFunc = await func.listar();
+
+        
+        res.render('admin/adminClientes',{layout: 'layout2', listaPF: listaPF, listaPJ: listaPJ, listaFunc: listaFunc});
     }
 }
 

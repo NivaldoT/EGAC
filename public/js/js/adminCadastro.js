@@ -84,7 +84,8 @@ document.addEventListener('DOMContentLoaded', function(){
         cpf: cpf.value,
         telefone: telefone.value,
         email: email.value,
-        senha: senha.value
+        senha: senha.value,
+        tipo: 1
       }
       fetch('/adminLogin/Cadastrar',{
         method: 'POST',
@@ -97,7 +98,16 @@ document.addEventListener('DOMContentLoaded', function(){
             return resposta.json(); //converte o corpo da resposta para json (gera uma nova promise)
         })
         .then(function(corpo) {//recebe o corpo em formato de obj genérico
-            alert(corpo.msg);
+            if(corpo.ok){
+              let msgSucesso = document.getElementById('mensagem-sucesso');
+              msgSucesso.style.display = 'block';
+              msgSucesso.textContent = corpo.msg;
+            }
+            else{
+              let msgErro = document.getElementById('mensagem-erro');
+              msgErro.style.display = 'block';
+              msgErro.textContent = corpo.msg;
+            }
       })
     }
   });

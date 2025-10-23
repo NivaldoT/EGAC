@@ -4,7 +4,7 @@ class authMiddleware{
     async verificarUsuarioLogado(req, res, next) {
         
         if(req.cookies != undefined && req.cookies.FuncionarioEmail != null && req.cookies.FuncionarioSenha != null){
-            let func = new funcionarioModel(null,null,null,null,req.cookies.FuncionarioEmail,req.cookies.FuncionarioSenha,null);
+            let func = new funcionarioModel(null,null,null,null,null,req.cookies.FuncionarioEmail,req.cookies.FuncionarioSenha,null);
             func = await func.logar();
             if(func)
                 next();

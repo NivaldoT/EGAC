@@ -1,12 +1,12 @@
 <script src="/js/js/adminClientes.js" defer></script>
 <div class="container-sm">
-    <h1>Listagem de Itens</h1>
+    <h1>Listagem de Clientes</h1>
     <a href="/admin" class="btn btn-secondary">Voltar</a>
     <div class="form-floating mt-3">
         <select name="select" id="select" class="form-control">
-            <option value="1" >Pessoa Física</option>
-            <option value="2" >Pessoa Jurídica</option>
-            <option value="3" >Funcionários</option>
+            <option value="1">Pessoa Física</option>
+            <option value="2">Pessoa Jurídica</option>
+            <option value="3">Funcionários</option>
         </select>
         <label for="select">Selecione:</label>
     </div>
@@ -20,20 +20,80 @@
             <th>Senha</th>
             <th>Telefone</th>
             <th>Alterar/Excluir</th>
-            <th><a href="/admin/CadastrarCliente">Cadastrar novo</a></th>
+            <th><a href="/admin/CadastrarPF">Cadastrar novo</a></th>
         </thead>
         <tbody>
             <%for(let i=0;i<listaPF.length;i++) {%>
                 <tr>
                     <td><%=listaPF[i].id%></td>
                     <td><%=listaPF[i].nome%></td>
-                    <td><%=listaPF[i].cpf%>R$</td>
+                    <td><%=listaPF[i].cpf%></td>
                     <td><%=listaPF[i].email%></td>
                     <td><%=listaPF[i].senha%></td>
                     <td><%=listaPF[i].telefone%></td>
                     <td>
                         <a href="/admin/alterarPF/<%=listaPF[i].id%>" class="btn btn-primary"><i class="bi bi-pencil-square"></i></a>
                         <button data-id="<%=listaPF[i].id%>" data-tipo="1"  data-nome='<%=listaPF[i].nome%>' class="btn btn-danger btnExcluir"><i class="bi bi-trash-fill"></i></button>
+                    </td>
+                </tr>
+            <%}%>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered mt-3" style="color: #000;" id="2"> <!--LISTA PJ-->
+        <thead>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>CNPJ</th>
+            <th>Email</th>
+            <th>Senha</th>
+            <th>Telefone</th>
+            <th>Alterar/Excluir</th>
+            <th><a href="/admin/CadastrarPJ">Cadastrar novo</a></th>
+        </thead>
+        <tbody>
+            <%for(let i=0;i<listaPJ.length;i++) {%>
+                <tr>
+                    <td><%=listaPJ[i].id%></td>
+                    <td><%=listaPJ[i].nome%></td>
+                    <td><%=listaPJ[i].cnpj%></td>
+                    <td><%=listaPJ[i].email%></td>
+                    <td><%=listaPJ[i].senha%></td>
+                    <td><%=listaPJ[i].telefone%></td>
+                    <td>
+                        <a href="/admin/alterarPJ/<%=listaPJ[i].id%>" class="btn btn-primary"><i class="bi bi-pencil-square"></i></a>
+                        <button data-id="<%=listaPJ[i].id%>" data-tipo="2"  data-nome='<%=listaPJ[i].nome%>' class="btn btn-danger btnExcluir"><i class="bi bi-trash-fill"></i></button>
+                    </td>
+                </tr>
+            <%}%>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered mt-3" style="color: #000;" id="3"> <!--LISTA FUNCIONÁRIO-->
+        <thead>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>CPF</th>
+            <th>Cargo</th>
+            <th>Email</th>
+            <th>Senha</th>
+            <th>Telefone</th>
+            <th>Alterar/Excluir</th>
+            <th><a href="/admin/CadastrarFuncionario">Cadastrar novo</a></th>
+        </thead>
+        <tbody>
+            <%for(let i=0;i<listaFunc.length;i++) {%>
+                <tr>
+                    <td><%=listaFunc[i].id%></td>
+                    <td><%=listaFunc[i].nome%></td>
+                    <td><%=listaFunc[i].cpf%></td>
+                    <td><%=listaFunc[i].cargo%></td>
+                    <td><%=listaFunc[i].email%></td>
+                    <td><%=listaFunc[i].senha%></td>
+                    <td><%=listaFunc[i].telefone%></td>
+                    <td>
+                        <a href="/admin/alterarFuncionario/<%=listaFunc[i].id%>" class="btn btn-primary"><i class="bi bi-pencil-square"></i></a>
+                        <button data-id="<%=listaFunc[i].id%>" data-tipo="3"  data-nome='<%=listaFunc[i].nome%>' class="btn btn-danger btnExcluir"><i class="bi bi-trash-fill"></i></button>
                     </td>
                 </tr>
             <%}%>
