@@ -40,7 +40,7 @@ class PFisicaModel extends pessoaModel{
         sql = 'commit;'
         await banco.ExecutaComandoNonQuery(sql);
         
-        console.log(result);
+        return result;
     }
 
     async listar(){

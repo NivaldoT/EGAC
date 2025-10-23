@@ -148,6 +148,15 @@ class adminController {
         
         res.render('admin/adminClientes',{layout: 'layout2', listaPF: listaPF, listaPJ: listaPJ, listaFunc: listaFunc});
     }
+    PFCadastroView(req,res){
+        res.render('admin/PFCadastro',{layout: 'layout2'});
+    }
+    PJCadastroView(req,res){
+        res.render('admin/PJCadastro',{layout: 'layout2'});
+    }
+    FuncionarioCadastroView(req,res){
+        res.render('admin/FuncionarioCadastro',{layout: 'layout2'});
+    }
 }
 
 module.exports = adminController;

@@ -3,10 +3,10 @@
 class UsuarioController {
 
     loginView(req, res) {
-        res.render('usuario/login');
+        res.render('usuario/usuarioLogin');
     }
     cadastroView(req, res) {
-        res.render('usuario/cadastro');
+        res.render('usuario/usuarioCadastro');
     }
 }
 

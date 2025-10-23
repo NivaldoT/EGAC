@@ -5,7 +5,10 @@ const ServicoController = require('../controllers/servicoController');
 const MarcaController = require('../controllers/marcaController');
 const CategoriaController = require('../controllers/categoriaController');
 const EquipAgricolaController = require('../controllers/equipAgricolaController');
-const FuncionarioController = require('../controllers/funcionarioController');
+
+const PFController = require("../controllers/PFController");
+const PJController = require("../controllers/PJController");
+const funcionarioController = require("../controllers/funcionarioController");
 const router = express.Router();
 
 const adminController = new AdminController();
@@ -14,18 +17,20 @@ const servicoController = new ServicoController();
 const marcaController = new MarcaController();
 const categoriaController = new CategoriaController();
 const equipAgricolaController = new EquipAgricolaController();
-const funcionarioController = new FuncionarioController();
+
+const pfController = new PFController();
+const pjController = new PJController();
+const funcController = new funcionarioController();
+
 router.get("/", adminController.homeView);
-// router.get('/adminLogin', adminController.loginView);
-// router.get('/adminCadastro', adminController.cadastroView);
-
-
-// router.post('/cadastrar', funcionarioController.cadastrar);
-// router.post('/adminLogin', funcionarioController.logar);
 
                 // Clientes
 router.get('/clientes', adminController.clientesView)
+router.get('/PFCadastro', adminController.PFCadastroView)
+// router.get('/PJCadastro', adminController.PJCadastroView)
+// router.get('/FuncionarioCadastro', adminController.FuncionarioCadastroView)
 
+router.post('/PFCadastro', pfController.cadastrar);
                 // CADASTRAR ITENS
 router.get('/cadastrarProduto', produtosController.cadastrarView);
 router.get('/cadastrarServico', servicoController.cadastrarView);
