@@ -3,13 +3,17 @@ const Database = require('../utils/database');
 
 class PFisicaModel extends pessoaModel{
     #cpf;
+    #isFunc;
 
     set cpf(valor){ this.#cpf = valor}
     get cpf(){return this.#cpf}
+    set isFunc(valor){ this.#isFunc = valor}
+    get isFunc(){return this.#isFunc}
 
-    constructor(id,nome, telefone, tipo, email, senha, cpf){
-        super(id,nome,telefone,tipo,email,senha);
+    constructor(id,nome, telefone, email, senha, cpf, isFunc){
+        super(id,nome,telefone,1,email,senha);
         this.#cpf = cpf;
+        this.#isFunc = isFunc;
     }
 
     async cadastrar(){
@@ -25,8 +29,8 @@ class PFisicaModel extends pessoaModel{
         sql = 'set @last_id = last_insert_id();'
         await banco.ExecutaComandoNonQuery(sql);
 
-        sql = 'insert into tb_PFisica(PF_id, PF_cpf) values(@last_id,?);'
-        valores = [this.cpf];
+        sql = 'insert into tb_PFisica(PF_id, PF_cpf) values(@last_id,?,?);'
+        valores = [this.cpf,this.#isFunc];
         let result = await banco.ExecutaComandoNonQuery(sql,valores);
 
         sql = 'commit;'
@@ -35,14 +39,14 @@ class PFisicaModel extends pessoaModel{
         return result;
     }
 
-    async listar(){
-        const sql = 'select * from tb_PFisica pf left join tb_Pessoa p on pf.PF_id = p.pessoa_id where p.pessoa_tipo = 1;'
+    async listar(){                                                             // where p.pessoa_tipo = 1
+        const sql = 'select * from tb_PFisica pf left join tb_Pessoa p on pf.PF_id = p.pessoa_id;'
         const banco = new Database();
         const rows = await banco.ExecutaComando(sql);
 
         let lista = [];
         for(let i=0;i<rows.length;i++){
-            lista.push(new PFisicaModel(rows[i]['PF_id'],rows[i]['pessoa_nome'],rows[i]['pessoa_telefone'],rows[i]['pessoa_tipo'],rows[i]['pessoa_email'],rows[i]['pessoa_senha'],rows[i]['PF_cpf']));
+            lista.push(new PFisicaModel(rows[i]['PF_id'],rows[i]['pessoa_nome'],rows[i]['pessoa_telefone'],rows[i]['pessoa_tipo'],rows[i]['pessoa_email'],rows[i]['pessoa_senha'],rows[i]['PF_cpf'],rows[i]['PF_isFunc']));
         }
         return lista;
     }
@@ -66,7 +70,7 @@ class PFisicaModel extends pessoaModel{
         const banco = new Database();
         let result = await banco.ExecutaComando(sql,valores);
 
-        let pessoa = new PFisicaModel(result['0']['PF_id'],result['0']['pessoa_nome'],result['0']['pessoa_telefone'],result['0']['pessoa_tipo'], result['0']['pessoa_email'],result['0']['pessoa_senha'], result['0']['PF_cpf']);
+        let pessoa = new PFisicaModel(result['0']['PF_id'],result['0']['pessoa_nome'],result['0']['pessoa_telefone'],result['0']['pessoa_tipo'], result['0']['pessoa_email'],result['0']['pessoa_senha'], result['0']['PF_cpf'], result['0']['PF_isFunc']);
 
         return pessoa;
     }
@@ -78,6 +82,19 @@ class PFisicaModel extends pessoaModel{
         let result = await banco.ExecutaComandoNonQuery(sql,valores);
 
         return result;
+    }
+
+    async logar(){                      // DEVE PUXAR UMA PESSOA FISICA E DEIXAR PASSAR CASO EXITA E SEJA FUNCIONÁRIO
+        let sql = 'select * from tb_Funcionario f left join tb_PFisica pf on f.func_id = pf.PF_id left join tb_Pessoa p on pf.PF_id = p.pessoa_id where p.pessoa_email = ? and p.pessoa_senha = ?';
+        let valores = [this.email, this.senha];
+        const banco = new Database();
+        let result = await banco.ExecutaComando(sql,valores); 
+        if(result.length > 0){
+            let func = new FuncionarioModel(result['0']['func_id'],result['0']['pessoa_nome'],result['0']['pessoa_telefone'],result['0']['pessoa_tipo'],result['0']['pessoa_email'],result['0']['pessoa_senha'],result['0']['PF_cpf'],result['0']['func_cargo'])
+            return func;
+        }
+        else
+            return null
     }
 }
 module.exports = PFisicaModel;

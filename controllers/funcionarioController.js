@@ -1,4 +1,5 @@
-const funcionarioModel = require('../models/funcionarioModel')
+const funcionarioModel = require('../models/funcionarioModel');
+const PFisicaModel = require('../models/pfisicaModel');
 class funcionarioController{
 
     async cadastrar(req,res){
@@ -36,20 +37,20 @@ class funcionarioController{
         res.send({ok, msg})
     }
 
-    async logar(req,res){
-        const email = req.body.email;
-        const senha = req.body.senha;
+    // async logar(req,res){
+    //     const email = req.body.email;
+    //     const senha = req.body.senha;
 
-        let func = new funcionarioModel(null,null,null,null,email,senha,null,null);
-        func = await func.logar();
-        if(func){
-            res.cookie('FuncionarioEmail', func.email);
-            res.cookie('FuncionarioSenha', func.senha);
-            res.send({ok: true})
-            // res.redirect('/');
-        }
-        else{res.send({ok: false})};
-    }
+    //     let func = new PFisicaModel(null,null,null,null,email,senha,null);
+    //     func = await func.logar();
+    //     if(func){
+    //         res.cookie('FuncionarioEmail', func.email);
+    //         res.cookie('FuncionarioSenha', func.senha);
+    //         res.send({ok: true})
+    //         // res.redirect('/');
+    //     }
+    //     else{res.send({ok: false})};
+    // }
 
     async alterar(req,res){
         let ok = true;
