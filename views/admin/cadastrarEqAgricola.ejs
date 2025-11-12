@@ -4,15 +4,21 @@
     <div id="form">
         <div class="form-floating mb-3">
             <input type="text" class="form-control" id="nomeval" placeholder=" " maxlength="50">
-            <label for="nome">Nome:</label>
-        </div>
-        <div class="form-floating mb-3" id="preco">
-            <input type="number" class="form-control" id="precoval" placeholder=" ">
-            <label for="preco">Preço:</label>
+            <label for="nome">Nome Equipamento:</label>
         </div>
         <div class="form-floating mb-3" id="descricao">
             <input type="text" class="form-control" id="descricaoval" placeholder=" " maxlength="100">
             <label for="descricao">Descrição:</label>
+        </div>
+        <div class="form-floating mb-3" id="procurarPessoa">
+            <input type="text" class="form-control" id="procurarPessoaval" placeholder=" " maxlength="100">
+            <label for="procurarPessoa">Insira o Nome do prorietário | Empresa:</label>
+        </div>
+        <div class="form-floating mb-3" id="pessoa">
+            <select name="pessoa" id="pessoaval" class="form-control">
+            <option value="0" selected>Busque o proprietário no campo acima...</option>
+            </select>
+            <label for="tipoItem">Proprietário:</label>
         </div>
         <div class="form-floating mb-3" id="marca">
             <select name="marca" id="marcaval" class="form-control">

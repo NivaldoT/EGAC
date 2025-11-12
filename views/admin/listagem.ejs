@@ -123,11 +123,10 @@
         <thead>
             <th>ID</th>
             <th>Nome</th>
-            <th>Preço</th>
+            <th>Proprietário</th>
             <th>Descrição</th>
             <th>Categoria</th>
             <th>Marca</th>
-            <th>Quantidade</th>
             <th>Alterar/Excluir</th>
             <th><a href="/admin/CadastrarEqAgricola">Cadastrar novo</a></th>
         </thead>
@@ -136,11 +135,10 @@
                 <tr>
                     <td><%=listaEqAg[i].id%></td>
                     <td><%=listaEqAg[i].nome%></td>
-                    <td><%=listaEqAg[i].preco%>R$</td>
+                    <td><%=listaEqAg[i].pessoa_nome%></td>
                     <td><%=listaEqAg[i].descricao%></td>
                     <td><%=listaEqAg[i].categoria_nome%></td>
                     <td><%=listaEqAg[i].marca_nome%></td>
-                    <td>A fazer</td>
                     <td>
                         <a href="/admin/alterarItem/4/<%=listaEqAg[i].id%>" class="btn btn-primary"><i class="bi bi-pencil-square"></i></a>
                         <button data-id="<%=listaEqAg[i].id%>" data-tipo="4"  data-nome='<%=listaEqAg[i].nome%>' class="btn btn-danger btnExcluir"><i class="bi bi-trash-fill"></i></button>

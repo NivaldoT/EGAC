@@ -13,6 +13,33 @@ document.addEventListener('DOMContentLoaded', function(){
             precomax.value = 9999999.00;
     })
 
+    let inputBuscar = document.getElementById('procurarPessoaval');  //Buscar Pessoas Equipamento Agricola
+    inputBuscar.addEventListener('blur', function(){
+
+        let nome = {nome : inputBuscar.value};
+        fetch("/admin/buscarCliente",{
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(nome)
+            })
+        .then(function(resposta){
+            return resposta.json();
+        })
+        .then(function(corpo){
+            let selectPessoa = document.getElementById('pessoaval');
+            selectPessoa.innerHTML = '';
+            if(corpo.lista.length == 0 ){
+                selectPessoa.innerHTML = '<option value="0">Pessoa não existente no banco de dados!</option>'
+            }
+            for(let i=0; i < corpo.lista.length;i++){
+                pessoa = corpo.lista[i];
+                selectPessoa.innerHTML += '<option value="'+pessoa.id+'">'+pessoa.nome+'</option>' 
+            }
+        })
+    });
+
     let btn = document.getElementById('cadastrar');
     btn.addEventListener('click', gravar);
 
@@ -22,35 +49,47 @@ document.addEventListener('DOMContentLoaded', function(){
     change();
     function change(){
         const preco = document.getElementById('preco');
+        const inputPessoa = document.getElementById('procurarPessoaval');
+        const pessoa = document.getElementById('pessoaval');
         const descricao = document.getElementById('descricao');
         const marca = document.getElementById('marca');
         const categoria = document.getElementById('categoria');
         if(tipoItem.value == 1 || tipoItem.value == 2){ //PRODUTO INSUMO
             preco.style.display = 'block';            
+            inputPessoa.style.display = 'none';
+            pessoa.style.display = 'none';
             descricao.style.display = 'block';
             marca.style.display = 'block';
             categoria.style.display = 'block';
         }
         if(tipoItem.value == 3){ //serviço
             preco.style.display = 'block';  
+            inputPessoa.style.display = 'none';
+            pessoa.style.display = 'none';
             descricao.style.display = 'block';
             marca.style.display = 'none';
             categoria.style.display = 'none';
         }
         if(tipoItem.value == 4){ // equip Agricola
-            preco.style.display = 'block';
+            preco.style.display = 'none';
+            inputPessoa.style.display = 'block';
+            pessoa.style.display = 'block';
             descricao.style.display = 'block';
             marca.style.display = 'block';
             categoria.style.display = 'block';
         }
         if(tipoItem.value == 5){ // marca 
             preco.style.display = 'none';
+            inputPessoa.style.display = 'none';
+            pessoa.style.display = 'none';
             descricao.style.display = 'none';
             marca.style.display = 'none';
             categoria.style.display = 'none';
         }
         if(tipoItem.value == 6){ // categoria
             preco.style.display = 'none';
+            inputPessoa.style.display = 'none';
+            pessoa.style.display = 'none';
             descricao.style.display = 'none';
             marca.style.display = 'none';
             categoria.style.display = 'none';
@@ -62,6 +101,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
         const nome = document.getElementById('nomeval');
         const preco = document.getElementById('precoval');
+        const pessoa = document.getElementById('pessoaval');
         const descricao = document.getElementById('descricaoval');
         const marca = document.getElementById('marcaval');
         const tipoItem = document.getElementById('tipoItem');
@@ -78,6 +118,10 @@ document.addEventListener('DOMContentLoaded', function(){
         else
             preco.style.borderColor = '';
 
+        if(pessoa.value == 0)
+            vetorVal.push(pessoa);
+        else
+            pessoa.style.borderColor = '';
         if(!descricao.value)
             vetorVal.push(descricao);
         else
@@ -151,11 +195,11 @@ document.addEventListener('DOMContentLoaded', function(){
             }
         }
         if(tipoItem.value == 4){ //EQUIPAMENTO AGRICOLA
-            if(nome.value && isFinite(Number(preco.value)) && preco.value && marca.value != 0 && preco.value >= 0){
+            if(nome.value && pessoa.value != 0 && marca.value != 0 && categoria.value != 0){
                 obj = {
                     id: id.value,
                     nome : nome.value,
-                    preco: preco.value,
+                    pessoa: pessoa.value,
                     marca: marca.value,
                     descricao: descricao.value,
                     categoria: categoria.value

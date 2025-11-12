@@ -23,6 +23,18 @@
             <input type="number" class="form-control" id="precoval" placeholder="name" value="<%=prod.preco%>">
             <label for="preco">Preço:</label>
         </div>
+
+        <div class="form-floating mb-3" id="procurarPessoa">
+            <input type="text" class="form-control" id="procurarPessoaval" placeholder=" " maxlength="100">
+            <label for="procurarPessoa">Insira o Nome do prorietário | Empresa:</label>
+        </div>
+        <div class="form-floating mb-3" id="pessoa">
+            <select name="pessoa" id="pessoaval" class="form-control">
+            <option value="0" selected>Busque o proprietário no campo acima...</option>
+            </select>
+            <label for="tipoItem">Proprietário:</label>
+        </div>
+
         <div class="form-floating mb-3" id="descricao">
             <input type="text" class="form-control" id="descricaoval" placeholder="name" value="<%=prod.descricao%>" maxlength="100">
             <label for="descricao">Descrição:</label>

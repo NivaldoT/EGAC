@@ -52,5 +52,25 @@ class pessoaModel{
         else
             return false;
     }
+    async buscarCliente(){
+        let sql = 'select * from tb_Pessoa where pessoa_nome like ?;';
+        let valores = [this.nome];
+        const banco = new Database();
+
+        let rows = await banco.ExecutaComando(sql,valores);
+        
+        let lista = [];
+        for(let i=0;i<rows.length;i++){
+            lista.push(new pessoaModel(rows[i]['pessoa_id'],rows[i]['pessoa_nome']));
+        }
+        return lista;
+    }
+
+    toJSON(){
+        return{
+            id : this.#id,
+            nome : this.#nome
+        }
+    }
 }
 module.exports = pessoaModel;

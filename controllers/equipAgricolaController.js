@@ -22,13 +22,13 @@ class equipAgricolasController{
     }
     async cadastrar(req,res){
         const nome = req.body.nome;
-        const preco = req.body.preco;
+        const pessoa = req.body.pessoa;
         const marca = req.body.marca;
         const descricao = req.body.descricao;
         const categoria = req.body.categoria;
 
 
-        let prod = new equipAgricolaModel(null,nome,preco,marca,null,descricao,categoria,null);
+        let prod = new equipAgricolaModel(null,nome,pessoa,null,marca,null,descricao,categoria,null);
         
         let result = await prod.cadastrar();
         if(result)
@@ -39,12 +39,12 @@ class equipAgricolasController{
     async alterar(req,res){
         const id = req.body.id;
         const nome = req.body.nome;
-        const preco = req.body.preco;
+        const pessoa = req.body.pessoa;
         const marca = req.body.marca;
         const descricao = req.body.descricao;
         const categoria = req.body.categoria;
 
-        let equip = new equipAgricolaModel(id,nome,preco,marca,null,descricao,categoria,null);
+        let equip = new equipAgricolaModel(id,nome,pessoa,null,marca,null,descricao,categoria,null);
         
         let result = await equip.alterar();
         if(result)
