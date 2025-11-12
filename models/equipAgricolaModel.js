@@ -90,6 +90,27 @@ class equipAgricolaModel{
         let result = await banco.ExecutaComandoNonQuery(sql,valores);
         return result;
     }
+
+    async buscarEqAgCliente(){
+        let sql = 'select eq_id, eq_nome from tb_EquipamentoAgricola where eq_idPessoa = ?';
+        let valores = [this.idPessoa];
+        const banco = new Database();
+
+        let rows = await banco.ExecutaComando(sql,valores);
+        
+        let lista = [];
+        for(let i=0;i<rows.length;i++){
+            lista.push(new equipAgricolaModel(rows[i]['eq_id'],rows[i]['eq_nome']));
+        }
+        return lista;
+    }
+
+    toJSON(){
+        return{
+            id:this.id,
+            nome: this.nome
+        }
+    }
 }
 
 module.exports = equipAgricolaModel;

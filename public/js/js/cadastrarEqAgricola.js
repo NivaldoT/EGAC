@@ -34,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function(){
     function gravar(){
         const nome = document.getElementById('nomeval');
         const pessoa = document.getElementById('pessoaval');
-        const preco = document.getElementById('precoval');
         const marca = document.getElementById('marcaval');
         const descricao = document.getElementById('descricaoval');
         const categoria = document.getElementById('categoriaval');

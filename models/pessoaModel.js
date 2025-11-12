@@ -52,7 +52,7 @@ class pessoaModel{
         else
             return false;
     }
-    async buscarCliente(){
+    async buscarClienteNome(){
         let sql = 'select * from tb_Pessoa where pessoa_nome like ?;';
         let valores = [this.nome];
         const banco = new Database();

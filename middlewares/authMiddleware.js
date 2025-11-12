@@ -9,7 +9,7 @@ class authMiddleware{
             if(func && func.isFunc)
                 next();
             else
-                res.redirect('/adminLogin')
+                res.redirect('/adminLogin');
         }
         else{
             res.redirect('/adminLogin');

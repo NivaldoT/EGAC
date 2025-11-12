@@ -98,5 +98,14 @@ class PFController{
         }
         res.send({ok, msg});
     }
+    async buscarFuncionarioNome(req,res){
+        let nome = '%'+req.body.nome+'%';
+        let pessoa = new PFisicaModel(null,nome);
+
+        let lista = await pessoa.buscarFuncionarioNome();
+        
+        res.send({lista});
+    }
+
 }
 module.exports = PFController;

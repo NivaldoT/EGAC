@@ -111,5 +111,21 @@ class PFisicaModel extends pessoaModel{
         // else
         //     return null
     }
+
+    async buscarFuncionarioNome(){
+        let sql =  `select * from tb_Pessoa p
+                    inner join tb_PFisica  pf on pf.PF_id = p.pessoa_id
+                    where pessoa_nome like ? and pf.PF_isFunc = 1;`;
+        let valores = [this.nome];
+        const banco = new Database();
+
+        let rows = await banco.ExecutaComando(sql,valores);
+        
+        let lista = [];
+        for(let i=0;i<rows.length;i++){
+            lista.push(new pessoaModel(rows[i]['pessoa_id'],rows[i]['pessoa_nome']));
+        }
+        return lista;
+    }
 }
 module.exports = PFisicaModel;

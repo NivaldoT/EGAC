@@ -9,7 +9,7 @@ const EquipAgricolaController = require('../controllers/equipAgricolaController'
 const PFController = require("../controllers/PFController");
 const PJController = require("../controllers/PJController");
 const PessoaController = require("../controllers/pessoaController");
-//const funcionarioController = require("../controllers/funcionarioController"); EXCLUIR
+const OrdemServicoController = require('../controllers/ordemServicoController')
 const router = express.Router();
 
 const adminController = new AdminController();
@@ -22,7 +22,8 @@ const equipAgricolaController = new EquipAgricolaController();
 const pfController = new PFController();
 const pjController = new PJController();
 const pessoaController = new PessoaController();
-//const funcController = new funcionarioController(); EXCLUIR
+
+const ordemServicoController = new OrdemServicoController()
 
 router.get("/", adminController.homeView);
 
@@ -40,7 +41,9 @@ router.post('/alterarPF', pfController.alterar);
 router.post('/alterarPJ', pjController.alterar);
 //router.post('/alterarFuncionario', funcController.alterar);
 
-router.post('/buscarCliente', pessoaController.buscarCliente);
+router.post('/buscarCliente', pessoaController.buscarClienteNome);
+router.post('/buscarEqAgricolaCliente', equipAgricolaController.buscarEqAgCliente);
+router.post('/buscarFuncionario', pfController.buscarFuncionarioNome);
                 // CADASTRAR ITENS
 router.get('/cadastrarProduto', produtosController.cadastrarView);
 router.get('/cadastrarServico', servicoController.cadastrarView);
@@ -66,6 +69,15 @@ router.post('/excluir', adminController.excluirItem);
 
                 // LISTAR ITENS
 router.get('/listagem/:tipo', adminController.listarItemView);
+
+
+                //ORDEM DE SERVIÇO
+router.get('/ordemServicos', ordemServicoController.homeView);
+router.get('/ordemServicos/abrir', ordemServicoController.abrirView);
+router.get('/ordemServicos/concluir', ordemServicoController.homeView);
+router.get('/ordemServicos/receber', ordemServicoController.homeView);
+
+router.post('/ordemServicos/abrir', ordemServicoController.abrirOS);
 
 router.get('/alterarItem/:tipo/:id', adminController.alterarItemView);
 router.get('/alterarCliente/:tipo/:id', adminController.alterarClienteView);

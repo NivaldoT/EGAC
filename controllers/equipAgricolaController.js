@@ -52,7 +52,14 @@ class equipAgricolasController{
         else
             res.send({ok:false, msg: 'Erro ao alterar Equipamento Agrícola!'});
     }
+    async buscarEqAgCliente(req,res){
+        let id = req.body.id;
+        let eq = new equipAgricolaModel(null,null,id);
 
+        let lista = await eq.buscarEqAgCliente();
+        
+        res.send({lista});
+    }
     
 }
 module.exports = equipAgricolasController;

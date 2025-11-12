@@ -1,0 +1,56 @@
+<script src="/js/ordemServico/abrir.js" defer></script>
+<div class="container">
+    <h1>Abrir Ordem de Serviço</h1>
+    <div id="form">
+        <div class="row">
+            <div class="form-floating mb-3 col-4" id="procurarPessoa"> 
+                <input type="text" class="form-control" id="procurarPessoaval" placeholder=" " maxlength="100">
+                <label for="procurarPessoaval">Insira o Nome do proprietário | Empresa:</label>
+            </div>
+            <div class="form-floating mb-3 col-8" id="pessoa">
+                <select name="pessoa" id="pessoaval" class="form-control">
+                    <option value="0" selected>Busque o proprietário | empresa no campo ao lado...</option>
+                </select>
+                <label for="pessoaval">Proprietário:</label>
+            </div>
+        </div>
+
+        <div class="form-floating mb-3" id="EqAgricola">
+            <select name="EqAgricola" id="EqAgricolaval" class="form-control">
+            <option value="0" selected>Insira o nome do proprietário | empresa no campo acima...</option>
+            </select>
+            <label for="EqAgricolaval">Equipamento Agrícola:</label>
+        </div>
+
+        <div class="form-floating mb-3" id="servico">
+            <select name="servico" id="servicoval" class="form-control">
+            <option value="0" selected disabled>Selecione...</option>
+            <%for(let i=0;i<listaServicos.length;i++){%>
+                <option value="<%=listaServicos[i].id%>"><%=listaServicos[i].nome%></option>
+                <%}%>
+            </select>
+            <label for="servicoval">Serviço:</label>
+        </div>
+
+        <div class="row">
+            <div class="form-floating mb-3 col-sm-4" id="procurarFunc">
+                <input type="text" class="form-control" id="procurarFuncval" placeholder=" " maxlength="100">
+                <label for="procurarFuncval">Insira o nome do funcionário responsável:</label>
+            </div>
+            <div class="form-floating mb-3 col-lg-8" id="func">
+                <select name="func" id="funcval" class="form-control">
+                <option value="0" selected>Busque o funcionário no campo ao lado...</option>
+                </select>
+                <label for="funcval">Funcionário responsável:</label>
+            </div>
+        </div>
+        
+        <button class="btn btn-primary" id="cadastrar">Abrir Ordem de Serviço</button>
+        <a href="/admin/OrdemServicos" class="btn btn-secondary">Voltar</a>
+    </div>
+</div>
+<style>
+    .row label{
+        padding-left: 1.5rem
+    }
+</style>

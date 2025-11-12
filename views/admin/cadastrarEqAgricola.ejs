@@ -10,15 +10,17 @@
             <input type="text" class="form-control" id="descricaoval" placeholder=" " maxlength="100">
             <label for="descricao">Descrição:</label>
         </div>
-        <div class="form-floating mb-3" id="procurarPessoa">
-            <input type="text" class="form-control" id="procurarPessoaval" placeholder=" " maxlength="100">
-            <label for="procurarPessoa">Insira o Nome do prorietário | Empresa:</label>
-        </div>
-        <div class="form-floating mb-3" id="pessoa">
-            <select name="pessoa" id="pessoaval" class="form-control">
-            <option value="0" selected>Busque o proprietário no campo acima...</option>
-            </select>
-            <label for="tipoItem">Proprietário:</label>
+        <div class="row">
+            <div class="form-floating mb-3 col-4" id="procurarPessoa">
+                <input type="text" class="form-control" id="procurarPessoaval" placeholder=" " maxlength="100">
+                <label for="procurarPessoa">Insira o Nome do proprietário | Empresa:</label>
+            </div>
+            <div class="form-floating mb-3 col-8" id="pessoa">
+                <select name="pessoa" id="pessoaval" class="form-control">
+                    <option value="0" selected>Busque o proprietário no campo acima...</option>
+                </select>
+                <label for="tipoItem">Proprietário:</label>
+            </div>
         </div>
         <div class="form-floating mb-3" id="marca">
             <select name="marca" id="marcaval" class="form-control">
@@ -43,3 +45,8 @@
         <a href="/admin/listagem/4" class="btn btn-secondary">Voltar</a>
     </div>
 </div>
+<style>
+    .row label{
+        padding-left: 1.5rem;
+    }
+</style>
