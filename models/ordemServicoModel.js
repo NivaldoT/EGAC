@@ -57,7 +57,7 @@ class OrdemDeServicoModel{
 
     async abrirOS(){
         let sql = 'insert into tb_OrdemDeServico(os_idPessoa,os_idServico,os_idEqAgricola,os_idFuncionario, os_status, os_dataAbertura) values (?,?,?,?,?,?);';
-        let valores = [this.#idPessoa, this.#idServico,this.#idEqAgricola,this.#idFuncionario,'A Fazer',new Date()];
+        let valores = [this.#idPessoa, this.#idServico,this.#idEqAgricola,this.#idFuncionario,0,new Date()];
         let banco = new Database();
 
         let result = await banco.ExecutaComandoNonQuery(sql,valores);
@@ -66,7 +66,7 @@ class OrdemDeServicoModel{
 
     async concluirOS(){
         let sql = 'update tb_OrdemDeServico set os_status = ?, os_dataConclusao = ?, os_comentario = ? where os_id = ?;';
-        let valores = ["Concluída", this.dataConclusao, this.comentario, this.id];
+        let valores = [1, this.dataConclusao, this.comentario, this.id];
         let banco = new Database();
         let result = await banco.ExecutaComandoNonQuery(sql,valores);
 
@@ -75,7 +75,7 @@ class OrdemDeServicoModel{
 
     async receberOS(){
         let sql = 'update tb_OrdemDeServico set os_status = ? where os_id = ?;';
-        let valores = ["Pagamento Concluído",this.id];
+        let valores = [2,this.id];
         let banco = new Database();
         let result = await banco.ExecutaComandoNonQuery(sql,valores);
 
@@ -94,8 +94,8 @@ class OrdemDeServicoModel{
         let rows = await banco.ExecutaComando(sql);
 
         let lista = [];
-        for(i in rows){
-            lista.push(new OrdemDeServico(rows[i]['os_id'],rows[i]['os_idPessoa'],rows[i]['os_idServico'],rows[i]['os_idEqAgricola'],rows[i]['os_idFuncionario'],rows[i]['os_status'],rows[i]['os_dataAbertura'],rows[i]['os_dataConclusao'],rows[i]['os_comentario']));
+        for(let i in rows){
+            lista.push(new OrdemDeServicoModel(rows[i]['os_id'],rows[i]['os_idPessoa'],rows[i]['os_idServico'],rows[i]['os_idEqAgricola'],rows[i]['os_idFuncionario'],rows[i]['os_status'],rows[i]['os_dataAbertura'],rows[i]['os_dataConclusao'],rows[i]['os_comentario']));
             lista[i].#nomePessoa = rows[i]['nomeCliente'];
             lista[i].#nomeFuncionario = rows[i]['nomeFuncionario'];
             lista[i].#nomeEqAgricola = rows[i]['eq_nome'];
