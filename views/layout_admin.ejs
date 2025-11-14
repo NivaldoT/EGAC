@@ -34,15 +34,20 @@
               <ul class="dropdown-menu dropdown-menu-large" aria-labelledby="cadastrosMenu">
                 <li>
                   <div class="row p-3">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                       <h6 class="dropdown-header">Cadastros</h6>
                       <a class="dropdown-item" href="/admin/listagem/1">Produtos</a>
-                      <a class="dropdown-item" href="/admin/clientes">Clientes e fornecedores</a>
+                      <a class="dropdown-item" href="/admin/listagem/2">Insumos</a>
+                      <a class="dropdown-item" href="/admin/listagem/5">Marcas</a>
+                      <a class="dropdown-item" href="/admin/listagem/6">Categorias</a>
+                    </div>
+                    <div class="col-md-3">
+                      <h6 class="dropdown-header">Pessoas</h6>
+                      <a class="dropdown-item" href="/admin/clientes">Clientes</a>
                       <a class="dropdown-item" href="/admin/FuncionarioCadastro">Funcionários</a>
                     </div>
-                    <div class="col-md-4">
-                      <h6 class="dropdown-header">Ferramentas</h6>
-                      <a class="dropdown-item" href="/admin/listagem/6">Categorias de produtos</a>
+                    <div class="col-md-3">
+                      <h6 class="dropdown-header">Serviços</h6>
                       <a class="dropdown-item" href="/admin/listagem/3">Serviços</a>
                       <a class="dropdown-item" href="/admin/listagem/4">Equipamentos Agrícolas</a>
                     </div>
@@ -112,11 +117,6 @@
               </ul>
             </li>
           </ul>
-
-          <form class="d-flex me-3" role="search" action="/admin/listagem/1" method="get">
-            <input class="form-control form-control-sm me-2" type="search" name="q" placeholder="Pesquisar" aria-label="Pesquisar">
-            <button class="btn btn-sm btn-outline-secondary" type="submit">Buscar</button>
-          </form>
 
           <ul class="navbar-nav ms-auto">
             <li class="nav-item dropdown">

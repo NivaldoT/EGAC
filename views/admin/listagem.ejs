@@ -3,20 +3,10 @@
 
 <div class="container-fluid">
     <div class="d-flex align-items-center mb-4">
-        <div class="dropdown me-3">
-            <button class="btn btn-lg btn-link text-dark text-decoration-none dropdown-toggle p-0" type="button" id="titleDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 24px; font-weight: 600;">
-                <span id="titleSelected"><% if(tipoListar == 1){ %>Produtos<% } else if(tipoListar == 2){ %>Insumos<% } else if(tipoListar == 3){ %>Serviços<% } else if(tipoListar == 4){ %>Equipamentos Agricolas<% } else if(tipoListar == 5){ %>Marcas<% } else if(tipoListar == 6){ %>Categorias<% } else { %>Listagem de Itens<% } %></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="titleDropdown">
-                <li><a class="dropdown-item title-option" href="#" data-value="1">Produtos</a></li>
-                <li><a class="dropdown-item title-option" href="#" data-value="2">Insumos</a></li>
-                <li><a class="dropdown-item title-option" href="#" data-value="3">Serviços</a></li>
-                <li><a class="dropdown-item title-option" href="#" data-value="4">Equipamentos Agricolas</a></li>
-                <li><a class="dropdown-item title-option" href="#" data-value="5">Marcas</a></li>
-                <li><a class="dropdown-item title-option" href="#" data-value="6">Categorias</a></li>
-            </ul>
-        </div>
-        <a href="<% if(tipoListar == 1){ %>/admin/CadastrarProduto<% } else if(tipoListar == 2){ %>/admin/CadastrarProduto<% } else if(tipoListar == 3){ %>/admin/CadastrarServico<% } else if(tipoListar == 4){ %>/admin/CadastrarEqAgricola<% } else if(tipoListar == 5){ %>/admin/CadastrarMarca<% } else if(tipoListar == 6){ %>/admin/CadastrarCategoria<% } else { %>/admin<% } %>" class="btn btn-success ms-auto">Incluir cadastro</a>
+        <h2 class="mb-0" style="font-size: 24px; font-weight: 600;">
+            <span id="titleSelected"><% if(tipoListar == 1){ %>Produtos<% } else if(tipoListar == 2){ %>Insumos<% } else if(tipoListar == 3){ %>Serviços<% } else if(tipoListar == 4){ %>Equipamentos Agricolas<% } else if(tipoListar == 5){ %>Marcas<% } else if(tipoListar == 6){ %>Categorias<% } else { %>Listagem de Itens<% } %></span>
+        </h2>
+        <a href="<% if(tipoListar == 1){ %>/admin/CadastrarProduto<% } else if(tipoListar == 2){ %>/admin/CadastrarProduto<% } else if(tipoListar == 3){ %>/admin/CadastrarServico<% } else if(tipoListar == 4){ %>/admin/CadastrarEqAgricola<% } else if(tipoListar == 5){ %>/admin/CadastrarMarca<% } else if(tipoListar == 6){ %>/admin/CadastrarCategoria<% } else { %>/admin<% } %>" class="btn btn-success ms-auto">+ Incluir cadastro</a>
     </div>
     <div class="form-floating mt-3 d-none">
         <select name="select" id="select" class="form-control">
