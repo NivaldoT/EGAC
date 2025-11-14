@@ -80,6 +80,26 @@ th{
   transform: translateY(-2px);
 }
 
+#btn-cadastrar {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  width: 100%;
+  padding: 0.9rem 2rem;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
+}
+
+#btn-cadastrar:hover {
+  background-color: #28a745;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
 #btn-cadastro {
   font-size: 0.875rem;
   font-weight: 600;

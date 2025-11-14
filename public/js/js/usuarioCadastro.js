@@ -1,118 +1,187 @@
+document.addEventListener('DOMContentLoaded', function(){
 
-  const formulario = document.getElementById('formulario-login');
-  const email = document.getElementById('login-email');
-  const senha = document.getElementById('login-senha');
-  const erroEmail = document.getElementById('erro-email');
-  const erroSenha = document.getElementById('erro-senha');
+    const nome = document.getElementById('cadastro-nome');
+    const telefone = document.getElementById('cadastro-telefone');
+    const cpf = document.getElementById('cadastro-cpf');
+    const email = document.getElementById('cadastro-email');
+    const senha = document.getElementById('cadastro-senha');
+    const confirmar = document.getElementById('cadastro-confirmar');
 
-  formulario.addEventListener('submit', function (e) {
-    e.preventDefault();
+    const erroNome = document.getElementById('erro-nome');
+    const erroTelefone = document.getElementById('erro-telefone');
+    const erroCpf = document.getElementById('erro-cpf');
+    const erroEmail = document.getElementById('erro-email');
+    const erroSenha = document.getElementById('erro-senha');
+    const erroConfirmar = document.getElementById('erro-confirmar');
 
-    // Limpa mensagens anteriores
-    erroEmail.textContent = '';
-    erroSenha.textContent = '';
+    const formulario = document.getElementById('formulario-cadastro');
 
-    let valido = true;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    formulario.addEventListener('submit', function(e){
+        e.preventDefault();
 
-    // Validação do e-mail
-    if (!email.value.trim()) {
-      erroEmail.textContent = 'O campo de e-mail é obrigatório.';
-      valido = false;
-    } else if (!emailRegex.test(email.value)) {
-      erroEmail.textContent = 'Digite um e-mail válido.';
-      valido = false;
-    }
+        console.log('Formulário submetido');
 
-    // Validação da senha
-    if (!senha.value.trim()) {
-      erroSenha.textContent = 'O campo de senha é obrigatório.';
-      valido = false;
-    } else if (senha.value.length < 6) {
-      erroSenha.textContent = 'A senha deve ter pelo menos 6 caracteres.';
-      valido = false;
-    }
+        erroNome.textContent = '';
+        erroTelefone.textContent = '';
+        erroCpf.textContent = '';
+        erroEmail.textContent = '';
+        erroSenha.textContent = '';
+        erroConfirmar.textContent = '';
 
-    // Se estiver tudo certo
-    if (valido) {
-      document.getElementById('mensagem-sucesso').style.display = 'block';
-    }
-  });
+        let valido = true;
 
-  // Faz a mensagem de erro sumir ao pressionar qualquer tecla
-  email.addEventListener('keydown', function() {
-    erroEmail.textContent = '';
-  });
+        if(!nome.value){
+            erroNome.textContent = 'O campo de nome é obrigatório.';
+            valido = false;
+        }else if(nome.value.length < 10){
+            erroNome.textContent = 'Por favor insira o nome completo.';
+            valido = false;
+        }
 
-  senha.addEventListener('keydown', function() {
-    erroSenha.textContent = '';
-  });
+        if(!telefone.value){
+            erroTelefone.textContent = 'O campo de telefone é obrigatório.';
+            valido = false;
+        }else if(isNaN(telefone.value) || telefone.value.length!=11 || telefone.value.split(' ').length > 1){
+            erroTelefone.textContent = 'Por favor insira um telefone válido.';
+            valido = false;
+        }
 
+        if(!cpf.value){
+            erroCpf.textContent = 'O campo de CPF é obrigatório.';
+            valido = false;
+        }else if(!validaCPF(cpf.value)){
+            erroCpf.textContent = 'Por favor insira um CPF válido.';
+            valido = false;
+        }
 
-  let usuariosLogados = [];
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function montarTabelaLogin() {
-  const tbody = document.querySelector('#tb-body');
-  let html = '';
-  for (let u of usuariosLogados) {
-    html += `
-      <tr>
-        <td><input type="checkbox" data-id="${u.id}"></td>
-        <td>${u.email}</td>
-        <td><a href="#" onclick="excluirUsuario(${u.id})">&#9746;</a></td>
-      </tr>`;
-  }
-  tbody.innerHTML = html;
-}
+        if (!email.value) {
+            erroEmail.textContent = 'O campo de e-mail é obrigatório.';
+            valido = false;
+        } else if (!emailRegex.test(email.value)) {
+            erroEmail.textContent = 'Digite um e-mail válido.';
+            valido = false;
+        }
 
-function adicionarLogin(email) {
-  const novo = {
-    id: new Date().getTime(),
-    email: email
-  };
-  usuariosLogados.push(novo);
-  montarTabelaLogin();
-}
+        if (!senha.value) {
+            erroSenha.textContent = 'O campo de senha é obrigatório.';
+            valido = false;
+        } else if (senha.value.length < 6) {
+            erroSenha.textContent = 'A senha deve ter pelo menos 6 caracteres.';
+            valido = false;
+        }
 
-function excluirUsuario(idDelete) {
-  usuariosLogados = usuariosLogados.filter(u => u.id != idDelete);
-  montarTabelaLogin();
-}
+        if(confirmar.value != senha.value){
+            erroConfirmar.textContent = 'As senhas não coincidem.';
+            valido = false;
+        }
 
-function excluirSelecionadosLogin() {
-  const checkboxes = document.querySelectorAll('[data-id]');
-  for (let ck of checkboxes) {
-    if (ck.checked) {
-      excluirUsuario(Number(ck.dataset.id));
-    }
-  }
-}
+        console.log('Validação completa. Válido:', valido);
 
-function selecionaTodosLogin() {
-  const checkboxes = document.querySelectorAll('[data-id]');
-  const ckPai = document.querySelector('#ckTodos');
-  for (let ck of checkboxes) {
-    ck.checked = ckPai.checked;
-  }
-}
-
-  document.addEventListener('DOMContentLoaded', function () {
-    document.querySelector('#ckTodos').addEventListener('click', selecionaTodosLogin);
-    document.querySelector('#btnExcluirSelecionados').addEventListener('click', excluirSelecionadosLogin);
-
-    document.querySelector('#formulario-login').addEventListener('submit', function (e) {
-      e.preventDefault();
-
-      const email = document.querySelector('#login-email').value.trim();
-      const senha = document.querySelector('#login-senha').value.trim();
-
-      if (email !== '' && senha !== '') {
-        adicionarLogin(email);
-        this.reset();
-        document.querySelector('#mensagem-sucesso').style.display = 'block';
-        setTimeout(() => {
-          document.querySelector('#mensagem-sucesso').style.display = 'none';
-        }, 3000);
-      }
+        if(valido){
+            let obj = {
+                nome: nome.value,
+                telefone: telefone.value,
+                cpf: cpf.value,
+                email: email.value,
+                senha: senha.value,
+                isFunc: 0
+            }
+            fetch('/usuario/cadastro',{
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(obj)
+            })
+            .then(function(resposta) {
+                return resposta.json();
+            })
+            .then(function(corpo) {
+                let msgfinal = document.getElementById('mensagem-sucesso');
+                msgfinal.style.display = 'block';
+                if(corpo.ok){
+                    msgfinal.textContent = corpo.msg;
+                    msgfinal.classList = 'text-success';
+                    setTimeout(function(){
+                        window.location.href = '/usuario/login';
+                    }, 2000);
+                }
+                else{
+                    msgfinal.textContent = corpo.msg;
+                    msgfinal.classList = 'text-danger';
+                }
+            })
+        }
     });
-  });
+
+    nome.addEventListener('keydown', function() {
+        erroNome.textContent = '';
+    });
+    telefone.addEventListener('keydown', function() {
+        erroTelefone.textContent = '';
+    });
+    cpf.addEventListener('keydown', function() {
+        erroCpf.textContent = '';
+    });
+    email.addEventListener('keydown', function() {
+        erroEmail.textContent = '';
+    });
+    senha.addEventListener('keydown', function() {
+        erroSenha.textContent = '';
+    });
+    confirmar.addEventListener('keydown', function() {
+        erroConfirmar.textContent = '';
+    });
+
+    function validaCPF(cpf) {
+        var Soma = 0
+        var Resto
+
+        var strCPF = String(cpf).replace(/[^\d]/g, '')
+        
+        if (strCPF.length !== 11)
+            return false
+        
+        if ([
+            '00000000000',
+            '11111111111',
+            '22222222222',
+            '33333333333',
+            '44444444444',
+            '55555555555',
+            '66666666666',
+            '77777777777',
+            '88888888888',
+            '99999999999',
+            ].indexOf(strCPF) !== -1)
+            return false
+
+        for (i=1; i<=9; i++)
+            Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (11 - i);
+
+        Resto = (Soma * 10) % 11
+
+        if ((Resto == 10) || (Resto == 11)) 
+            Resto = 0
+
+        if (Resto != parseInt(strCPF.substring(9, 10)) )
+            return false
+
+        Soma = 0
+
+        for (i = 1; i <= 10; i++)
+            Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (12 - i)
+
+        Resto = (Soma * 10) % 11
+
+        if ((Resto == 10) || (Resto == 11)) 
+            Resto = 0
+
+        if (Resto != parseInt(strCPF.substring(10, 11) ) )
+            return false
+
+        return true
+    }
+});

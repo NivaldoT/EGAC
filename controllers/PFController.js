@@ -27,7 +27,7 @@ class PFController{
     
             if(result){
                 ok = true;
-                msg = 'Pessoa Física cadastrada com Sucesso!';
+                msg = 'Conta cadastrada com Sucesso!';
             }else{
                 ok = false;
                 msg = 'Erro ao cadastrar Pessoa Física!';
@@ -72,9 +72,9 @@ class PFController{
         res.send({ok,msg});
     }
 
-    // função de login
     async logar(req,res){
-        
+        //funcao de logar unificada
+
         const email = req.body.email;
         const senha = req.body.senha; // email e senha
 
@@ -114,32 +114,6 @@ class PFController{
         res.send({ok, msg, redirecionarPara});
     }
 
-    async logarFuncionario(req,res){
-        const email = req.body.email;
-        const senha = req.body.senha;
-
-        let ok;
-        let msg;
-
-        let func = new PFisicaModel(null,null,null,email,senha,null,null);
-        func = await func.logarEmailSenha();
-        if(func && func.isFunc){
-            res.cookie('FuncionarioEmail', func.email);
-            res.cookie('FuncionarioSenha', func.senha);
-            ok = true;
-            msg = 'Login Concluído com Sucesso!';
-            // res.redirect('/');
-        }
-        if(func && !func.isFunc){
-            ok = false;
-            msg = 'Usuário sem acesso de Funcionário!';
-        }
-        if(func == null){
-            ok = false;
-            msg = 'Credenciais Incorretas!';
-        }
-        res.send({ok, msg});
-    }
     async buscarFuncionarioNome(req,res){
         let nome = '%'+req.body.nome+'%';
         let pessoa = new PFisicaModel(null,nome);

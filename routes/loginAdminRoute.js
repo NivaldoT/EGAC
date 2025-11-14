@@ -10,8 +10,6 @@ const pfController = new PFController();
 router.get('/', adminController.loginView);
 router.get('/Cadastro', adminController.cadastroView);
 
-            //adminLogin
-router.post('/', pfController.logarFuncionario);
 router.post('/Cadastrar', pfController.cadastrar);
 
 module.exports = router;

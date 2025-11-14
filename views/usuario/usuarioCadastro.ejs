@@ -1,74 +1,67 @@
 <script src="/js/js/usuarioCadastro.js" defer></script>
-    <!-- Formulario para login -->
 
-    <div class="container d-flex justify-content-center mt-5">
-      <form id="formulario-login" class="bg-white p-5 shadow rounded" style="max-width: 400px; width: 100%;" novalidate>
-        <h3 class="mb-4 text-center">Crie sua conta</h3><br><br>
+    <div class="container d-flex justify-content-center mt-5 mb-5">
+      <form id="formulario-cadastro" class="bg-white p-5 shadow rounded" style="max-width: 400px; width: 100%;" novalidate>
+        <h3 class="mb-4 text-center">Crie sua conta</h3><br>
 
         <div class="form-group">
           <div class="float-container">
-            <input type="text" id="login-nome" name="nome" class="form-control" placeholder=" " required>
-            <label for="login-nome">Nome completo</label>
+            <input type="text" id="cadastro-nome" name="nome" class="form-control" placeholder=" " maxlength="100" required>
+            <label for="cadastro-nome">Nome completo</label>
           </div>
           <p id="erro-nome" class="erro"></p>
         </div>
 
+        <div class="form-group">
+          <div class="float-container">
+            <input type="text" id="cadastro-telefone" name="telefone" class="form-control" placeholder=" " maxlength="11" required>
+            <label for="cadastro-telefone">Telefone</label>
+          </div>
+          <p id="erro-telefone" class="erro"></p>
+        </div>
 
         <div class="form-group">
           <div class="float-container">
-            <input type="email" id="login-email" name="email" class="form-control" placeholder=" " required>
-            <label for="login-email">E-mail</label>
+            <input type="text" id="cadastro-cpf" name="cpf" class="form-control" placeholder=" " maxlength="11" required>
+            <label for="cadastro-cpf">CPF</label>
+          </div>
+          <p id="erro-cpf" class="erro"></p>
+        </div>
+
+        <div class="form-group">
+          <div class="float-container">
+            <input type="email" id="cadastro-email" name="email" class="form-control" placeholder=" " maxlength="100" required>
+            <label for="cadastro-email">E-mail</label>
           </div>
           <p id="erro-email" class="erro"></p>
         </div>
 
-
         <div class="form-group">
           <div class="float-container">
-            <input type="password" id="login-senha" name="senha" class="form-control" placeholder=" " required>
-            <label for="login-senha">Senha</label>
+            <input type="password" id="cadastro-senha" name="senha" class="form-control" placeholder=" " maxlength="30" required>
+            <label for="cadastro-senha">Senha</label>
           </div>
           <p id="erro-senha" class="erro"></p>
         </div>
 
         <div class="form-group">
           <div class="float-container">
-            <input type="password" id="login-confirmar" name="confirmar" class="form-control" placeholder=" " required>
-
-            <label for="login-confirmar">Confirmar Senha</label>
+            <input type="password" id="cadastro-confirmar" name="confirmar" class="form-control" placeholder=" " maxlength="30" required>
+            <label for="cadastro-confirmar">Confirmar Senha</label>
           </div>
           <p id="erro-confirmar" class="erro"></p>
         </div>
 
-
         <div class="text-center mt-4">
-          <button id="btn-login" type="submit">Cadastrar</button>
+          <button id="btn-cadastrar" type="submit">Cadastrar</button>
         </div>
 
         <div class="text-center mt-3">
-          <p id="mensagem-sucesso" class="text-success" style="display: none;">Cadastro realizado com sucesso!</p>
+          <p id="mensagem-sucesso" class="text-success" style="display: none;"></p>
         </div>
 
         <div class="text-center mt-3">
           <small>Já tem conta? <a href="/usuario/login">Login</a></small>
         </div>
       </form>
-    </div>
-
-    <div class="container mt-5">
-      <h4 class="mb-3">Usuários Cadastrados</h4>
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th><input type="checkbox" id="ckTodos"></th>
-            <th>Nome</th>
-            <th>Email</th>
-            <th>Ação</th>
-          </tr>
-        </thead>
-        <tbody id="tb-body">
-          
-        </tbody>
-      </table>
-      <button class="btn btn-danger" id="btnExcluirSelecionados">Excluir Selecionados</button>
     </div>
