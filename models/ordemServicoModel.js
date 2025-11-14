@@ -56,8 +56,8 @@ class OrdemDeServicoModel{
     }
 
     async abrirOS(){
-        let sql = 'insert into tb_OrdemDeServico(os_idPessoa,os_idServico,os_idEqAgricola,os_idFuncionario, os_status, os_dataAbertura) values (?,?,?,?,?,?);';
-        let valores = [this.#idPessoa, this.#idServico,this.#idEqAgricola,this.#idFuncionario,0,new Date()];
+        let sql = 'insert into tb_OrdemDeServico(os_idPessoa,os_idServico,os_idEqAgricola,os_idFuncionario, os_status, os_dataAbertura,os_comentario) values (?,?,?,?,?,?,?);';
+        let valores = [this.#idPessoa, this.#idServico,this.#idEqAgricola,this.#idFuncionario,0,new Date(),this.#comentario];
         let banco = new Database();
 
         let result = await banco.ExecutaComandoNonQuery(sql,valores);
@@ -102,6 +102,25 @@ class OrdemDeServicoModel{
             lista[i].#nomeServico = rows[i]['serv_nome'];
         }
         return lista;
+    }
+    async buscarId(){
+        let sql = `select os_id, os_idPessoa, os_idServico,os_idEqAgricola,os_idFuncionario,os_status,os_dataAbertura,os_dataConclusao,
+        os_comentario, p.pessoa_nome as nomeCliente, func.pessoa_nome as nomeFuncionario, s.serv_nome, eq.eq_nome from tb_OrdemDeServico os 
+        inner join tb_Pessoa p on p.pessoa_id = os.os_idPessoa
+        inner join tb_Pessoa func on func.pessoa_id = os.os_idFuncionario
+        inner join tb_Servico s on s.serv_id = os.os_idServico
+        inner join tb_EquipamentoAgricola eq on eq.eq_id = os.os_idEqAgricola where os.os_id = ?;`;
+        let valores = [this.#id];
+        let banco = new Database();
+        let rows = await banco.ExecutaComando(sql,valores);
+
+        let os = new OrdemDeServicoModel(rows['0']['os_id'],rows['0']['os_idPessoa'],rows['0']['os_idServico'],rows['0']['os_idEqAgricola'],rows['0']['os_idFuncionario'],rows['0']['os_status'],rows['0']['os_dataAbertura'],rows['0']['os_dataConclusao'],rows['0']['os_comentario']);
+            os.#nomePessoa = rows['0']['nomeCliente'];
+            os.#nomeFuncionario = rows['0']['nomeFuncionario'];
+            os.#nomeEqAgricola = rows['0']['eq_nome'];
+            os.#nomeServico = rows['0']['serv_nome'];
+        
+            return os;
     }
 
 }

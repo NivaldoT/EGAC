@@ -68,4 +68,35 @@
             <%}%>
         </tbody>
     </table>
+
+    <table class="table table-bordered mt-3" style="color: #000;" id="3"> <!--LISTA PF-->
+        <thead>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>CPF</th>
+            <th>Email</th>
+            <th>Senha</th>
+            <th>Telefone</th>
+            <th>Alterar/Excluir</th>
+            <th><a href="/admin/PFCadastro">Cadastrar novo</a></th>
+        </thead>
+        <tbody>
+            <%for(let i=0;i<listaPF.length;i++) {%>
+                <%if(listaPF[i].isFunc){%>
+                <tr>
+                    <td><%=listaPF[i].id%></td>
+                    <td><%=listaPF[i].nome%></td>
+                    <td><%=listaPF[i].cpf%></td>
+                    <td><%=listaPF[i].email%></td>
+                    <td><%=listaPF[i].senha%></td>
+                    <td><%=listaPF[i].telefone%></td>
+                    <td>
+                        <a href="/admin/alterarCliente/1/<%=listaPF[i].id%>" class="btn btn-primary"><i class="bi bi-pencil-square"></i></a>
+                        <button data-id="<%=listaPF[i].id%>"  data-nome='<%=listaPF[i].nome%>' class="btn btn-danger btnExcluir"><i class="bi bi-trash-fill"></i></button>
+                    </td>
+                </tr>
+                <%}%>
+            <%}%>
+        </tbody>
+    </table>
 </div>

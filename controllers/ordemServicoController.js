@@ -17,17 +17,24 @@ class OrdemDeServicoController{
 
         res.render('admin/ordemServico/abrir.ejs',{listaServicos: listaServicos ,layout: 'layout_admin'});
     }
+    async concluirView(req,res){
+        let id = req.params.id;
+        let os = new OrdemDeServicoModel(id);
+        os = await os.buscarId();
+        res.render('admin/ordemServico/concluir.ejs',{os: os,layout: 'layout_admin'});
+    }
     async abrirOS(req,res){
         console.log(req.body)
         let pessoa = req.body.pessoa;
         let EqAg = req.body.EqAg;
         let servico = req.body.servico;
         let func = req.body.func;
+        let comentario = req.body.comentario;
 
         let ok;
         let msg;
 
-        let OS = new OrdemDeServicoModel(null,pessoa,servico,EqAg,func);
+        let OS = new OrdemDeServicoModel(null,pessoa,servico,EqAg,func,null,null,null,comentario);
         let result = await OS.abrirOS();
         if(result){
             ok = true;

@@ -1,0 +1,65 @@
+<script src="/js/ordemServico/concluir.js" defer></script>
+<div class="container">
+    <h1>Concluir Ordem de Serviço</h1>
+    <div id="form">
+        <input type="hidden" value="<%=os.id%>">
+        <div class="form-floating mb-3" id="pessoa">
+            <select name="pessoa" id="pessoaval" class="form-control">
+                <option value="" selected><%=os.nomePessoa%></option>
+            </select>
+            <label for="pessoaval">Proprietário:</label>
+        </div>
+
+        <div class="form-floating mb-3" id="EqAgricola">
+            <select name="EqAgricola" id="EqAgricolaval" class="form-control">
+            <option value="" selected><%=os.nomeEqAgricola%></option>
+            </select>
+            <label for="EqAgricolaval">Equipamento Agrícola:</label>
+        </div>
+
+        <div class="form-floating mb-3" id="servico">
+            <select name="servico" id="servicoval" class="form-control">
+            <option value=""><%=os.nomeServico%></option>
+            </select>
+            <label for="servicoval">Serviço:</label>
+        </div>
+
+        <div class="form-floating mb-3" id="func">
+            <select name="func" id="funcval" class="form-control">
+            <option value="" selected><%=os.nomeFuncionario%></option>
+            </select>
+            <label for="funcval">Funcionário responsável:</label>
+        </div>
+
+        <div class="form-floating mb-3" id="comentario"> 
+            <input type="text" class="form-control" id="comentarioval" placeholder=" " maxlength="200" value="<%if(os.comentario){%><%=os.comentario%><%}%>">
+            <label for="comentarioval">Comentários:(Opcional)</label>
+        </div>
+
+        <div class="row">
+            <div class="form-floating mb-3 col-3" id="procurarInsumo"> 
+                <input type="text" class="form-control" id="procurarInsumoval" placeholder=" " maxlength="100">
+                <label for="procurarInsumoval">Selecione o insumo utlizado:</label>
+            </div>
+            <div class="form-floating mb-3 col-6" id="pessoa">
+                <select name="pessoa" id="pessoaval" class="form-control">
+                    <option value="0" selected>Busque o insumo no campo ao lado...</option>
+                </select>
+                <label for="pessoaval">Insumo:</label>
+            </div>
+            <div class="form-floating mb-3 col-3" id="quantidade">
+                <input type="text" name="quantidade" id="quantidadeval" class="form-control">
+                <label for="quantidadeval">Quantidade:</label>
+            </div>
+        </div>
+        
+        <button class="btn btn-primary mb-4" id="cadastrar">Adicionar à Ordem de Serviço</button><br>
+        <button class="btn btn-primary" id="cadastrar">Concluir Ordem de Serviço</button>
+        <a href="/admin/OrdemServicos" class="btn btn-secondary">Voltar</a>
+    </div>
+</div>
+<style>
+    .row label{
+        padding-left: 1.5rem
+    }
+</style>
