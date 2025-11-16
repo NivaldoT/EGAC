@@ -51,6 +51,20 @@ class produtosController{
             res.send({ok:false, msg: 'Erro ao alterar produto!'});
     }
 
-    
+    async buscarInsumoNome(req,res){
+        let nome = '%'+req.body.nome+'%';
+        let insumo = new produtoModel(null,null,nome);
+
+        let lista = await insumo.buscarInsumoNome();
+        
+        res.send({lista});
+    }
+
+    async buscarId(req,res){
+        let id = req.body.id;
+        let prod = new produtoModel();
+        prod = await prod.buscarId(id);
+        res.send({prod});
+    }
 }
 module.exports = produtosController;
