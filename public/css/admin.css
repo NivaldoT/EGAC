@@ -89,6 +89,7 @@ body.admin-layout {
   align-items: center;
   text-decoration: none;
   border-radius: 6px;
+  width: 96%;
 }
 
 .dropdown-menu-large .dropdown-item i {
@@ -118,6 +119,10 @@ body.admin-layout {
 .dropdown-menu-large .col-md-4 {
   border-right: 1px solid #f3f4f6;
   padding: 0 8px;
+}
+
+.dropdown-menu-large .col-md-3 {
+  width: 33% !important; /* sobrescrever o width do boostrap porque está errado*/
 }
 
 .dropdown-menu-large .col-md-3:last-child,
