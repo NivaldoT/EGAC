@@ -44,7 +44,9 @@ router.post('/alterarPJ', pjController.alterar);
 router.post('/buscarCliente', pessoaController.buscarClienteNome);
 router.post('/buscarEqAgricolaCliente', equipAgricolaController.buscarEqAgCliente);
 router.post('/buscarFuncionario', pfController.buscarFuncionarioNome);
+
 router.post('/buscarInsumoNome', produtosController.buscarInsumoNome);
+router.post('/buscarProdPorId', produtosController.buscarId)
                 // CADASTRAR ITENS
 router.get('/cadastrarProduto', produtosController.cadastrarView);
 router.get('/cadastrarServico', servicoController.cadastrarView);
@@ -79,6 +81,7 @@ router.get('/ordemServicos/concluir/:id', ordemServicoController.concluirView);
 router.get('/ordemServicos/receber/:id', ordemServicoController.homeView);
 
 router.post('/ordemServicos/abrir', ordemServicoController.abrirOS);
+router.post('/ordemServicos/concluir', ordemServicoController.concluirView);
 
 router.get('/alterarItem/:tipo/:id', adminController.alterarItemView);
 router.get('/alterarCliente/:tipo/:id', adminController.alterarClienteView);

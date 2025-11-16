@@ -135,7 +135,15 @@ class produtoModel{
     toJSON(){
         return{
             id: this.#id,
-            nome: this.#nome
+            nome: this.#nome,
+            tipo: this.#tipo,
+            preco: this.#preco,
+            descricao: this.#descricao,
+            categoria: this.#categoria,
+            categoria_nome: this.#categoria_nome,
+            marca: this.#marca,
+            marca_nome: this.#marca_nome,
+            estoque: this.#estoque
         }
     }
 }

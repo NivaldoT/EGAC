@@ -43,41 +43,66 @@ document.addEventListener('DOMContentLoaded', function(){
             ok = false;
             msgErroInsumo.textContent = 'Selecione um Item para adicionar!';
         }
-        for(i in listaInsumo){
-            if(listaInsumo[i].id == selectInsumo.value){
-                ok = false;
-                msgErroInsumo.textContent = 'Este item já foi adicionado!';
+        if(ok && !inputInsumoQtd.value || inputInsumoQtd.value == '0'){
+            ok = false;
+            msgErroInsumo.textContent = 'Insira a Quantidade do insumo!';
+        }
+        if(ok){
+            for(i in listaInsumo){
+                if(listaInsumo[i].id == selectInsumo.value){
+                    ok = false;
+                    msgErroInsumo.textContent = 'Este item já foi adicionado!';
+                }
             }
         }
-        if(ok == true){
-            listaInsumo.push({id: selectInsumo.value, qtd: inputInsumoQtd.value});
-            console.log(listaInsumo);
+        if(ok){
+            obj = {id: selectInsumo.value};
+            fetch('/admin/buscarProdPorId',{
+                    method: 'POST',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify(obj)
+                })
+                .then(function(resposta) {//recebe a resposta como retorno do fetch
+                    return resposta.json(); //converte o corpo da resposta para json (gera uma nova promise)
+                })
+                .then(function(corpo) {//recebe o corpo em formato de obj genérico
+                    console.log(corpo.prod);
+                    prod = corpo.prod;
+                    if(prod.estoque < inputInsumoQtd.value){
+                        ok = false;
+                        msgErroInsumo.textContent = 'Quantidade inválida, Quantidade no estoque: '+prod.estoque;
+                    }
+                    if(ok){
+                        listaInsumo.push({id: selectInsumo.value, qtd: inputInsumoQtd.value});
+                        
+                        tableInsumo.innerHTML+= `
+                        <tr>
+                        <td>${selectInsumo.value}</td>
+                        <td>${selectInsumo.textContent}</td>
+                        <td>${inputInsumoQtd.value}</td>
+                        <td><button class='btn btn-danger btnExcluirInsumo' data-id='${selectInsumo.value}'><i class="bi bi-trash-fill"></i></button></td>
+                        </tr>`;
             
-            tableInsumo.innerHTML+= `
-            <tr>
-            <td>${selectInsumo.value}</td>
-            <td>${selectInsumo.textContent}</td>
-            <td>${inputInsumoQtd.value}</td>
-            <td><button class='btn btn-danger btnExcluirInsumo' data-id='${selectInsumo.value}'><i class="bi bi-trash-fill"></i></button></td>
-            </tr>`;
-
-            listabtnExcluirInsumo = [];
-            listabtnExcluirInsumo = document.querySelectorAll('.btnExcluirInsumo');
-
-            for(let i=0; i<listabtnExcluirInsumo.length;i++){
-                listabtnExcluirInsumo[i].addEventListener('click', removerInsumo);
-            }
+                        listabtnExcluirInsumo = [];
+                        listabtnExcluirInsumo = document.querySelectorAll('.btnExcluirInsumo');
+            
+                        for(let i=0; i<listabtnExcluirInsumo.length;i++){
+                            listabtnExcluirInsumo[i].addEventListener('click', removerInsumo);
+                        }
+                    }
+                })
         }
     }
 
     function removerInsumo(){
         let id = this.dataset.id
-        for(i in listaInsumo){
+        for(let i=0; i< listaInsumo.length;i++){
             if(listaInsumo[i].id == id){
                 listaInsumo.splice(i,1);
             }
         }
-        console.log(listaInsumo)
         this.parentElement.parentElement.remove();
     }
     
@@ -113,30 +138,37 @@ document.addEventListener('DOMContentLoaded', function(){
     let msgErroSubItem = document.getElementById('msgErroSubItem');
     let listaSubItem = []
     let tableSubItem = document.getElementById('tableSubItem'); 
+    let subItemval = document.getElementById('subItemval');
     document.getElementById('AddSubItem').addEventListener('click', addSubItem);
     function addSubItem(){
         msgErroSubItem.textContent = '';
         let ok = true;
-        if(selectFuncionario.value == 0){
+        if(!subItemval.value || !(/[a-z]/i.test(subItemval.value))){
+            ok = false;
+            msgErroSubItem.textContent = 'Escreva um Nome para o Sub-Item!'
+        }
+        if(selectFuncionario.value == 0 && ok){
             ok = false;
             msgErroSubItem.textContent = 'Selecione um Funcionario para adicionar Sub-Item!';
         }
-        for(i in listaSubItem){
-            if(listaSubItem[i].id == selectFuncionario.value){
-                ok = false;
-                msgErroSubItem.textContent = 'Este item já foi adicionado!';
+        if(ok){
+            for(i in listaSubItem){
+                if(listaSubItem[i].nome == subItemval.value){
+                    ok = false;
+                    msgErroSubItem.textContent = 'Este item já foi adicionado!';
+                }
             }
         }
-        if(ok == true){
-            listaSubItem.push({id: selectFuncionario.value, qtd: inputSubItemQtd.value}); // NO EJS , TEM QUE POR ID FUNC NA TABELA E ENTÃO VER AQ
+        if(ok){
+            listaSubItem.push({id: selectFuncionario.value, nome: subItemval.value});
             console.log(listaSubItem);
             
             tableSubItem.innerHTML+= `
             <tr>
             <td>${selectFuncionario.value}</td>
-            <td>${selectFuncionario.textContent}</td>
-            <td>${inputSubItemQtd.value}</td>
-            <td><button class='btn btn-danger btnExcluirSubItem' data-id='${selectFuncionario.value}'><i class="bi bi-trash-fill"></i></button></td>
+            <td>${selectFuncionario[0].textContent}</td>
+            <td>${subItemval.value}</td>
+            <td><button class='btn btn-danger btnExcluirSubItem' data-id='${subItemval.value}'><i class="bi bi-trash-fill"></i></button></td>
             </tr>`;
 
             listabtnExcluirSubItem = [];
@@ -150,79 +182,47 @@ document.addEventListener('DOMContentLoaded', function(){
 
     function removerSubItem(){
         let id = this.dataset.id
-        for(i in listaSubItem){
-            if(listaSubItem[i].id == id){
+        for(let i=0;i<listaSubItem.length;i++){
+            if(listaSubItem[i].nome == id){
                 listaSubItem.splice(i,1);
             }
         }
-        console.log(listaSubItem)
         this.parentElement.parentElement.remove();
     }
 
     document.getElementById('concluirOS').addEventListener('click', gravar);
 
     function gravar(){
-        const pessoa = document.getElementById('pessoaval');
-        const eqAg = document.getElementById('EqAgricolaval');
-        const servico = document.getElementById('servicoval');
-        const func = document.getElementById('funcval');
+        const idOS = document.getElementById('idOS');
         const comentario = document.getElementById('comentarioval');
-
-        let vetorVal= [];
-        if(pessoa.value == 0)
-            vetorVal.push(pessoa);
-        else
-            pessoa.style.borderColor = '';
-
-        if(eqAg.value == 0)
-            vetorVal.push(eqAg);
-        else
-            eqAg.style.borderColor = '';
-
-        if(servico.value == 0)
-            vetorVal.push(servico);
-        else
-            servico.style.borderColor = '';
-
-        if(func.value == 0)
-            vetorVal.push(func);
-        else
-            func.style.borderColor = '';
-
-        if(vetorVal.length == 0){
-            //if(nome.value && pessoa.value != 0 && preco.value && marca.value != 0){
+        
+        if(listaSubItem.length>0 && confirm('Confirma a conclusão da Ordem de Serviço?')){
                 obj = {
-                    pessoa: pessoa.value,
-                    EqAg: eqAg.value,
-                    servico: servico.value,
-                    func: func.value,
+                    idOS: idOS,
+                    listaInsumo: listaInsumo,
+                    listaSubItem: listaSubItem,
                     comentario: comentario.value
                 }
-                fetch('/admin/ordemServicos/abrir',{
+                fetch('/admin/ordemServicos/concluir',{
                     method: 'POST',
                     headers: {
                         'Content-type': 'application/json'
                     },
                     body: JSON.stringify(obj)
-                    })
-                    .then(function(resposta) {//recebe a resposta como retorno do fetch
-                        return resposta.json(); //converte o corpo da resposta para json (gera uma nova promise)
-                    })
-                    .then(function(corpo) {//recebe o corpo em formato de obj genérico
-                        alert(corpo.msg);
-                        pessoa.value='';
-                        eqAg.value='';
-                        servico.value='';
-                        func.value ='';
-                        comentario.value = '';
+                })
+                .then(function(resposta) {//recebe a resposta como retorno do fetch
+                    return resposta.json(); //converte o corpo da resposta para json (gera uma nova promise)
+                })
+                .then(function(corpo) {//recebe o corpo em formato de obj genérico
+                    alert(corpo.msg);
+                    window.location.replace('/admin/OrdemServicos/');
                 })
             //}
         }
         else{
-            alert('Favor Preencher os Campos Obrigatórios!');
-            for(let i=0; i<vetorVal.length; i++){
-                vetorVal[i].style.borderColor = 'red';
-            }
+            let msgErro = document.getElementById('msgErroFinal'); 
+            msgErro.textContent = 'Favor Inserir ao menos um Sub-Item ao Serviço';
+            msgErro.style.display = 'block';
         }
     }
 })

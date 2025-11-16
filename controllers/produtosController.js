@@ -59,5 +59,12 @@ class produtosController{
         
         res.send({lista});
     }
+
+    async buscarId(req,res){
+        let id = req.body.id;
+        let prod = new produtoModel();
+        prod = await prod.buscarId(id);
+        res.send({prod});
+    }
 }
 module.exports = produtosController;
