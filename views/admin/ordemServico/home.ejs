@@ -1,41 +1,44 @@
-<a href="/admin/OrdemServicos/Abrir"><button class="btn btn-primary">Abrir Ordem de Serviço</button></a>
 <div class="table-responsive">
-
-<table class="table table-bordered mt-3 " style="color: #000;">
-    <thead>
-        <th>ID - OS</th>
-        <th>Proprietário</th>
-        <th>Serviço</th>
-        <th>Equipamento Agrícola</th>
-        <th>Funcionário Responsável</th>
-        <th>Status</th>
-        <th>Comentário</th>
-        <th>Data Abertura</th>
-        <th>Data Conclusão</th>
-        <th>Ações</th>
-    </thead>
-    <tbody>
-        <%for(let i=0;i<listaOS.length;i++) {%>
-            <tr>
-                <td><%=listaOS[i].id%></td>
-                <td><%=listaOS[i].nomePessoa%></td>
-                <td><%=listaOS[i].nomeServico%></td>
-                <td><%=listaOS[i].nomeEqAgricola%></td>
-                <td><%=listaOS[i].nomeFuncionario%></td>
-                <td><%if(listaOS[i].status == 0){%>A Fazer<%}if(listaOS[i].status == 1){%>Concluída<%}if(listaOS[i].status == 2){%>Pagamento Recebido<%}%></td>
-                <td><%=listaOS[i].comentario%></td>
-                <td><%=new Date(listaOS[i].dataAbertura).toLocaleString()%></td>
-                <td><%=listaOS[i].dataConclusao%></td>
-                <td>
-                    <a href="/admin/OrdemServicos/concluir/<%=listaOS[i].id%>" class="btn btn-primary <%if(listaOS[i].status!=0){%>disabled<%}%>"><i class="bi bi-pencil-square"></i>Concluir OS</a>
-                    <a href="/admin/OrdemServicos/receber/<%=listaOS[i].id%>" class="btn btn-primary <%if(listaOS[i].status!=1){%>disabled<%}%>"><i class="bi bi-pencil-square"></i>Receber OS</a>
-                </td>
-            </tr>
-        <%}%>
-    </tbody>
-</table>
+    <div class="container-fluid">
+        <div class="d-flex align-items-center mb-4">
+            <h2 class="mb-0" style="font-size: 24px; font-weight: 600;">
+                <span id="titleSelected">Ordem de Serviços</span>
+            </h2>
+            <a href="/admin/OrdemServicos/Abrir"class="btn btn-success ms-auto">+ Abrir Ordem de Serviço</a>
+        </div>
+    </div>
+    <table class="table table-bordered mt-3 " style="color: #000;">
+        <thead>
+            <th>ID - OS</th>
+            <th>Proprietário</th>
+            <th>Serviço</th>
+            <th>Equipamento Agrícola</th>
+            <th>Funcionário Responsável</th>
+            <th>Status</th>
+            <th>Comentário</th>
+            <th>Data Abertura</th>
+            <th>Data Conclusão</th>
+            <th>Ações</th>
+        </thead>
+        <tbody>
+            <%for(let i=0;i<listaOS.length;i++) {%>
+                <tr>
+                    <td><%=listaOS[i].id%></td>
+                    <td><%=listaOS[i].nomePessoa%></td>
+                    <td><%=listaOS[i].nomeServico%></td>
+                    <td><%=listaOS[i].nomeEqAgricola%></td>
+                    <td><%=listaOS[i].nomeFuncionario%></td>
+                    <td><%if(listaOS[i].status == 0){%>A Fazer<%}if(listaOS[i].status == 1){%>Concluída<%}if(listaOS[i].status == 2){%>Pagamento Recebido<%}%></td>
+                    <td><%=listaOS[i].comentario%></td>
+                    <td><%=new Date(listaOS[i].dataAbertura).toLocaleString()%></td>
+                    <%if(listaOS[i].status == 1){%><td><%=new Date(listaOS[i].dataConclusao).toLocaleString()%></td><%}else{%><td>A concluir</td><%}%>
+                    <td>
+                        <a href="/admin/OrdemServicos/concluir/<%=listaOS[i].id%>" class="btn btn-primary <%if(listaOS[i].status!=0){%>disabled<%}%>"><i class="bi bi-pencil-square"></i>Concluir OS</a>
+                        <a href="/admin/OrdemServicos/receber/<%=listaOS[i].id%>" class="btn btn-primary <%if(listaOS[i].status!=1){%>disabled<%}%>"><i class="bi bi-pencil-square"></i>Receber OS</a>
+                    </td>
+                </tr>
+            <%}%>
+        </tbody>
+    </table>
 
 </div>
-<a href="/admin/OrdemServicos/Concluir"><button class="btn btn-primary">Concluir Ordem de Serviço</button></a>
-<a href="/admin/OrdemServicos/Receber"><button class="btn btn-primary">Efetuar Recebimento de Ordem de Serviço</button></a>
-<a href="/admin/OrdemServicos/Listar"><button class="btn btn-primary">Listar Ordem de Serviço</button></a>

@@ -1,5 +1,8 @@
+const itensUsadosOSModel = require("../models/itensUsadosOSModel");
 const OrdemDeServicoModel = require("../models/ordemServicoModel");
+const produtoModel = require("../models/produtoModel");
 const ServicoModel = require("../models/servicoModel");
+const subItemModel = require("../models/subItemModel");
 
 class OrdemDeServicoController{
     async homeView(req,res){
@@ -44,6 +47,42 @@ class OrdemDeServicoController{
             msg = 'Falha ao abrir Ordem de Serviço!';
         }
         res.send({ok,msg});
+    }
+    async concluirOS(req,res){
+        let ok;
+        let msg;
+        let idOS = req.body.idOS;
+        let listaInsumo = req.body.listaInsumo;
+        let listaSubItem = req.body.listaSubItem;
+        let comentario = req.body.comentario;
+        console.log(idOS,listaInsumo,listaSubItem,comentario)
+
+        let os = new OrdemDeServicoModel(idOS,null,null,null,null,null,null,null,comentario);
+        let result = await os.concluirOS(); 
+        if(true){
+            ok = true;
+            let subItem;
+            for(let i=0;i<listaSubItem.length;i++){
+                subItem = new subItemModel(null,idOS,listaSubItem[i].idFunc,null,listaSubItem[i].nome);
+                let result = await subItem.gravar();
+                if(!result){i=listaSubItem.length; ok = false};
+            }
+            let itUsadoOS;
+            for(let i=0;i<listaInsumo.length;i++){
+                let insumo = new produtoModel();
+                insumo = await insumo.buscarId(listaInsumo[i].idProd);
+                itUsadoOS = new itensUsadosOSModel(null,idOS,listaInsumo[i].idProd,null,listaInsumo[i].qtd,insumo.preco);
+                let result = await itUsadoOS.gravar();
+                if(result){
+                    ok = await insumo.atualizarEstoque(-(listaInsumo[i].qtd));
+                    if(!ok){msg = 'Erro ao Atualizar Estoque do item '+insumo.nome; i = listaInsumo.length};
+                }
+                else{i = listaInsumo.length; ok = false};
+            }
+            if(ok){msg = 'Ordem de Serviço cadastrada com Sucesso!'};
+        }
+
+        res.send({ok,msg})
     }
 }
 module.exports = OrdemDeServicoController;

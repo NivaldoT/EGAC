@@ -66,7 +66,7 @@ class OrdemDeServicoModel{
 
     async concluirOS(){
         let sql = 'update tb_OrdemDeServico set os_status = ?, os_dataConclusao = ?, os_comentario = ? where os_id = ?;';
-        let valores = [1, this.dataConclusao, this.comentario, this.id];
+        let valores = [1, new Date(), this.comentario, this.id];
         let banco = new Database();
         let result = await banco.ExecutaComandoNonQuery(sql,valores);
 

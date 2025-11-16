@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function(){
     //     voltar.href = '/admin/listagem/'+tipo.value;
     // })
 
+    const inputIsFunc = document.getElementById('isFunc');
     const nome = document.getElementById('nomeval');
     const telefone = document.getElementById('telefoneval');
     const cpf = document.getElementById('cpfval');
@@ -82,13 +83,17 @@ document.addEventListener('DOMContentLoaded', function(){
             valido = false
         }
         if(valido){
+            let isFunc = 0;
+            if(inputIsFunc.checked){
+                isFunc = 1;
+            }
             obj = {
                 nome: nome.value,
                 telefone: telefone.value,
                 cpf: cpf.value,
                 email: email.value,
                 senha: senha.value,
-                isFunc: 0
+                isFunc: isFunc
             }
             fetch('/admin/PFCadastro',{
                 method: 'POST',

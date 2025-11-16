@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function(){
         .then(function(corpo){
             selectEqAg.innerHTML = '';
             if(corpo.lista.length == 0 ){
-                selectEqAg.innerHTML = '<option value="0">'+selectPessoa.textContent+' não possui Equipamentos Agrícolas cadastrados!</option>'
+                selectEqAg.innerHTML = '<option value="0">'+selectPessoa[selectPessoa.selectedIndex].textContent+' não possui Equipamentos Agrícolas cadastrados!</option>'
             }
             for(let i=0; i < corpo.lista.length;i++){
                 let EqAg = corpo.lista[i];
