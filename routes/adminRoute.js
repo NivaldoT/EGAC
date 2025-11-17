@@ -78,7 +78,7 @@ router.get('/listagem/:tipo', adminController.listarItemView);
 router.get('/ordemServicos', ordemServicoController.homeView);
 router.get('/ordemServicos/abrir', ordemServicoController.abrirView);
 router.get('/ordemServicos/concluir/:id', ordemServicoController.concluirView);
-router.get('/ordemServicos/receber/:id', ordemServicoController.homeView);
+router.get('/ordemServicos/receber/:id', ordemServicoController.receberView);
 
 router.post('/ordemServicos/abrir', ordemServicoController.abrirOS);
 router.post('/ordemServicos/concluir', ordemServicoController.concluirOS);

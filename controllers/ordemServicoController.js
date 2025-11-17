@@ -26,6 +26,12 @@ class OrdemDeServicoController{
         os = await os.buscarId();
         res.render('admin/ordemServico/concluir.ejs',{os: os,layout: 'layout_admin'});
     }
+    async receberView(req,res){
+        let id = req.params.id;
+        let os = new OrdemDeServicoModel(id);
+        os = await os.buscarId();
+        res.render('admin/ordemServico/receber.ejs',{os: os,layout: 'layout_admin'});
+    }
     async abrirOS(req,res){
         console.log(req.body)
         let pessoa = req.body.pessoa;
@@ -59,7 +65,7 @@ class OrdemDeServicoController{
 
         let os = new OrdemDeServicoModel(idOS,null,null,null,null,null,null,null,comentario);
         let result = await os.concluirOS(); 
-        if(true){
+        if(result){
             ok = true;
             let subItem;
             for(let i=0;i<listaSubItem.length;i++){
@@ -80,6 +86,10 @@ class OrdemDeServicoController{
                 else{i = listaInsumo.length; ok = false};
             }
             if(ok){msg = 'Ordem de Serviço cadastrada com Sucesso!'};
+        }
+        else{
+            ok = false;
+            msg = 'Erro ao concluir Ordem de Serviço!';
         }
 
         res.send({ok,msg})
