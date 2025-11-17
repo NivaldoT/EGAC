@@ -81,7 +81,7 @@ router.get('/ordemServicos/concluir/:id', ordemServicoController.concluirView);
 router.get('/ordemServicos/receber/:id', ordemServicoController.homeView);
 
 router.post('/ordemServicos/abrir', ordemServicoController.abrirOS);
-router.post('/ordemServicos/concluir', ordemServicoController.concluirView);
+router.post('/ordemServicos/concluir', ordemServicoController.concluirOS);
 
 router.get('/alterarItem/:tipo/:id', adminController.alterarItemView);
 router.get('/alterarCliente/:tipo/:id', adminController.alterarClienteView);

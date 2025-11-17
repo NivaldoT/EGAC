@@ -131,6 +131,13 @@ class produtoModel{
         }
         return lista;
     }
+    async atualizarEstoque(qtd){
+        let sql = 'update tb_Produto set prod_estoque = prod_estoque +(?) where prod_id = ?';
+        let valores = [qtd, this.#id];
+        let banco = new Database();
+        let result = await banco.ExecutaComandoNonQuery(sql,valores);
+        return result;
+    }
 
     toJSON(){
         return{

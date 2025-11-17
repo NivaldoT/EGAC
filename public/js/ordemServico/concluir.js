@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function(){
         }
         if(ok){
             for(i in listaInsumo){
-                if(listaInsumo[i].id == selectInsumo.value){
+                if(listaInsumo[i].idProd == selectInsumo.value){
                     ok = false;
                     msgErroInsumo.textContent = 'Este item já foi adicionado!';
                 }
@@ -68,19 +68,20 @@ document.addEventListener('DOMContentLoaded', function(){
                     return resposta.json(); //converte o corpo da resposta para json (gera uma nova promise)
                 })
                 .then(function(corpo) {//recebe o corpo em formato de obj genérico
-                    console.log(corpo.prod);
+                    //console.log(corpo.prod);
                     prod = corpo.prod;
                     if(prod.estoque < inputInsumoQtd.value){
                         ok = false;
                         msgErroInsumo.textContent = 'Quantidade inválida, Quantidade no estoque: '+prod.estoque;
                     }
                     if(ok){
-                        listaInsumo.push({id: selectInsumo.value, qtd: inputInsumoQtd.value});
+                        listaInsumo.push({idProd: selectInsumo.value, qtd: inputInsumoQtd.value});
+                        console.log(listaInsumo);
                         
                         tableInsumo.innerHTML+= `
                         <tr>
                         <td>${selectInsumo.value}</td>
-                        <td>${selectInsumo.textContent}</td>
+                        <td>${selectInsumo[selectInsumo.selectedIndex].textContent}</td>
                         <td>${inputInsumoQtd.value}</td>
                         <td><button class='btn btn-danger btnExcluirInsumo' data-id='${selectInsumo.value}'><i class="bi bi-trash-fill"></i></button></td>
                         </tr>`;
@@ -99,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function(){
     function removerInsumo(){
         let id = this.dataset.id
         for(let i=0; i< listaInsumo.length;i++){
-            if(listaInsumo[i].id == id){
+            if(listaInsumo[i].idProd == id){
                 listaInsumo.splice(i,1);
             }
         }
@@ -160,13 +161,13 @@ document.addEventListener('DOMContentLoaded', function(){
             }
         }
         if(ok){
-            listaSubItem.push({id: selectFuncionario.value, nome: subItemval.value});
+            listaSubItem.push({idFunc: selectFuncionario.value, nome: subItemval.value});
             console.log(listaSubItem);
             
             tableSubItem.innerHTML+= `
             <tr>
             <td>${selectFuncionario.value}</td>
-            <td>${selectFuncionario[0].textContent}</td>
+            <td>${selectFuncionario[selectFuncionario.selectedIndex].textContent}</td>
             <td>${subItemval.value}</td>
             <td><button class='btn btn-danger btnExcluirSubItem' data-id='${subItemval.value}'><i class="bi bi-trash-fill"></i></button></td>
             </tr>`;
@@ -197,27 +198,28 @@ document.addEventListener('DOMContentLoaded', function(){
         const comentario = document.getElementById('comentarioval');
         
         if(listaSubItem.length>0 && confirm('Confirma a conclusão da Ordem de Serviço?')){
-                obj = {
-                    idOS: idOS,
-                    listaInsumo: listaInsumo,
-                    listaSubItem: listaSubItem,
-                    comentario: comentario.value
-                }
-                fetch('/admin/ordemServicos/concluir',{
-                    method: 'POST',
-                    headers: {
-                        'Content-type': 'application/json'
-                    },
-                    body: JSON.stringify(obj)
-                })
-                .then(function(resposta) {//recebe a resposta como retorno do fetch
-                    return resposta.json(); //converte o corpo da resposta para json (gera uma nova promise)
-                })
-                .then(function(corpo) {//recebe o corpo em formato de obj genérico
-                    alert(corpo.msg);
+            obj = {
+                idOS: idOS.value,
+                listaInsumo: listaInsumo,
+                listaSubItem: listaSubItem,
+                comentario: comentario.value
+            }
+            fetch('/admin/ordemServicos/concluir',{
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(obj)
+            })
+            .then(function(resposta) {//recebe a resposta como retorno do fetch
+                return resposta.json(); //converte o corpo da resposta para json (gera uma nova promise)
+            })
+            .then(function(corpo) {//recebe o corpo em formato de obj genérico
+                alert(corpo.msg);
+                if(corpo.ok){
                     window.location.replace('/admin/OrdemServicos/');
-                })
-            //}
+                }
+            })
         }
         else{
             let msgErro = document.getElementById('msgErroFinal'); 
