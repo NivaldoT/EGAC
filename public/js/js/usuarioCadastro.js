@@ -19,8 +19,6 @@ document.addEventListener('DOMContentLoaded', function(){
     formulario.addEventListener('submit', function(e){
         e.preventDefault();
 
-        console.log('Formulário submetido');
-
         erroNome.textContent = '';
         erroTelefone.textContent = '';
         erroCpf.textContent = '';
@@ -76,8 +74,6 @@ document.addEventListener('DOMContentLoaded', function(){
             erroConfirmar.textContent = 'As senhas não coincidem.';
             valido = false;
         }
-
-        console.log('Validação completa. Válido:', valido);
 
         if(valido){
             let obj = {
