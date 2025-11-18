@@ -33,7 +33,7 @@ th{
 
 /* Estilo exclusivo para inputs do formulário */
 #formulario-cadastro input {
-  font-size: 1.1875rem;
+  font-size: 1rem;
   color: #404040;
   padding: 1rem 0 0.5rem 0;
   width: 100%;
@@ -44,7 +44,7 @@ th{
 }
 
 #formulario-login input {
-  font-size: 1.1875rem;
+  font-size: 1rem;
   color: #404040;
   padding-top: 2rem;
   padding-left: 0.5rem;
