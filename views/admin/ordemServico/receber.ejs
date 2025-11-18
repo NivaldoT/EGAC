@@ -41,110 +41,13 @@
     </div>
     <div id="form">
         <input type="hidden" value="<%=os.id%>" id="idOS">
-        <div class="form-floating mb-3" id="pessoa">
-            <select name="pessoa" id="pessoaval" class="form-control">
-                <option value="" selected><%=os.nomePessoa%></option>
-            </select>
-            <label for="pessoaval">Proprietário:</label>
-        </div>
-
-        <div class="form-floating mb-3" id="EqAgricola">
-            <select name="EqAgricola" id="EqAgricolaval" class="form-control">
-            <option value="" selected><%=os.nomeEqAgricola%></option>
-            </select>
-            <label for="EqAgricolaval">Equipamento Agrícola:</label>
-        </div>
-
-        <div class="form-floating mb-3" id="servico">
-            <select name="servico" id="servicoval" class="form-control">
-            <option value=""><%=os.nomeServico%></option>
-            </select>
-            <label for="servicoval">Serviço:</label>
-        </div>
-
-        <div class="form-floating mb-3" id="func">
-            <select name="func" id="funcjafeito" class="form-control">
-            <option value="" selected><%=os.nomeFuncionario%></option>
-            </select>
-            <label for="funcjafeito">Funcionário responsável:</label>
-        </div>
-
-        <div class="form-floating mb-3" id="comentario"> 
-            <input type="text" class="form-control" id="comentarioval" placeholder=" " maxlength="200" value="<%if(os.comentario){%><%=os.comentario%><%}%>">
-            <label for="comentarioval">Altere o Comentário(Opcional):</label>
-        </div>
-
-        <div class="container">
-        
-        <div class="row shadow-lg p-3">  
-            <h4>Adicionar Sub-Itens ao Serviço</h4>
-            <div class="form-floating mb-3 col-sm-3" id="subItem">
-                <input type="text" name="subItem" id="subItemval" class="form-control" placeholder=" ">
-                <label for="subItemval">Nome Sub-Item:</label>
-            </div>
-            <div class="form-floating mb-3 col-sm-5" id="procurarFunc">
-                <input type="text" class="form-control" id="procurarFuncval" placeholder=" " maxlength="100">
-                <label for="procurarFuncval">Insira o nome do funcionário responsável:</label>
-            </div>
-            <div class="form-floating mb-3 col-lg-4" id="func">
-                <select name="func" id="funcval" class="form-control">
-                <option value="0" selected>Busque o funcionário no campo ao lado...</option>
-                </select>
-                <label for="funcval">Funcionário responsável:</label>
-            </div>            
-            <div>
-                <button class="btn btn-primary mb-4" id="AddSubItem">Adicionar Sub-Item à Ordem de Serviço</button>
-                <span class="text-danger align-items-center" id="msgErroSubItem"></span>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-bordered mt-3" id="tableSubItem" style="color: #000;">
-                    <thead>
-                        <th>ID - Funcionário</th>
-                        <th>Funcionário</th>
-                        <th>Sub-Item</th>
-                        <th>Remover</th>
-                    </thead>
-                </table>
-            </div>
-        </div>
-        <br><br>
-
-        <div class="row shadow-lg p-3">
-            <h4>Adicionar Insumos ao Serviço</h4>
-            <div class="form-floating mb-3 col-sm-3" id="procurarInsumo"> 
-                <input type="text" class="form-control" id="procurarInsumoval" placeholder=" " maxlength="100">
-                <label for="procurarInsumoval">Selecione o insumo utlizado:</label>
-            </div>
-            <div class="form-floating mb-3 col-sm-5" id="pessoa">
-                <select name="pessoa" id="insumoval" class="form-control">
-                    <option value="0" selected>Busque o insumo no campo ao lado...</option>
-                </select>
-                <label for="insumoval">Insumo:</label>
-            </div>
-            <div class="form-floating mb-3 col-sm-4" id="quantidade">
-                <input type="text" name="quantidade" id="quantidadeInsumoval" class="form-control" placeholder=" ">
-                <label for="quantidadeval">Quantidade:</label>
-            </div>
-            <div>
-                <button class="btn btn-primary mb-4" id="AddInsumo">Adicionar insumo à Ordem de Serviço</button>
-                <span class="text-danger align-items-center" id="msgErroInsumo"></span>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-bordered mt-3" id="" style="color: #000;">
-                    <thead>
-                        <th>ID</th>
-                        <th>Insumo</th>
-                        <th>Quantidade</th>
-                        <th>Remover</th>
-                    </thead>
-                    <tbody id="tableInsumo">
-                    </tbody>
-                </table>
-            </div>
+        <div class="form-floating mb-3" id="parcela">
+            <input type="text" class="form-control" max="12" id="inputParcelas">
+            <label for="parcelaval">Quantidade de parcelas(Entre 1x e 12x):</label>
         </div>
         <br><br>
         <div class="alert alert-danger" id="msgErroFinal" style="display: none;"></div>
-        <button class="btn btn-primary" id="concluirOS">Concluir Ordem de Serviço</button>
+        <button class="btn btn-primary" id="receberOS">Confirmar Recebimento de Ordem de Serviço</button>
         <a href="/admin/OrdemServicos" class="btn btn-secondary">Voltar</a>
     </div>
     </div>
