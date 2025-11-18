@@ -1,3 +1,4 @@
+const ContaReceberModel = require("../models/contaReceberModel");
 const itensUsadosOSModel = require("../models/itensUsadosOSModel");
 const OrdemDeServicoModel = require("../models/ordemServicoModel");
 const produtoModel = require("../models/produtoModel");
@@ -25,6 +26,12 @@ class OrdemDeServicoController{
         let os = new OrdemDeServicoModel(id);
         os = await os.buscarId();
         res.render('admin/ordemServico/concluir.ejs',{os: os,layout: 'layout_admin'});
+    }
+    async receberView(req,res){
+        let id = req.params.id;
+        let os = new OrdemDeServicoModel(id);
+        os = await os.buscarId();
+        res.render('admin/ordemServico/receber.ejs',{os: os,layout: 'layout_admin'});
     }
     async abrirOS(req,res){
         console.log(req.body)
@@ -59,7 +66,7 @@ class OrdemDeServicoController{
 
         let os = new OrdemDeServicoModel(idOS,null,null,null,null,null,null,null,comentario);
         let result = await os.concluirOS(); 
-        if(true){
+        if(result){
             ok = true;
             let subItem;
             for(let i=0;i<listaSubItem.length;i++){
@@ -81,8 +88,39 @@ class OrdemDeServicoController{
             }
             if(ok){msg = 'Ordem de Serviço cadastrada com Sucesso!'};
         }
+        else{
+            ok = false;
+            msg = 'Erro ao concluir Ordem de Serviço!';
+        }
 
         res.send({ok,msg})
+    }
+    async receberOS(req,res){
+        let ok = true;
+        let msg;
+        let idOS = req.body.idOS;
+        let numParcelas = req.body.numParcelas;
+
+        let os = new OrdemDeServicoModel(idOS);
+        os = await os.buscarId();
+        if(os != null){
+            ok = await os.receberOS();
+            if(ok){
+                for(let i = 0; i<numParcelas;i++){
+                    let hj =  new Date();
+                    let dataVencimento = hj.setMonth(hj.getMonth()+i+1);
+                    let contaRE = new ContaReceberModel(null,1,idOS,new Date(dataVencimento), 0, i+1, numParcelas);
+                    ok = await contaRE.gravar();
+                    if(!ok){i = numParcelas; ok = false; msg = 'Falha ao gravar Conta a Pagar'}; // ver CHAVES prova = função báisca fundmental saída
+                }
+            }
+
+        }
+        else{
+            ok = false;
+            msg = 'Ordem de serviço de ID = '+idOS+' não encontrada!';
+        }
+        res.send({ok,msg});
     }
 }
 module.exports = OrdemDeServicoController;

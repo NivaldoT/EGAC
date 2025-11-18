@@ -11,7 +11,7 @@ class HomeController {
         let listaCategorias = await categoriaModel.listar();
         
         let produtoModel = new ProdutoModel();
-        let listaProdutos = await produtoModel.listarProd();
+        let listaProdutos = await produtoModel.listar();
         
         res.render('shop/shop', {listaCategorias: listaCategorias, listaProdutos: listaProdutos});
     }

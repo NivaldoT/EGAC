@@ -114,13 +114,16 @@ class OrdemDeServicoModel{
         let banco = new Database();
         let rows = await banco.ExecutaComando(sql,valores);
 
-        let os = new OrdemDeServicoModel(rows['0']['os_id'],rows['0']['os_idPessoa'],rows['0']['os_idServico'],rows['0']['os_idEqAgricola'],rows['0']['os_idFuncionario'],rows['0']['os_status'],rows['0']['os_dataAbertura'],rows['0']['os_dataConclusao'],rows['0']['os_comentario']);
-            os.#nomePessoa = rows['0']['nomeCliente'];
-            os.#nomeFuncionario = rows['0']['nomeFuncionario'];
-            os.#nomeEqAgricola = rows['0']['eq_nome'];
-            os.#nomeServico = rows['0']['serv_nome'];
-        
-            return os;
+        if(rows.length>0){
+            let os = new OrdemDeServicoModel(rows['0']['os_id'],rows['0']['os_idPessoa'],rows['0']['os_idServico'],rows['0']['os_idEqAgricola'],rows['0']['os_idFuncionario'],rows['0']['os_status'],rows['0']['os_dataAbertura'],rows['0']['os_dataConclusao'],rows['0']['os_comentario']);
+                os.#nomePessoa = rows['0']['nomeCliente'];
+                os.#nomeFuncionario = rows['0']['nomeFuncionario'];
+                os.#nomeEqAgricola = rows['0']['eq_nome'];
+                os.#nomeServico = rows['0']['serv_nome'];
+            
+                return os;
+        }
+        else{return null};
     }
 
 }

@@ -1,0 +1,59 @@
+<script src="/js/ordemServico/receber.js" defer></script>
+<div class="container">
+    <h1>Receber Ordem de Serviço</h1>
+    <div class="table-responsive">
+        <table class="table table-bordered mt-3" style="color: #000;">
+            <thead>
+                <th>Dados</th>
+                <th>Informações sobre OS</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ID - OS</td>
+                    <td><%=os.id%></td>
+                </tr>
+                <tr>
+                    <td>Cliente</td>
+                    <td><%=os.nomePessoa%></td>
+                </tr>
+                <tr>
+                    <td>Equipamento Agrícola</td>
+                    <td><%=os.nomeEqAgricola%></td>
+                </tr>
+                <tr>
+                    <td>Serviço</td>
+                    <td><%=os.nomeServico%></td>
+                </tr>
+                <tr>
+                    <td>Funcionário Responsável</td>
+                    <td><%=os.nomeFuncionario%></td>
+                </tr>
+                <tr>
+                    <td>Data de Abertura</td>
+                    <td><%=(new Date(os.dataAbertura)).toLocaleString()%></td>
+                </tr>
+                <tr>
+                    <td>Data de Conclusão</td>
+                    <td><%=(new Date(os.dataConclusao)).toLocaleString()%></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="form">
+        <input type="hidden" value="<%=os.id%>" id="idOS">
+        <div class="form-floating mb-3" id="parcela">
+            <input type="text" class="form-control" max="12" id="inputParcelas">
+            <label for="parcelaval">Quantidade de parcelas(Entre 1x e 12x):</label>
+        </div>
+        <br><br>
+        <div class="alert alert-danger" id="msgErroFinal" style="display: none;"></div>
+        <button class="btn btn-primary" id="receberOS">Confirmar Recebimento de Ordem de Serviço</button>
+        <a href="/admin/OrdemServicos" class="btn btn-secondary">Voltar</a>
+    </div>
+    </div>
+</div>
+<style>
+    .row label{
+        padding-left: 1.5rem
+    }
+</style>
