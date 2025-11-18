@@ -64,7 +64,17 @@ class produtoModel{
         
         let lista = [];
         for(let i=0; i<rows.length;i++){
-            lista.push(new produtoModel(rows[i]['prod_id'],rows[i]['prod_tipo'], rows[i]['prod_nome'], rows[i]['prod_preco'], rows[i]['prod_descricao'], rows[i]['prod_categoria'], rows[i]['categoria_nome'], rows[i]['prod_marca'], rows[i]['marca_nome'], rows[i]['prod_estoque'], rows[i]['prod_imagem']));
+            // Formatar caminho da imagem
+            const fs = require('fs');
+            let imagemPath = "";
+            if(rows[i]['prod_imagem'] != null && fs.existsSync(global.CAMINHO_IMG_PRODUTOS_ABS + rows[i]['prod_imagem'])) {
+                imagemPath = global.CAMINHO_IMG_PRODUTOS + rows[i]['prod_imagem'];
+            } else {
+                imagemPath = "/images/produto-sem-imagem.webp"; // 
+            }
+            
+            let produto = new produtoModel(rows[i]['prod_id'],rows[i]['prod_tipo'], rows[i]['prod_nome'], rows[i]['prod_preco'], rows[i]['prod_descricao'], rows[i]['prod_categoria'], rows[i]['categoria_nome'], rows[i]['prod_marca'], rows[i]['marca_nome'], rows[i]['prod_estoque'], imagemPath);
+            lista.push(produto);
         }
 
         return lista;
@@ -77,11 +87,22 @@ class produtoModel{
         
         let lista = [];
         for(let i=0; i<rows.length;i++){
-            lista.push(new produtoModel(rows[i]['prod_id'],rows[i]['prod_tipo'], rows[i]['prod_nome'], rows[i]['prod_preco'], rows[i]['prod_descricao'], rows[i]['prod_categoria'], rows[i]['categoria_nome'], rows[i]['prod_marca'], rows[i]['marca_nome'], rows[i]['prod_estoque'], rows[i]['prod_imagem']));
+            // Formatar caminho da imagem
+            const fs = require('fs');
+            let imagemPath = "";
+            if(rows[i]['prod_imagem'] != null && fs.existsSync(global.CAMINHO_IMG_PRODUTOS_ABS + rows[i]['prod_imagem'])) {
+                imagemPath = global.CAMINHO_IMG_PRODUTOS + rows[i]['prod_imagem'];
+            } else {
+                imagemPath = "/images/produto-default.png"; // imagem padrão se não existir
+            }
+            
+            let produto = new produtoModel(rows[i]['prod_id'],rows[i]['prod_tipo'], rows[i]['prod_nome'], rows[i]['prod_preco'], rows[i]['prod_descricao'], rows[i]['prod_categoria'], rows[i]['categoria_nome'], rows[i]['prod_marca'], rows[i]['marca_nome'], rows[i]['prod_estoque'], imagemPath);
+            lista.push(produto);
         }
 
         return lista;
     }
+
     async listarInsumo(){
         const sql ='select * from tb_Produto p inner join tb_Categoria c on p.prod_categoria = c.categoria_id inner join tb_Marca m on p.prod_marca = m.marca_id where prod_tipo = 2';
         const banco = new Database();

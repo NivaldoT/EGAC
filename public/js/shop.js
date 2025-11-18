@@ -1,104 +1,135 @@
 
 function addToCart(product) {
-    const cartTable = document.querySelector(".cart-section .table-cart tbody");
-    if (!cartTable) return;
-
     const name = product.getAttribute("data-name");
     const price = parseFloat(product.getAttribute("data-price"));
     const img = product.getAttribute("data-img");
 
-    // Verifica se já existe o produto no carrinho
-    let existingRow = Array.from(cartTable.rows).find(row => row.cells[2] && row.cells[2].innerText === name);
-    if (existingRow) {
-        // Atualiza quantidade e total
-        let qtyCell = existingRow.cells[4].querySelector('.cart-qty');
-        let totalCell = existingRow.cells[5];
-        let qty = parseInt(qtyCell.innerText) + 1;
-        qtyCell.innerText = qty;
-        totalCell.innerText = "R$" + (qty * price).toFixed(2);
+    // Salvar no localStorage
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let existingProduct = cart.find(item => item.name === name);
+    
+    if (existingProduct) {
+        existingProduct.quantity += 1;
     } else {
-        // Adiciona nova linha
-        let row = cartTable.insertRow();
-        row.innerHTML = `
-            <td><button class="cart-remove btn btn-link" title="Remover" style="color:black;font-size:18px;">&times;</button>
-            </td>
-            <td>
-                <img src="${img}" alt="" style="width:40px;height:40px;object-fit:cover;margin-left:5px;">
-            </td>
-            <td>${name}</td>
-            <td>R$${price.toFixed(2)}</td>
-            <td>
-                <button class="cart-qty-minus btn btn-sm btn-light" style="margin-right:3px;">-</button>
-                <span class="cart-qty">1</span>
-                <button class="cart-qty-plus btn btn-sm btn-light" style="margin-left:3px;">+</button>
-            </td>
-            <td>R$${price.toFixed(2)}</td>
-        `;
+        cart.push({ name, price, img, quantity: 1 });
     }
-
-    updateCartEvents();
-    updateCartCount();
-    updateCartTotal();
+    
+    localStorage.setItem('cart', JSON.stringify(cart));
+    
+    // Atualizar carrinho visual
+    renderSidebarCart();
 }
 
-function updateCartEvents() {
+function renderSidebarCart() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const container = document.getElementById('cart-items-sidebar');
+    
+    if (!container) return;
+    
+    if (cart.length === 0) {
+        container.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">Seu carrinho está vazio</p>';
+        updateSidebarTotals();
+        return;
+    }
+    
+    container.innerHTML = '';
+    
+    cart.forEach((item, index) => {
+        const itemDiv = document.createElement('div');
+        itemDiv.style.cssText = 'display: flex; align-items: center; gap: 15px; padding: 15px; background: #f9f9f9; border-radius: 8px; margin-bottom: 10px;';
+        itemDiv.setAttribute('data-index', index);
+        itemDiv.setAttribute('data-price', item.price);
+        
+        itemDiv.innerHTML = `
+            <button class="cart-remove-sidebar" style="background: none; border: none; color: #999; font-size: 24px; cursor: pointer; padding: 0; line-height: 1;" data-index="${index}">&times;</button>
+            <img src="${item.img}" style="width: 50px; height: 50px; object-fit: contain; border-radius: 4px;">
+            <div style="flex: 1; min-width: 0;">
+                <div style="font-size: 14px; color: #333; margin-bottom: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${item.name}</div>
+                <div style="display: inline-flex; align-items: center; gap: 8px; border: 1px solid #ddd; border-radius: 4px; padding: 2px 8px; background: #fff;">
+                    <button class="sidebar-qty-minus" data-index="${index}" style="background: none; border: none; color: #82ae46; font-size: 18px; cursor: pointer; padding: 0;">−</button>
+                    <span class="sidebar-qty-value" style="min-width: 20px; text-align: center; font-size: 14px;">${item.quantity}</span>
+                    <button class="sidebar-qty-plus" data-index="${index}" style="background: none; border: none; color: #82ae46; font-size: 18px; cursor: pointer; padding: 0;">+</button>
+                </div>
+            </div>
+            <div style="font-size: 16px; font-weight: 500; color: #333; white-space: nowrap;">R$ ${Math.floor(item.price * item.quantity)},<sup style="font-size: 12px;">${String(((item.price * item.quantity) % 1).toFixed(2)).split('.')[1]}</sup></div>
+        `;
+        
+        container.appendChild(itemDiv);
+    });
+    
+    attachSidebarEventListeners();
+    updateSidebarTotals();
+}
+
+function attachSidebarEventListeners() {
     // Remover item
-    document.querySelectorAll('.cart-remove').forEach(btn => {
-        btn.onclick = function () {
-            const row = btn.closest('tr');
-            if (row) row.remove();
-            updateCartCount();
-            updateCartTotal();
-        };
+    document.querySelectorAll('.cart-remove-sidebar').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const index = parseInt(this.getAttribute('data-index'));
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            renderSidebarCart();
+        });
     });
-
+    
     // Diminuir quantidade
-    document.querySelectorAll('.cart-qty-minus').forEach(btn => {
-        btn.onclick = function () {
-            const row = btn.closest('tr');
-            const qtySpan = row.querySelector('.cart-qty');
-            let qty = parseInt(qtySpan.innerText);
-            if (qty > 1) {
-                qty--;
-                qtySpan.innerText = qty;
-                const price = parseFloat(row.cells[3].innerText.replace("R$", "").replace(",", "."));
-                row.cells[5].innerText = "R$" + (qty * price).toFixed(2);
+    document.querySelectorAll('.sidebar-qty-minus').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const index = parseInt(this.getAttribute('data-index'));
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            if (cart[index].quantity > 1) {
+                cart[index].quantity -= 1;
+                localStorage.setItem('cart', JSON.stringify(cart));
+                renderSidebarCart();
             } else {
-                row.remove();
+                cart.splice(index, 1);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                renderSidebarCart();
             }
-            updateCartCount();
-            updateCartTotal();
-        };
+        });
     });
-
+    
     // Aumentar quantidade
-    document.querySelectorAll('.cart-qty-plus').forEach(btn => {
-        btn.onclick = function () {
-            const row = btn.closest('tr');
-            const qtySpan = row.querySelector('.cart-qty');
-            let qty = parseInt(qtySpan.innerText);
-            qty++;
-            qtySpan.innerText = qty;
-            const price = parseFloat(row.cells[3].innerText.replace("R$", "").replace(",", "."));
-            row.cells[5].innerText = "R$" + (qty * price).toFixed(2);
-            updateCartCount();
-            updateCartTotal();
-        };
+    document.querySelectorAll('.sidebar-qty-plus').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const index = parseInt(this.getAttribute('data-index'));
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart[index].quantity += 1;
+            localStorage.setItem('cart', JSON.stringify(cart));
+            renderSidebarCart();
+        });
     });
+}
+
+function updateSidebarTotals() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let subtotal = 0;
+    let itemCount = 0;
+    
+    cart.forEach(item => {
+        subtotal += item.price * item.quantity;
+        itemCount += item.quantity;
+    });
+    
+    const totalParts = subtotal.toFixed(2).split('.');
+    document.getElementById('sidebar-total').textContent = totalParts[0];
+    document.getElementById('sidebar-total-cents').textContent = totalParts[1];
+    
+    // Atualizar contador no ícone do carrinho
+    updateCartCount();
 }
 
 function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let totalItems = 0;
+    cart.forEach(item => {
+        totalItems += item.quantity;
+    });
+    
     const cartCount = document.querySelector('.btn-cart .icon-shopping_cart');
     if (cartCount) {
-        const cartTableRows = document.querySelectorAll('.cart-section .table-cart tbody tr');
-        let totalItems = 0;
-        cartTableRows.forEach(row => {
-            const qtySpan = row.querySelector('.cart-qty');
-            if (qtySpan) {
-                totalItems += parseInt(qtySpan.innerText) || 0;
-            }
-        });
-        // Atualiza o número dentro do [ ]
         const countText = cartCount.nextSibling;
         if (countText && countText.nodeType === Node.TEXT_NODE) {
             countText.textContent = `[${totalItems}]`;
@@ -107,19 +138,7 @@ function updateCartCount() {
 }
 
 function updateCartTotal() {
-    const cartTable = document.querySelector(".cart-section .table-cart tbody");
-    let total = 0;
-    Array.from(cartTable.rows).forEach(row => {
-        let totalCell = row.cells[5];
-        if (totalCell) {
-            let value = parseFloat(totalCell.innerText.replace("R$", "").replace(",", "."));
-            total += value;
-        }
-    });
-    const totalDisplay = document.querySelector(".cart-section .cart-total h3");
-    if (totalDisplay) {
-        totalDisplay.innerText = "Total: R$" + total.toFixed(2);
-    }
+    // Função mantida para compatibilidade, mas não mais usada
 }
 
 document.querySelectorAll('.buy-now').forEach(btn => {
@@ -177,6 +196,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 cartSection.classList.remove("cart-inactive");
                 cartSection.classList.add("cart-active");
                 mainContent.classList.add("main-content"); // Adiciona margin quando abre
+                renderSidebarCart(); // Renderizar carrinho ao abrir
             }
         });
     }
@@ -188,11 +208,14 @@ document.addEventListener("DOMContentLoaded", function () {
             mainContent.classList.remove("main-content");
         });
     }
+    
+    // Carregar carrinho inicial
+    renderSidebarCart();
 });
 
 function finalizarCompra() {
-    const cartTableRows = document.querySelectorAll('.cart-section .table-cart tbody tr');
-    if (cartTableRows.length === 0) {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    if (cart.length === 0) {
         alert('Seu carrinho está vazio!');
         return;
     }

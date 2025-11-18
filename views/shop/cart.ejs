@@ -1,131 +1,416 @@
-<div class="hero-wrap hero-bread" style="background-image: url('images/bg_2.png');">
-      <div class="container">
-        <div class="row no-gutters slider-text align-items-center justify-content-center">
-          <div class="col-md-9 ftco-animate text-center">
-          	<p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home</a></span> <span>Carrinho</span></p>
-            <h1 class="mb-0 bread">Meu carrinho</h1>
-          </div>
+<style>
+.cart-container {
+    background-color: #f5f5f5;
+    min-height: 100vh;
+    padding: 40px 0;
+}
+.cart-products-section {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.cart-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 15px;
+    background: #82ae46;
+    border-radius: 8px 8px 0 0;
+    margin: -20px -20px 20px -20px;
+}
+.cart-header h5 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 400;
+    color: #fff;
+}
+.cart-product-item {
+    display: flex;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid #e5e5e5;
+    position: relative;
+    gap: 20px;
+}
+.cart-product-item:last-child {
+    border-bottom: none;
+}
+.cart-checkbox {
+    margin-right: 15px;
+    margin-top: 5px;
+}
+.cart-product-image {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-right: 20px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    padding: 5px;
+}
+.cart-product-details {
+    flex: 0 0 auto;
+    max-width: 300px;
+}
+.cart-product-name {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 5px;
+    line-height: 1.4;
+}
+.cart-product-info {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 10px;
+}
+.cart-product-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+.cart-product-actions a {
+    color: #3483fa;
+    font-size: 14px;
+    text-decoration: none;
+    cursor: pointer;
+}
+.cart-product-actions a:hover {
+    text-decoration: none;
+}
+.cart-product-qty-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.cart-product-price-section {
+    text-align: right;
+    min-width: 150px;
+}
+.cart-product-discount {
+    font-size: 12px;
+    color: #00a650;
+    font-weight: 500;
+}
+.cart-product-old-price {
+    font-size: 12px;
+    color: #999;
+    text-decoration: line-through;
+}
+.cart-product-price {
+    font-size: 24px;
+    color: #333;
+    font-weight: 400;
+    margin: 5px 0;
+}
+.cart-product-stock {
+    font-size: 12px;
+    color: #666;
+}
+.cart-qty-controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    padding: 5px 10px;
+    background: #fff;
+}
+.cart-qty-btn {
+    background: none;
+    border: none;
+    color: #3483fa;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0 5px;
+}
+.cart-qty-value {
+    min-width: 30px;
+    text-align: center;
+    font-size: 14px;
+}
+.cart-summary {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    position: sticky;
+    top: 20px;
+}
+.cart-summary h5 {
+    font-size: 18px;
+    font-weight: 400;
+    margin-bottom: 20px;
+}
+.cart-summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+.cart-summary-label {
+    color: #666;
+}
+.cart-summary-value {
+    color: #333;
+}
+.cart-summary-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 28px;
+    font-weight: 400;
+    margin: 20px 0;
+    padding-top: 20px;
+    border-top: 1px solid #e5e5e5;
+}
+.cart-summary-total .price-cents {
+    font-size: 18px;
+    vertical-align: top;
+    line-height: 28px;
+}
+.cart-summary .btn-checkout {
+    width: 100%;
+    background: #3483fa;
+    color: #fff;
+    border: none;
+    padding: 15px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+.cart-summary .btn-checkout:hover {
+    background: #2968c8;
+}
+.cart-coupon-section {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.cart-coupon-input {
+    display: flex;
+    gap: 10px;
+}
+.cart-coupon-input input {
+    flex: 1;
+    padding: 10px 15px;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    font-size: 14px;
+}
+.cart-coupon-input button {
+    background: #fff;
+    color: #3483fa;
+    border: 1px solid #3483fa;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+}
+.cart-select-all {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 15px 20px;
+    background: #fff;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+</style>
+
+<div class="cart-container">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Selecionar todos -->
+                <div class="cart-select-all">
+                    <input type="checkbox" id="select-all-products">
+                    <label for="select-all-products" style="margin: 0; cursor: pointer;">Todos os produtos</label>
+                </div>
+
+                <!-- Produtos -->
+                <div class="cart-products-section">
+                    <div class="cart-header">
+                        <h5>Produtos</h5>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+
+                    <div id="cart-items-container">
+                        <!-- Os produtos do localStorage-->
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <!-- Resumo -->
+                <div class="cart-summary">
+                    <h5>Resumo da compra</h5>
+                    <div class="cart-summary-row">
+                        <span class="cart-summary-label">Produtos (<span id="total-items">0</span>)</span>
+                        <span class="cart-summary-value">R$ <span id="subtotal-value">0</span>,<span id="subtotal-cents">00</span></span>
+                    </div>
+                    <div class="cart-summary-row">
+                        <span class="cart-summary-label">Frete</span>
+                        <span class="cart-summary-value" style="color: #00a650;">Grátis</span>
+                    </div>
+                    <div class="cart-summary-total">
+                        <span>Total</span>
+                        <span>R$ <span id="total-value">0</span>,<span class="price-cents" id="total-cents">00</span></span>
+                    </div>
+                    <button class="btn-checkout" id="finalizarCompra">Continuar a compra</button>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
+</div>
 
+<script>
+// Carregar produtos do localStorage ao abrir a página
+function loadCartItems() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const container = document.getElementById('cart-items-container');
+    
+    if (cart.length === 0) {
+        container.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">Seu carrinho está vazio</p>';
+        updateCartTotals();
+        return;
+    }
+    
+    container.innerHTML = '';
+    
+    cart.forEach((item, index) => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'cart-product-item';
+        itemDiv.setAttribute('data-price', item.price);
+        itemDiv.setAttribute('data-index', index);
+        
+        itemDiv.innerHTML = `
+            <input type="checkbox" class="cart-checkbox cart-item-checkbox" checked>
+            <img src="${item.img}" class="cart-product-image" alt="${item.name}">
+            <div class="cart-product-details">
+                <div class="cart-product-name">${item.name}</div>
+                <div class="cart-product-actions">
+                    <a href="#" class="cart-remove-btn">Excluir</a>
+                </div>
+            </div>
+            <div class="cart-product-qty-section">
+                <div class="cart-qty-controls">
+                    <button class="cart-qty-btn cart-qty-minus">−</button>
+                    <span class="cart-qty-value">${item.quantity}</span>
+                    <button class="cart-qty-btn cart-qty-plus">+</button>
+                </div>
+            </div>
+            <div class="cart-product-price-section">
+                <div class="cart-product-price">R$ ${Math.floor(item.price)},<sup>${String((item.price % 1).toFixed(2)).split('.')[1]}</sup></div>
+            </div>
+        `;
+        
+        container.appendChild(itemDiv);
+    });
+    
+    attachEventListeners();
+    updateCartTotals();
+}
 
-    <section class="ftco-section ftco-cart">
-			<div class="container">
-				<div class="row">
-    			<div class="col-md-12 ftco-animate">
-    				<div class="cart-list">
-	    				<table class="table">
-						    <thead class="thead-primary">
-						      <tr class="text-center">
-						        <th>&nbsp;</th>
-						        <th>&nbsp;</th>
-						        <th>Nome do produto</th>
-						        <th>Preço</th>
-						        <th>Quantidade</th>
-						        <th>Total</th>
-						      </tr>
-						    </thead>
-						    <tbody>
-								<tr class="text-center cart-item" data-price="25.90">
-								<td class="product-remove"><a href="#"><span class="ion-ios-close"></span></a></td>
-								
-								<td class="image-prod"><div class="img" style="background-image:url(./images/racao1.png);"></div></td>
-								
-								<td class="product-name">
-								<h3>Ração de Galinha de Postura 20kg</h3>
-								</td>
-								
-								<td class="price">R$<span class="unit-price">25.90</span></td>
-								
-								<td class="quantity">
-								<div class="input-group mb-3">
-									<input type="number" class="quantity-input form-control input-number" value="1" min="1" max="100">
-								</div>
-								</td>
-								
-								<td class="total">R$<span class="item-total">25.90</span></td>
-							</tr>
+function attachEventListeners() {
+    // Remover item
+    document.querySelectorAll('.cart-remove-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const item = this.closest('.cart-product-item');
+            const index = parseInt(item.getAttribute('data-index'));
+            
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            loadCartItems();
+        });
+    });
 
-							<tr class="text-center cart-item" data-price="650.00">
-								<td class="product-remove"><a href="#"><span class="ion-ios-close"></span></a></td>
-								
-								<td class="image-prod"><div class="img" style="background-image:url(./images/ovino2.png);"></div></td>
-								
-								<td class="product-name">
-								<h3>Suplemento Produtividade 5kg</h3>
-								</td>
-								
-								<td class="price">R$<span class="unit-price">650.00</span></td>
-								
-								<td class="quantity">
-								<div class="input-group mb-3">
-									<input type="number" class="quantity-input form-control input-number" value="1" min="1" max="100">
-								</div>
-								</td>
-								
-								<td class="total">R$<span class="item-total">650.00</span></td>
+    // Diminuir quantidade
+    document.querySelectorAll('.cart-qty-minus').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const item = this.closest('.cart-product-item');
+            const index = parseInt(item.getAttribute('data-index'));
+            const qtySpan = this.parentElement.querySelector('.cart-qty-value');
+            let qty = parseInt(qtySpan.textContent);
+            
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            if (qty > 1) {
+                cart[index].quantity = qty - 1;
+                localStorage.setItem('cart', JSON.stringify(cart));
+                loadCartItems();
+            } else {
+                cart.splice(index, 1);
+                localStorage.setItem('cart', JSON.stringify(cart));
+                loadCartItems();
+            }
+        });
+    });
 
-							</tr>
-						    </tbody>
-						  </table>
-					  </div>
-    			</div>
-    		</div>
-    		<div class="row justify-content-end">
-    			<div class="col-lg-4 mt-5 cart-wrap ftco-animate">
-    				<div class="cart-total mb-3">
-    					<h3>Código de desconto</h3>
-    					<p>Entre com o cupon se tiver algum</p>
-  						<form action="#" class="info">
-	              <div class="form-group">
-	              	<label for="">Código de desconto</label>
-	                <input type="text" class="form-control text-left px-3" placeholder="">
-	              </div>
-	            </form>
-    				</div>
-    				<p><a href="" class="btn btn-primary py-3 px-4">Aplicar cupom</a></p>
-    			</div>
-    			<div class="col-lg-4 mt-5 cart-wrap ftco-animate">
-    				<div class="cart-total mb-3">
-    					<h3>Frete estimado</h3>
-    					<p>Entre com seus dados postais para calculo aproximado</p>
-  						<form action="#" class="info">
-	              <div class="form-group">
-	              	<label for="">País</label>
-	                <input type="text" class="form-control text-left px-3" placeholder="">
-	              </div>
-	              <div class="form-group">
-	              	<label for="country">Cidade</label>
-	                <input type="text" class="form-control text-left px-3" placeholder="">
-	              </div>
-	              <div class="form-group">
-	              	<label for="country">CEP</label>
-	                <input type="text" class="form-control text-left px-3" placeholder="">
-	              </div>
-	            </form>
-    				</div>
-    				<p><a href="" class="btn btn-primary py-3 px-4">Calcular</a></p>
-    			</div>
-    			<div class="col-lg-4 mt-5 cart-wrap ftco-animate">
-    				<div class="cart-total mb-3">
-    					<h3>Total do carinho</h3>
-    					<p class="d-flex">
-    						<span>Entrega</span>
-    						<span>R$0.00</span>
-    					</p>
-    					<p class="d-flex">
-    						<span>Desconto</span>
-    						<span>R$75.90</span>
-    					</p>
-    					<hr>
-    					<p class="d-flex total-price">
-							<span>Total</span>
-							<span id="cart-total">R$600.00</span>
-						</p>
-    				</div>
-    				<p><a class="btn btn-primary py-3 px-4" id="finalizarCompra"  onclick="finalizarCompra() " style="color: aliceblue;" >Finalizar compra</a></p>
-    			</div>
-    		</div>
-			</div>
-		</section>
+    // Aumentar quantidade
+    document.querySelectorAll('.cart-qty-plus').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const item = this.closest('.cart-product-item');
+            const index = parseInt(item.getAttribute('data-index'));
+            const qtySpan = this.parentElement.querySelector('.cart-qty-value');
+            let qty = parseInt(qtySpan.textContent);
+            
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart[index].quantity = qty + 1;
+            localStorage.setItem('cart', JSON.stringify(cart));
+            loadCartItems();
+        });
+    });
+
+    // Checkboxes
+    document.querySelectorAll('.cart-item-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', updateCartTotals);
+    });
+}
+
+// Atualizar totais
+function updateCartTotals() {
+    let subtotal = 0;
+    let itemCount = 0;
+    
+    document.querySelectorAll('.cart-product-item').forEach(item => {
+        const checkbox = item.querySelector('.cart-item-checkbox');
+        if (checkbox && checkbox.checked) {
+            const price = parseFloat(item.getAttribute('data-price'));
+            const qty = parseInt(item.querySelector('.cart-qty-value').textContent);
+            subtotal += price * qty;
+            itemCount += qty;
+        }
+    });
+    
+    document.getElementById('total-items').textContent = itemCount;
+    
+    const subtotalParts = subtotal.toFixed(2).split('.');
+    document.getElementById('subtotal-value').textContent = subtotalParts[0];
+    document.getElementById('subtotal-cents').textContent = subtotalParts[1];
+    
+    const totalParts = subtotal.toFixed(2).split('.');
+    document.getElementById('total-value').textContent = totalParts[0];
+    document.getElementById('total-cents').textContent = totalParts[1];
+}
+
+// Selecionar todos
+document.getElementById('select-all-products').addEventListener('change', function() {
+    document.querySelectorAll('.cart-item-checkbox').forEach(checkbox => {
+        checkbox.checked = this.checked;
+    });
+    updateCartTotals();
+});
+
+// Carregar ao iniciar
+document.addEventListener('DOMContentLoaded', function() {
+    loadCartItems();
+});
+</script>
