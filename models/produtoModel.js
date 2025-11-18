@@ -11,6 +11,7 @@ class produtoModel{
     #marca;
     #marca_nome;
     #estoque;
+    #imagem;
 
     set id(valor){this.#id = valor};
     get id(){return this.#id};
@@ -30,8 +31,10 @@ class produtoModel{
     get marca_nome(){return this.#marca_nome};
     set estoque(valor){this.#estoque = valor};
     get estoque(){return this.#estoque};
+    set imagem(valor){this.#imagem = valor};
+    get imagem(){return this.#imagem};
 
-    constructor(id,tipo,nome,preco,descricao, categoria, categoria_nome, marca, marca_nome, estoque){
+    constructor(id,tipo,nome,preco,descricao, categoria, categoria_nome, marca, marca_nome, estoque, imagem){
         this.#id = id;
         this.#tipo = tipo;
         this.#nome = nome;
@@ -42,11 +45,12 @@ class produtoModel{
         this.#marca = marca;
         this.#marca_nome = marca_nome;
         this.#estoque = estoque;
+        this.#imagem = imagem;
     }
 
     async cadastrar(){
-        const sql = 'insert into tb_Produto(prod_nome,prod_tipo,prod_preco,prod_descricao, prod_categoria, prod_marca) values(?,?,?,?,?,?)';
-        const valores = [this.#nome, this.#tipo, this.#preco, this.#descricao, this.#categoria,this.#marca];
+        const sql = 'insert into tb_Produto(prod_nome,prod_tipo,prod_preco,prod_descricao, prod_categoria, prod_marca, prod_imagem) values(?,?,?,?,?,?,?)';
+        const valores = [this.#nome, this.#tipo, this.#preco, this.#descricao, this.#categoria,this.#marca, this.#imagem];
         const banco = new Database();
 
         let result = await banco.ExecutaComandoNonQuery(sql,valores);
@@ -60,7 +64,7 @@ class produtoModel{
         
         let lista = [];
         for(let i=0; i<rows.length;i++){
-            lista.push(new produtoModel(rows[i]['prod_id'],rows[i]['prod_tipo'], rows[i]['prod_nome'], rows[i]['prod_preco'], rows[i]['prod_descricao'], rows[i]['prod_categoria'], rows[i]['categoria_nome'], rows[i]['prod_marca'], rows[i]['marca_nome'], rows[i]['prod_estoque']));
+            lista.push(new produtoModel(rows[i]['prod_id'],rows[i]['prod_tipo'], rows[i]['prod_nome'], rows[i]['prod_preco'], rows[i]['prod_descricao'], rows[i]['prod_categoria'], rows[i]['categoria_nome'], rows[i]['prod_marca'], rows[i]['marca_nome'], rows[i]['prod_estoque'], rows[i]['prod_imagem']));
         }
 
         return lista;
@@ -73,7 +77,7 @@ class produtoModel{
         
         let lista = [];
         for(let i=0; i<rows.length;i++){
-            lista.push(new produtoModel(rows[i]['prod_id'],rows[i]['prod_tipo'], rows[i]['prod_nome'], rows[i]['prod_preco'], rows[i]['prod_descricao'], rows[i]['prod_categoria'], rows[i]['categoria_nome'], rows[i]['prod_marca'], rows[i]['marca_nome'], rows[i]['prod_estoque']));
+            lista.push(new produtoModel(rows[i]['prod_id'],rows[i]['prod_tipo'], rows[i]['prod_nome'], rows[i]['prod_preco'], rows[i]['prod_descricao'], rows[i]['prod_categoria'], rows[i]['categoria_nome'], rows[i]['prod_marca'], rows[i]['marca_nome'], rows[i]['prod_estoque'], rows[i]['prod_imagem']));
         }
 
         return lista;
@@ -85,7 +89,7 @@ class produtoModel{
         
         let lista = [];
         for(let i=0; i<rows.length;i++){
-            lista.push(new produtoModel(rows[i]['prod_id'],rows[i]['prod_tipo'], rows[i]['prod_nome'], rows[i]['prod_preco'], rows[i]['prod_descricao'], rows[i]['prod_categoria'], rows[i]['categoria_nome'], rows[i]['prod_marca'], rows[i]['marca_nome'], rows[i]['prod_estoque']));
+            lista.push(new produtoModel(rows[i]['prod_id'],rows[i]['prod_tipo'], rows[i]['prod_nome'], rows[i]['prod_preco'], rows[i]['prod_descricao'], rows[i]['prod_categoria'], rows[i]['categoria_nome'], rows[i]['prod_marca'], rows[i]['marca_nome'], rows[i]['prod_estoque'], rows[i]['prod_imagem']));
         }
 
         return lista;
@@ -97,13 +101,13 @@ class produtoModel{
         const banco = new Database();
         
         const row = await banco.ExecutaComando(sql,valores);
-        let prod = new produtoModel(row['0']['prod_id'], row['0']['prod_tipo'], row['0']['prod_nome'], row['0']['prod_preco'], row['0']['prod_descricao'], row['0']['prod_categoria'],null,row['0']['prod_marca'],null,row['0']['prod_estoque']);
+        let prod = new produtoModel(row['0']['prod_id'], row['0']['prod_tipo'], row['0']['prod_nome'], row['0']['prod_preco'], row['0']['prod_descricao'], row['0']['prod_categoria'],null,row['0']['prod_marca'],null,row['0']['prod_estoque'], row['0']['prod_imagem']);
         return prod;
     }
 
     async alterar(){
-        const sql = 'update tb_Produto set prod_nome = ?, prod_tipo = ?, prod_preco = ?, prod_descricao = ?, prod_categoria = ?, prod_marca = ? where prod_id = ?';
-        const valores = [this.#nome,this.#tipo,this.#preco,this.#descricao,this.#categoria,this.#marca, this.#id];
+        const sql = 'update tb_Produto set prod_nome = ?, prod_tipo = ?, prod_preco = ?, prod_descricao = ?, prod_categoria = ?, prod_marca = ?, prod_imagem = ? where prod_id = ?';
+        const valores = [this.#nome,this.#tipo,this.#preco,this.#descricao,this.#categoria,this.#marca, this.#imagem, this.#id];
         const banco = new Database();
 
         let result = await banco.ExecutaComandoNonQuery(sql,valores);

@@ -1,4 +1,5 @@
 const express = require("express");
+const multer = require("multer");
 const AdminController = require("../controllers/adminController");
 const ProdutosController = require('../controllers/produtosController');
 const ServicoController = require('../controllers/servicoController');
@@ -11,6 +12,20 @@ const PJController = require("../controllers/PJController");
 const PessoaController = require("../controllers/pessoaController");
 const OrdemServicoController = require('../controllers/ordemServicoController')
 const router = express.Router();
+
+// Configuração do Multer para upload de imagens
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, 'public/images/produtos');
+    },
+    filename: function(req, file, cb) {
+        let nomeArq = "PROD-" + Date.now();
+        let ext = file.originalname.split(".").pop();
+        cb(null, `${nomeArq}.${ext}`);
+    }
+});
+
+const upload = multer({ storage: storage });
 
 const adminController = new AdminController();
 const produtosController = new ProdutosController();
@@ -54,14 +69,14 @@ router.get('/cadastrarEqAgricola', equipAgricolaController.cadastrarView);
 router.get('/cadastrarMarca', marcaController.cadastrarView);
 router.get('/cadastrarCategoria', categoriaController.cadastrarView);
 
-router.post('/cadastrarProd', produtosController.cadastrar);
+router.post('/cadastrarProd', upload.single('imagem'), produtosController.cadastrar);
 router.post('/cadastrarServico', servicoController.cadastrar);
 router.post('/cadastrarEqAgricola', equipAgricolaController.cadastrar);
 router.post('/cadastrarMarca', marcaController.cadastrar);
 router.post('/cadastrarCategoria', categoriaController.cadastrar);
 
                 // ALTERAR ITENS
-router.post('/alterarProduto', produtosController.alterar);
+router.post('/alterarProduto', upload.single('imagem'), produtosController.alterar);
 router.post('/alterarMarca', marcaController.alterar);
 router.post('/alterarServico', servicoController.alterar);
 router.post('/alterarCategoria', categoriaController.alterar);

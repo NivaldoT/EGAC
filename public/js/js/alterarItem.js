@@ -7,6 +7,12 @@ document.addEventListener('DOMContentLoaded', function(){
         voltar.href = '/admin/listagem/'+tipo.value;
     }
 
+    // Preview da imagem 
+    let inputImagem = document.getElementById('inputImagem');
+    if(inputImagem) {
+        inputImagem.addEventListener('change', carregarPrevia);
+    }
+
     let precomax = document.getElementById('precoval');
     precomax.addEventListener('keydown', function(){
         if(precomax.value>9999999.00)
@@ -144,26 +150,30 @@ document.addEventListener('DOMContentLoaded', function(){
         console.log(vetorVal)
         if(tipoItem.value == 1 || tipoItem.value == 2){ // PRODUTO INSUMO
             if(nome.value && isFinite(Number(preco.value)) && preco.value && descricao.value && categoria.value > 0 && preco.value >= 0 && marca.value > 0){
-                obj = {
-                    id: id.value,
-                    tipoItem : tipoItem.value,
-                    nome : nome.value,
-                    preco: preco.value,
-                    descricao: descricao.value,
-                    categoria: categoria.value,
-                    marca: marca.value
+                // Usar FormData para enviar arquivo
+                let formData = new FormData();
+                formData.append('id', id.value);
+                formData.append('tipoItem', tipoItem.value);
+                formData.append('nome', nome.value);
+                formData.append('preco', preco.value);
+                formData.append('descricao', descricao.value);
+                formData.append('categoria', categoria.value);
+                formData.append('marca', marca.value);
+                
+                // Adicionar imagem se foi selecionada
+                let inputImagem = document.getElementById('inputImagem');
+                if(inputImagem && inputImagem.files.length > 0) {
+                    formData.append('imagem', inputImagem.files[0]);
                 }
+
                 fetch('/admin/alterarProduto',{
                     method: 'POST',
-                    headers: {
-                        'Content-type': 'application/json'
-                    },
-                    body: JSON.stringify(obj)
+                    body: formData // Não enviar header Content-Type com FormData
                     })
-                    .then(function(resposta) {//recebe a resposta como retorno do fetch
-                        return resposta.json(); //converte o corpo da resposta para json (gera uma nova promise)
+                    .then(function(resposta) {
+                        return resposta.json();
                     })
-                    .then(function(corpo) {//recebe o corpo em formato de obj genérico
+                    .then(function(corpo) {
                         alert(corpo.msg);
                 })
                 return
@@ -273,6 +283,35 @@ document.addEventListener('DOMContentLoaded', function(){
             for(let i=0; i<vetorVal.length; i++){
                 vetorVal[i].style.borderColor = 'red';
             }
+        }
+    }
+
+    function carregarPrevia() {
+        if(this.files.length > 0) {
+            const arquivo = this.files[0];
+            const tamanhoMaximo = 2 * 1024 * 1024; // 2MB em bytes
+            
+            // Validar tamanho
+            if(arquivo.size > tamanhoMaximo) {
+                alert('A imagem é muito grande! Tamanho máximo: 2MB');
+                this.value = '';
+                document.getElementById('divPrevia').style.display = 'none';
+                return;
+            }
+            
+            // Validar tipo
+            const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+            if(!tiposPermitidos.includes(arquivo.type)) {
+                alert('Formato não permitido! Use: JPG, JPEG, PNG ou WebP');
+                this.value = '';
+                document.getElementById('divPrevia').style.display = 'none';
+                return;
+            }
+            
+            let img = document.getElementById('previaImagem');
+            let urlImg = URL.createObjectURL(this.files[0]);
+            img.src = urlImg;
+            document.getElementById('divPrevia').style.display = 'block';
         }
     }
 })

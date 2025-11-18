@@ -40,6 +40,17 @@
             </select>
             <label for="tipoItem">Marca:</label>
         </div>
+        <div class="form-group mb-3">
+            <label>Imagem do Produto:</label>
+            <input class="form-control" type="file" id="inputImagem" accept="image/jpeg,image/jpg,image/png,image/webp">
+            <small class="form-text text-muted">Formatos aceitos: JPG, JPEG, PNG, WebP (máx. 2MB)</small>
+        </div>
+        <div class="form-group mb-3" id="divPrevia" style="display:none;">
+            <label>Prévia da Imagem</label>
+            <div>
+                <img width="250" id="previaImagem" class="img-thumbnail">
+            </div>
+        </div>
         <button class="btn btn-primary" id="cadastrar">Cadastrar Item</button>
         <a id="voltar" href="/admin/listagem/1" class="btn btn-secondary">Voltar</a>
     </div>

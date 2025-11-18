@@ -58,6 +58,30 @@
             </select>
             <label for="tipoItem">Marca:</label>
         </div>
+        
+        <% if(tipo == 1 || tipo == 2) { %>
+        <div class="form-group mb-3" id="divImagemAtual">
+            <label>Imagem Atual:</label>
+            <div>
+                <% if(prod.imagem) { %>
+                    <img src="/images/produtos/<%=prod.imagem%>" width="200" class="img-thumbnail">
+                <% } else { %>
+                    <p class="text-muted">Nenhuma imagem cadastrada</p>
+                <% } %>
+            </div>
+        </div>
+        <div class="form-group mb-3" id="divNovaImagem">
+            <label>Nova Imagem do Produto (opcional):</label>
+            <input class="form-control" type="file" id="inputImagem" accept="image/jpeg,image/jpg,image/png,image/webp">
+            <small class="form-text text-muted">Formatos aceitos: JPG, JPEG, PNG, WebP (máx. 2MB) - Deixe em branco para manter a imagem atual</small>
+        </div>
+        <div class="form-group mb-3" id="divPrevia" style="display:none;">
+            <label>Prévia da Nova Imagem</label>
+            <div>
+                <img width="250" id="previaImagem" class="img-thumbnail">
+            </div>
+        </div>
+        <% } %>
             
         <button class="btn btn-primary" id="cadastrar">Confirmar Alteração</button>
         <a id="voltar" href="/admin/listagem/1" class="btn btn-secondary">Voltar</a>

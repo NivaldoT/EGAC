@@ -32,6 +32,10 @@ let auth = new authMiddleware;
 server.use(auth.verificarUsuarioLogado)
 server.use('/admin',routerAdmin);
 
+// Config de caminho para imagens de produtos
+global.CAMINHO_IMG_PRODUTOS = "/images/produtos/";
+global.CAMINHO_IMG_PRODUTOS_ABS = __dirname + "/public/images/produtos/";
+
 server.listen(5550, function() {
     console.log("servidor web em funcionamento na porta 5550!");
 })

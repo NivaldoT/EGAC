@@ -24,8 +24,9 @@ class produtosController{
         const descricao = req.body.descricao;
         const categoria = req.body.categoria;
         const marca = req.body.marca;
+        const imagem = req.file ? req.file.filename : null;
 
-        let prod = new produtoModel(null,tipoItem,nome,preco,descricao,categoria,null,marca,null,null);
+        let prod = new produtoModel(null,tipoItem,nome,preco,descricao,categoria,null,marca,null,null,imagem);
         
         let result = await prod.cadastrar();
         if(result)
@@ -41,8 +42,24 @@ class produtosController{
         const descricao = req.body.descricao;
         const categoria = req.body.categoria;
         const marca = req.body.marca;
+        
+        // Buscar produto atual com busca id para pegar imagem antiga
+        let produtoAtual = new produtoModel();
+        produtoAtual = await produtoAtual.buscarId(id);
+        
+        // Se veio nova imagem, usar a nova, senão manter a antiga
+        let imagem = req.file ? req.file.filename : produtoAtual.imagem;
+        
+        // Se veio nova imagem, deletar a antiga
+        if(req.file && produtoAtual.imagem) {
+            const fs = require('fs');
+            const caminhoImagemAntiga = global.CAMINHO_IMG_PRODUTOS_ABS + produtoAtual.imagem;
+            if(fs.existsSync(caminhoImagemAntiga)) {
+                fs.unlinkSync(caminhoImagemAntiga);
+            }
+        }
 
-        let prod = new produtoModel(id,tipoItem,nome,preco,descricao,categoria,null,marca,null,null);
+        let prod = new produtoModel(id,tipoItem,nome,preco,descricao,categoria,null,marca,null,null,imagem);
         
         let result = await prod.alterar();
         if(result)
