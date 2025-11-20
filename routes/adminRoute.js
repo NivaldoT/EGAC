@@ -10,7 +10,8 @@ const EquipAgricolaController = require('../controllers/equipAgricolaController'
 const PFController = require("../controllers/PFController");
 const PJController = require("../controllers/PJController");
 const PessoaController = require("../controllers/pessoaController");
-const OrdemServicoController = require('../controllers/ordemServicoController')
+const OrdemServicoController = require('../controllers/ordemServicoController');
+const PedidosController = require('../controllers/pedidosController');
 const router = express.Router();
 
 // Configuração do Multer para upload de imagens
@@ -38,7 +39,8 @@ const pfController = new PFController();
 const pjController = new PJController();
 const pessoaController = new PessoaController();
 
-const ordemServicoController = new OrdemServicoController()
+const ordemServicoController = new OrdemServicoController();
+const pedidosController = new PedidosController();
 
 router.get("/", adminController.homeView);
 
@@ -98,6 +100,10 @@ router.get('/ordemServicos/receber/:id', ordemServicoController.receberView);
 router.post('/ordemServicos/abrir', ordemServicoController.abrirOS);
 router.post('/ordemServicos/concluir', ordemServicoController.concluirOS);
 router.post('/ordemServicos/receber', ordemServicoController.receberOS);
+
+                //VENDAS/PEDIDOS
+router.get('/vendas', pedidosController.pedidosView);
+router.get('/vendas/listar', pedidosController.listarPedidos);
 
 router.get('/alterarItem/:tipo/:id', adminController.alterarItemView);
 router.get('/alterarCliente/:tipo/:id', adminController.alterarClienteView);

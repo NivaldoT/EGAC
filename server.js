@@ -3,6 +3,7 @@ const expressEjsLayouts = require('express-ejs-layouts');
 const routerHome = require("./routes/homeRoute");
 const routerUsuario = require("./routes/usuarioRoute");
 const routerAdmin = require("./routes/adminRoute");
+const routerPedidos = require("./routes/pedidosRoute");
 
 const cookieParser = require('cookie-parser');
 const authMiddleware = require('./middlewares/authMiddleware');
@@ -27,6 +28,7 @@ server.use(express.json());
 
 server.use("/", routerHome);
 server.use('/usuario',routerUsuario);
+server.use('/pedido',routerPedidos);
 
 let auth = new authMiddleware;
 server.use(auth.verificarUsuarioLogado)

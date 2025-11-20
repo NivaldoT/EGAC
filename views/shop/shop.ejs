@@ -22,7 +22,7 @@
 					<div class="row">
 						<%for(let i=0; i<listaProdutos.length; i++) {%>
 						<div class="col-md-6 col-lg-3 ftco-animate" style="margin-bottom: 20px;">
-							<div class="product" data-category="<%=listaProdutos[i].categoria_nome.toLowerCase()%>" data-name="<%=listaProdutos[i].nome%>"
+							<div class="product" data-category="<%=listaProdutos[i].categoria_nome.toLowerCase()%>" data-id="<%=listaProdutos[i].id%>" data-name="<%=listaProdutos[i].nome%>"
 								data-price="<%=listaProdutos[i].preco%>" data-img="<%=listaProdutos[i].imagem%>"
 								style="background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,0.1); transition: box-shadow 0.3s ease; height: 100%;">
 								<a href="#" class="img-prod" style="height: 250px; display: block; background: #fff; padding: 20px;">

@@ -412,5 +412,72 @@ document.getElementById('select-all-products').addEventListener('change', functi
 // Carregar ao iniciar
 document.addEventListener('DOMContentLoaded', function() {
     loadCartItems();
+    
+    // Botão de finalizar compra
+    document.getElementById('finalizarCompra').addEventListener('click', function() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        
+        if (cart.length === 0) {
+            alert('Seu carrinho está vazio!');
+            return;
+        }
+        
+        // Pegar apenas os itens selecionados
+        const selectedItems = [];
+        document.querySelectorAll('.cart-product-item').forEach((item, index) => {
+            const checkbox = item.querySelector('.cart-item-checkbox');
+            if (checkbox && checkbox.checked) {
+                const cartItem = cart[index];
+                selectedItems.push({
+                    id: cartItem.id,
+                    name: cartItem.name,
+                    price: cartItem.price,
+                    quantity: parseInt(item.querySelector('.cart-qty-value').textContent),
+                    img: cartItem.img
+                });
+            }
+        });
+        
+        if (selectedItems.length === 0) {
+            alert('Selecione pelo menos um produto!');
+            return;
+        }
+        
+        // Enviar pedido para o servidor
+        fetch('/pedido/gravar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(selectedItems)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.ok) {
+                alert(data.msg);
+                
+                // Remover itens selecionados do carrinho
+                const remainingItems = cart.filter((_, index) => {
+                    const item = document.querySelectorAll('.cart-product-item')[index];
+                    const checkbox = item?.querySelector('.cart-item-checkbox');
+                    return !(checkbox && checkbox.checked);
+                });
+                
+                localStorage.setItem('cart', JSON.stringify(remainingItems));
+                loadCartItems();
+                
+                // Atualizar contador do carrinho no header
+                if (typeof updateCartCount === 'function') {
+                    updateCartCount();
+                }
+            } else {
+                alert(data.msg);
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao finalizar pedido:', error);
+            alert('Erro ao finalizar pedido. Tente novamente.');
+        });
+    });
 });
 </script>

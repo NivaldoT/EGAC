@@ -1,17 +1,18 @@
 
 function addToCart(product) {
+    const id = product.getAttribute("data-id");
     const name = product.getAttribute("data-name");
     const price = parseFloat(product.getAttribute("data-price"));
     const img = product.getAttribute("data-img");
 
     // Salvar no localStorage
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    let existingProduct = cart.find(item => item.name === name);
+    let existingProduct = cart.find(item => item.id === id);
     
     if (existingProduct) {
         existingProduct.quantity += 1;
     } else {
-        cart.push({ name, price, img, quantity: 1 });
+        cart.push({ id, name, price, img, quantity: 1 });
     }
     
     localStorage.setItem('cart', JSON.stringify(cart));
