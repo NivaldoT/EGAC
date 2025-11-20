@@ -44,7 +44,9 @@ class OrdemDeServicoController{
         let ok;
         let msg;
 
-        let OS = new OrdemDeServicoModel(null,pessoa,servico,EqAg,func,null,null,null,comentario);
+        let servModel = new ServicoModel(servico);
+        servModel = await servModel.buscarId(servico);
+        let OS = new OrdemDeServicoModel(null,pessoa,servico,servModel.preco,EqAg,func,null,null,null,comentario);
         let result = await OS.abrirOS();
         if(result){
             ok = true;
@@ -86,7 +88,7 @@ class OrdemDeServicoController{
                 }
                 else{i = listaInsumo.length; ok = false};
             }
-            if(ok){msg = 'Ordem de Serviço cadastrada com Sucesso!'};
+            if(ok){msg = 'Ordem de Serviço concluída com Sucesso!'};
         }
         else{
             ok = false;
@@ -109,10 +111,11 @@ class OrdemDeServicoController{
                 for(let i = 0; i<numParcelas;i++){
                     let hj =  new Date();
                     let dataVencimento = hj.setMonth(hj.getMonth()+i+1);
-                    let contaRE = new ContaReceberModel(null,1,idOS,new Date(dataVencimento), 0, i+1, numParcelas);
+                    let contaRE = new ContaReceberModel(null,1,idOS,null,null,(os.precoServico/numParcelas),new Date(dataVencimento), 0, i+1, numParcelas);
                     ok = await contaRE.gravar();
                     if(!ok){i = numParcelas; ok = false; msg = 'Falha ao gravar Conta a Pagar'}; // ver CHAVES prova = função báisca fundmental saída
                 }
+                if(ok){msg = 'Ordem de Serviço Recebida com Sucesso!'};
             }
 
         }

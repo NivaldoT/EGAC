@@ -15,6 +15,7 @@ class OrdemDeServicoModel{
     #dataAbertura;
     #dataConclusao;
     #comentario;
+    #precoServico;
 
     get id(){return this.#id};
     set id(valor){this.#id = valor};
@@ -42,11 +43,14 @@ class OrdemDeServicoModel{
     set nomeFuncionario(valor){this.#nomeFuncionario = valor};
     get comentario(){return this.#comentario};
     set comentario(valor){this.#comentario = valor};
+    get precoServico(){return this.#precoServico};
+    set precoServico(valor){this.#precoServico = valor};
     
-    constructor(id,idPessoa,idServico,idEqAgricola,idFuncionario,status,dataAbertura,dataConclusao,comentario){
+    constructor(id,idPessoa,idServico,precoServico,idEqAgricola,idFuncionario,status,dataAbertura,dataConclusao,comentario){
         this.#id = id;
         this.#idPessoa = idPessoa;
         this.#idServico = idServico;
+        this.#precoServico = precoServico;
         this.#idEqAgricola = idEqAgricola;
         this.#idFuncionario = idFuncionario;
         this.#status = status;
@@ -56,8 +60,8 @@ class OrdemDeServicoModel{
     }
 
     async abrirOS(){
-        let sql = 'insert into tb_OrdemDeServico(os_idPessoa,os_idServico,os_idEqAgricola,os_idFuncionario, os_status, os_dataAbertura,os_comentario) values (?,?,?,?,?,?,?);';
-        let valores = [this.#idPessoa, this.#idServico,this.#idEqAgricola,this.#idFuncionario,0,new Date(),this.#comentario];
+        let sql = 'insert into tb_OrdemDeServico(os_idPessoa,os_idServico,os_precoServico,os_idEqAgricola,os_idFuncionario, os_status, os_dataAbertura,os_comentario) values (?,?,?,?,?,?,?,?);';
+        let valores = [this.#idPessoa, this.#idServico,this.#precoServico,this.#idEqAgricola,this.#idFuncionario,0,new Date(),this.#comentario];
         let banco = new Database();
 
         let result = await banco.ExecutaComandoNonQuery(sql,valores);
@@ -84,7 +88,7 @@ class OrdemDeServicoModel{
 
     async listar(){
         let sql = `select os_id, os_idPessoa, os_idServico,os_idEqAgricola,os_idFuncionario,os_status,os_dataAbertura,os_dataConclusao,
-        os_comentario, p.pessoa_nome as nomeCliente, func.pessoa_nome as nomeFuncionario, s.serv_nome, eq.eq_nome from tb_OrdemDeServico os 
+        os_comentario, p.pessoa_nome as nomeCliente, func.pessoa_nome as nomeFuncionario, s.serv_nome, os.os_precoServico, eq.eq_nome from tb_OrdemDeServico os 
         inner join tb_Pessoa p on p.pessoa_id = os.os_idPessoa
         inner join tb_Pessoa func on func.pessoa_id = os.os_idFuncionario
         inner join tb_Servico s on s.serv_id = os.os_idServico
@@ -95,17 +99,18 @@ class OrdemDeServicoModel{
 
         let lista = [];
         for(let i in rows){
-            lista.push(new OrdemDeServicoModel(rows[i]['os_id'],rows[i]['os_idPessoa'],rows[i]['os_idServico'],rows[i]['os_idEqAgricola'],rows[i]['os_idFuncionario'],rows[i]['os_status'],rows[i]['os_dataAbertura'],rows[i]['os_dataConclusao'],rows[i]['os_comentario']));
+            lista.push(new OrdemDeServicoModel(rows[i]['os_id'],rows[i]['os_idPessoa'],rows[i]['os_idServico'],rows[i]['os_precoServico'],rows[i]['os_idEqAgricola'],rows[i]['os_idFuncionario'],rows[i]['os_status'],rows[i]['os_dataAbertura'],rows[i]['os_dataConclusao'],rows[i]['os_comentario']));
             lista[i].#nomePessoa = rows[i]['nomeCliente'];
             lista[i].#nomeFuncionario = rows[i]['nomeFuncionario'];
             lista[i].#nomeEqAgricola = rows[i]['eq_nome'];
             lista[i].#nomeServico = rows[i]['serv_nome'];
+            lista[i].#precoServico = rows[i]['os_precoServico'];
         }
         return lista;
     }
     async buscarId(){
         let sql = `select os_id, os_idPessoa, os_idServico,os_idEqAgricola,os_idFuncionario,os_status,os_dataAbertura,os_dataConclusao,
-        os_comentario, p.pessoa_nome as nomeCliente, func.pessoa_nome as nomeFuncionario, s.serv_nome, eq.eq_nome from tb_OrdemDeServico os 
+        os_comentario, p.pessoa_nome as nomeCliente, func.pessoa_nome as nomeFuncionario, s.serv_nome, os.os_precoServico, eq.eq_nome from tb_OrdemDeServico os 
         inner join tb_Pessoa p on p.pessoa_id = os.os_idPessoa
         inner join tb_Pessoa func on func.pessoa_id = os.os_idFuncionario
         inner join tb_Servico s on s.serv_id = os.os_idServico
@@ -115,12 +120,13 @@ class OrdemDeServicoModel{
         let rows = await banco.ExecutaComando(sql,valores);
 
         if(rows.length>0){
-            let os = new OrdemDeServicoModel(rows['0']['os_id'],rows['0']['os_idPessoa'],rows['0']['os_idServico'],rows['0']['os_idEqAgricola'],rows['0']['os_idFuncionario'],rows['0']['os_status'],rows['0']['os_dataAbertura'],rows['0']['os_dataConclusao'],rows['0']['os_comentario']);
+            let os = new OrdemDeServicoModel(rows['0']['os_id'],rows['0']['os_idPessoa'],rows['0']['os_idServico'],rows['0']['os_precoServico'],rows['0']['os_idEqAgricola'],rows['0']['os_idFuncionario'],rows['0']['os_status'],rows['0']['os_dataAbertura'],rows['0']['os_dataConclusao'],rows['0']['os_comentario']);
                 os.#nomePessoa = rows['0']['nomeCliente'];
                 os.#nomeFuncionario = rows['0']['nomeFuncionario'];
                 os.#nomeEqAgricola = rows['0']['eq_nome'];
                 os.#nomeServico = rows['0']['serv_nome'];
-            
+                os.#precoServico = rows['0']['os_precoServico'];
+
                 return os;
         }
         else{return null};

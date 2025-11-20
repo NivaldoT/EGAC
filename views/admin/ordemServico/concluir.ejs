@@ -1,8 +1,11 @@
 <script src="/js/ordemServico/concluir.js" defer></script>
+<%if(os.status!=0){%><input type='hidden' value = '<%=os.id%>' id="OSInvalida"><%}%>
+<input type='hidden' value = '0' id="OSInvalida">
 <div class="container">
     <h1>Concluir Ordem de Serviço</h1>
     <div id="form">
         <input type="hidden" value="<%=os.id%>" id="idOS">
+        
         <div class="form-floating mb-3" id="pessoa">
             <select name="pessoa" id="pessoaval" class="form-control">
                 <option value="" selected><%=os.nomePessoa%></option>

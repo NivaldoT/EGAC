@@ -31,7 +31,7 @@
                     <td><%if(listaOS[i].status == 0){%>A Fazer<%}if(listaOS[i].status == 1){%>Concluída<%}if(listaOS[i].status == 2){%>Pagamento Recebido<%}%></td>
                     <td><%=listaOS[i].comentario%></td>
                     <td><%=new Date(listaOS[i].dataAbertura).toLocaleString()%></td>
-                    <%if(listaOS[i].status == 1){%><td><%=new Date(listaOS[i].dataConclusao).toLocaleString()%></td><%}else{%><td>A concluir</td><%}%>
+                    <%if(listaOS[i].status == 1 || listaOS[i].status == 2){%><td><%=new Date(listaOS[i].dataConclusao).toLocaleString()%></td><%}else{%><td>A concluir</td><%}%>
                     <td>
                         <a href="/admin/OrdemServicos/concluir/<%=listaOS[i].id%>" class="btn btn-primary <%if(listaOS[i].status!=0){%>disabled<%}%>"><i class="bi bi-pencil-square"></i>Concluir OS</a>
                         <a href="/admin/OrdemServicos/receber/<%=listaOS[i].id%>" class="btn btn-primary <%if(listaOS[i].status!=1){%>disabled<%}%>"><i class="bi bi-pencil-square"></i>Receber OS</a>
@@ -40,5 +40,4 @@
             <%}%>
         </tbody>
     </table>
-
 </div>
