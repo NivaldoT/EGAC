@@ -67,10 +67,10 @@ class produtoModel{
             // Formatar caminho da imagem
             const fs = require('fs');
             let imagemPath = "";
-            if(rows[i]['prod_imagem'] != null && fs.existsSync(global.CAMINHO_IMG_PRODUTOS_ABS + rows[i]['prod_imagem'])) {
+            if(rows[i]['prod_imagem'] != null && rows[i]['prod_imagem'] != '' && fs.existsSync(global.CAMINHO_IMG_PRODUTOS_ABS + rows[i]['prod_imagem'])) {
                 imagemPath = global.CAMINHO_IMG_PRODUTOS + rows[i]['prod_imagem'];
             } else {
-                imagemPath = "/images/produto-sem-imagem.webp"; // 
+                imagemPath = "/images/produto-sem-imagem.webp"; // imagem padrão
             }
             
             let produto = new produtoModel(rows[i]['prod_id'],rows[i]['prod_tipo'], rows[i]['prod_nome'], rows[i]['prod_preco'], rows[i]['prod_descricao'], rows[i]['prod_categoria'], rows[i]['categoria_nome'], rows[i]['prod_marca'], rows[i]['marca_nome'], rows[i]['prod_estoque'], imagemPath);
@@ -90,10 +90,10 @@ class produtoModel{
             // Formatar caminho da imagem
             const fs = require('fs');
             let imagemPath = "";
-            if(rows[i]['prod_imagem'] != null && fs.existsSync(global.CAMINHO_IMG_PRODUTOS_ABS + rows[i]['prod_imagem'])) {
+            if(rows[i]['prod_imagem'] != null && rows[i]['prod_imagem'] != '' && fs.existsSync(global.CAMINHO_IMG_PRODUTOS_ABS + rows[i]['prod_imagem'])) {
                 imagemPath = global.CAMINHO_IMG_PRODUTOS + rows[i]['prod_imagem'];
             } else {
-                imagemPath = "/images/produto-default.png"; // imagem padrão se não existir
+                imagemPath = "/images/produto-sem-imagem.webp"; // imagem padrão
             }
             
             let produto = new produtoModel(rows[i]['prod_id'],rows[i]['prod_tipo'], rows[i]['prod_nome'], rows[i]['prod_preco'], rows[i]['prod_descricao'], rows[i]['prod_categoria'], rows[i]['categoria_nome'], rows[i]['prod_marca'], rows[i]['marca_nome'], rows[i]['prod_estoque'], imagemPath);
