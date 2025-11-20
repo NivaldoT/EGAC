@@ -99,17 +99,6 @@ class PFisicaModel extends pessoaModel{
         }
         else
             return null;
-
-        // let sql = 'select * from tb_Funcionario f left join tb_PFisica pf on f.func_id = pf.PF_id left join tb_Pessoa p on pf.PF_id = p.pessoa_id where p.pessoa_email = ? and p.pessoa_senha = ?';
-        // let valores = [this.email, this.senha];
-        // const banco = new Database();
-        // let result = await banco.ExecutaComando(sql,valores); 
-        // if(result.length > 0){
-        //     let func = new FuncionarioModel(result['0']['func_id'],result['0']['pessoa_nome'],result['0']['pessoa_telefone'],result['0']['pessoa_tipo'],result['0']['pessoa_email'],result['0']['pessoa_senha'],result['0']['PF_cpf'],result['0']['func_cargo'])
-        //     return func;
-        // }
-        // else
-        //     return null
     }
 
     async buscarFuncionarioNome(){

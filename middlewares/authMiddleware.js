@@ -9,26 +9,11 @@ class authMiddleware{
             if(func && func.isFunc)
                 next();
             else
-                res.redirect('/adminLogin');
+                res.redirect('/usuario/login');
         }
         else{
-            res.redirect('/adminLogin');
+            res.redirect('/usuario/login');
         }
-
-        // if(req.cookies != undefined && req.cookies.usuarioLogado != null){
-        //     let usuarioId = req.cookies.usuarioLogado;
-        //     let usuario = new funcionarioModel();
-        //     usuario = await usuario.obter(usuarioId);
-        //     if(usuario != null && usuario.usuarioAtivo == 1) {
-        //         next();
-        //     }
-        //     else{
-        //         res.redirect("/login");
-        //     }
-        // }
-        // else{
-        //     res.redirect("/login");
-        // }
     }
 }
 module.exports = authMiddleware;

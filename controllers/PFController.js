@@ -72,48 +72,6 @@ class PFController{
         res.send({ok,msg});
     }
 
-    async logar(req,res){
-        //funcao de logar unificada
-
-        const email = req.body.email;
-        const senha = req.body.senha; // email e senha
-
-        let ok;
-        let msg;
-        let redirecionarPara;
-
-        let usuario = new PFisicaModel(null,null,null,email,senha,null,null); // objeto com os dados do login
-        
-        usuario = await usuario.logarEmailSenha(); //busca se existe o usuario com esse email e senha
-        
-        //se encontrar, verifica se é funcionario
-        if(usuario){
-
-            if(usuario.isFunc){
-                // Se for funcionario salva os cookies
-                res.cookie('FuncionarioEmail', usuario.email);
-                res.cookie('FuncionarioSenha', usuario.senha);
-                ok = true;
-                msg = 'Login de Funcionário realizado com Sucesso!';
-                redirecionarPara = '/admin';
-            } else {
-                // Se for cliente, salva os cookies e redireciona para '/'
-                res.cookie('UsuarioEmail', usuario.email);
-                res.cookie('UsuarioSenha', usuario.senha);
-                ok = true;
-                msg = 'Login realizado com Sucesso!';
-                redirecionarPara = '/';
-            }
-        } else {
-           
-            ok = false; //credencial invalida
-            msg = 'Email ou Senha Incorretos!';
-            redirecionarPara = null;
-        }
-    
-        res.send({ok, msg, redirecionarPara});
-    }
-
     async buscarFuncionarioNome(req,res){
         let nome = '%'+req.body.nome+'%';
         let pessoa = new PFisicaModel(null,nome);
