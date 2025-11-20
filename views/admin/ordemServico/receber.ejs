@@ -1,4 +1,7 @@
 <script src="/js/ordemServico/receber.js" defer></script>
+<%if(os.status!=1){%><input type='hidden' value = '<%=os.id%>' id="OSInvalida"><%}%>
+<input type='hidden' value = '0' id="OSInvalida">
+
 <div class="container">
     <h1>Receber Ordem de Serviço</h1>
     <div class="table-responsive">
@@ -25,6 +28,10 @@
                     <td><%=os.nomeServico%></td>
                 </tr>
                 <tr>
+                    <td>Valor do Serviço</td>
+                    <td><%=os.precoServico%>R$</td>
+                </tr>
+                <tr>
                     <td>Funcionário Responsável</td>
                     <td><%=os.nomeFuncionario%></td>
                 </tr>
@@ -42,10 +49,14 @@
     <div id="form">
         <input type="hidden" value="<%=os.id%>" id="idOS">
         <div class="form-floating mb-3" id="parcela">
-            <input type="text" class="form-control" max="12" id="inputParcelas">
+            <select name="numParcela" id="selectParcelas" class="form-control">
+                <option value="0" selected>Selecione...</option>
+                <%for(let i=1;i<13;i++){%>
+                    <option value="<%=i%>"><%=i%>x (Parcelas de <%=(os.precoServico/i).toFixed(2)%>R$)</option>
+                <%}%>
+            </select>
             <label for="parcelaval">Quantidade de parcelas(Entre 1x e 12x):</label>
         </div>
-        <br><br>
         <div class="alert alert-danger" id="msgErroFinal" style="display: none;"></div>
         <button class="btn btn-primary" id="receberOS">Confirmar Recebimento de Ordem de Serviço</button>
         <a href="/admin/OrdemServicos" class="btn btn-secondary">Voltar</a>

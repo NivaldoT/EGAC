@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', function(){
+    let OSInvalida = document.getElementById('OSInvalida');
+    if(OSInvalida.value > 0 ){alert('A ORDEM DE SERVIÇO '+OSInvalida.value+' É INVÁLIDA PARA ESTE PROCESSO!!'); window.location.replace('/admin/OrdemServicos/');}
     
     let inputProcurarInsumo = document.getElementById('procurarInsumoval');
     let inputInsumoQtd = document.getElementById('quantidadeInsumoval');

@@ -65,6 +65,20 @@ class pessoaModel{
         }
         return lista;
     }
+    async logarEmailSenha(){
+        // let sql = 'select * from tb_PFisica pf inner join tb_Pessoa p on pf.PF_id = p.pessoa_id where p.pessoa_email = ? and p.pessoa_senha = ?;'
+        let sql = 'select * from tb_Pessoa where pessoa_email = ? and pessoa_senha = ?;'
+        let valores = [this.email, this.senha];
+        const banco = new Database();
+        let result = await banco.ExecutaComando(sql,valores);
+
+        if(result.length>0){
+            let pessoa = new pessoaModel(result['0']['PF_id'],result['0']['pessoa_nome'],result['0']['pessoa_telefone'],result['0']['pessoa_tipo'], result['0']['pessoa_email'],result['0']['pessoa_senha']);
+            return pessoa;
+        }
+        else
+            return null;
+    }
 
     toJSON(){
         return{
