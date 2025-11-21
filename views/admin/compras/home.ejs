@@ -1,0 +1,70 @@
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+<script src="/js/pedidos/listar.js"></script>
+
+<div class="container-fluid mt-4">
+    <a href="/admin/comprar" class="btn btn-success ms-auto">Efetuar Compra</a>
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-3">
+            <h3 class="mb-0">Pedidos de Compras</h3>
+
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label>Busca (Nome do Produto ou Nro. Pedido)</label>
+                        <input id="inputBusca" class="form-control" placeholder="Digite o nome do produto ou número do pedido..." />
+                    </div>
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <div class="btn-group w-100" role="group">
+                        <button id="buscar" class="btn btn-primary">
+                            <i class="bi bi-search"></i> Buscar
+                        </button>
+                        <button class="btn btn-success" id="excel">
+                            <i class="bi bi-file-earmark-excel"></i> Excel
+                        </button>
+                        <button onclick="window.print()" class="btn btn-info" id="pdf">
+                            <i class="bi bi-file-earmark-pdf"></i> PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="table-responsive">
+                <table id="pedidos" class="table table-hover table-striped">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Nro. Pedido</th>
+                            <th>Data do Pedido</th>
+                            <th>Produto</th>
+                            <th>Quantidade</th>
+                            <th>Valor Unitário</th>
+                            <th>Valor do Pedido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="6" class="text-center text-muted">
+                                <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+                                Carregando pedidos...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @media print {
+        .btn-group, .card-header, label {
+            display: none !important;
+        }
+        .card {
+            border: none !important;
+            box-shadow: none !important;
+        }
+    }
+</style>
