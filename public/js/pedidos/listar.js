@@ -29,8 +29,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 for(let i = 0; i < corpo.lista.length; i++) {
                     let item = corpo.lista[i];
                     html += `<tr>
-                                <td><strong>#${item.pedido}</strong></td>
+                                <td><strong>#${item.venda}</strong></td>
                                 <td>${new Date(item.data).toLocaleString('pt-BR')}</td>
+                                <td>${item.cliente || 'N/A'}</td>
                                 <td>${item.produto}</td>
                                 <td>${item.quantidade}</td>
                                 <td>R$ ${parseFloat(item.valorUnitario).toFixed(2).replace('.', ',')}</td>
@@ -43,21 +44,21 @@ document.addEventListener("DOMContentLoaded", function() {
             } else {
                 document.querySelector("#pedidos > tbody").innerHTML = `
                     <tr>
-                        <td colspan="6" class="text-center text-muted py-4">
+                        <td colspan="7" class="text-center text-muted py-4">
                             <i class="bi bi-inbox fs-3 d-block mb-2"></i>
-                            Nenhum pedido encontrado
+                            Nenhuma venda encontrada
                         </td>
                     </tr>
                 `;
             }
         })
         .catch(function(erro) {
-            console.error('Erro ao carregar pedidos:', erro);
+            console.error('Erro ao carregar vendas:', erro);
             document.querySelector("#pedidos > tbody").innerHTML = `
                 <tr>
-                    <td colspan="6" class="text-center text-danger py-4">
+                    <td colspan="7" class="text-center text-danger py-4">
                         <i class="bi bi-exclamation-triangle fs-3 d-block mb-2"></i>
-                        Erro ao carregar pedidos
+                        Erro ao carregar vendas
                     </td>
                 </tr>
             `;

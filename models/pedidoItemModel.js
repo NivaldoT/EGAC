@@ -2,30 +2,31 @@ const Database = require("../utils/database");
 
 const banco = new Database();
 
-class PedidoItemModel {
+class ItemVendaModel {
 
-    #pedidoItemId;
-    #pedidoId;
+    #itemVendaId;
+    #vendaId;
     #produtoId;
-    #pedidoItemQuantidade;
-    #pedidoItemValor;
-    #pedidoItemValorTotal;
-    #pedidoData;
-    #pedidoValorTotal;
+    #itemVendaQuantidade;
+    #itemVendaValor;
+    #itemVendaValorTotal;
+    #vendaData;
+    #vendaValorTotal;
     #produtoNome;
+    #pessoaNome;
 
-    get pedidoItemId() {
-        return this.#pedidoItemId;
+    get itemVendaId() {
+        return this.#itemVendaId;
     }
-    set pedidoItemId(pedidoItemId) {
-        this.#pedidoItemId = pedidoItemId;
+    set itemVendaId(itemVendaId) {
+        this.#itemVendaId = itemVendaId;
     }
 
-    get pedidoId() {
-        return this.#pedidoId;
+    get vendaId() {
+        return this.#vendaId;
     }
-    set pedidoId(pedidoId) {
-        this.#pedidoId = pedidoId;
+    set vendaId(vendaId) {
+        this.#vendaId = vendaId;
     }
 
     get produtoId() {
@@ -35,39 +36,39 @@ class PedidoItemModel {
         this.#produtoId = produtoId;
     }
 
-    get pedidoItemQuantidade() {
-        return this.#pedidoItemQuantidade;
+    get itemVendaQuantidade() {
+        return this.#itemVendaQuantidade;
     }
-    set pedidoItemQuantidade(pedidoItemQuantidade) {
-        this.#pedidoItemQuantidade = pedidoItemQuantidade;
-    }
-
-    get pedidoItemValor() {
-        return this.#pedidoItemValor;
-    }
-    set pedidoItemValor(pedidoItemValor) {
-        this.#pedidoItemValor = pedidoItemValor;
+    set itemVendaQuantidade(itemVendaQuantidade) {
+        this.#itemVendaQuantidade = itemVendaQuantidade;
     }
 
-    get pedidoItemValorTotal() {
-        return this.#pedidoItemValorTotal;
+    get itemVendaValor() {
+        return this.#itemVendaValor;
     }
-    set pedidoItemValorTotal(pedidoItemValorTotal) {
-        this.#pedidoItemValorTotal = pedidoItemValorTotal;
-    }
-
-    get pedidoData() {
-        return this.#pedidoData;
-    }
-    set pedidoData(pedidoData) {
-        this.#pedidoData = pedidoData;
+    set itemVendaValor(itemVendaValor) {
+        this.#itemVendaValor = itemVendaValor;
     }
 
-    get pedidoValorTotal() {
-        return this.#pedidoValorTotal;
+    get itemVendaValorTotal() {
+        return this.#itemVendaValorTotal;
     }
-    set pedidoValorTotal(pedidoValorTotal) {
-        this.#pedidoValorTotal = pedidoValorTotal;
+    set itemVendaValorTotal(itemVendaValorTotal) {
+        this.#itemVendaValorTotal = itemVendaValorTotal;
+    }
+
+    get vendaData() {
+        return this.#vendaData;
+    }
+    set vendaData(vendaData) {
+        this.#vendaData = vendaData;
+    }
+
+    get vendaValorTotal() {
+        return this.#vendaValorTotal;
+    }
+    set vendaValorTotal(vendaValorTotal) {
+        this.#vendaValorTotal = vendaValorTotal;
     }
 
     get produtoNome() {
@@ -77,19 +78,27 @@ class PedidoItemModel {
         this.#produtoNome = produtoNome;
     }
 
+    get pessoaNome() {
+        return this.#pessoaNome;
+    }
+    set pessoaNome(pessoaNome) {
+        this.#pessoaNome = pessoaNome;
+    }
 
-    constructor(pedidoItemId, pedidoId, produtoId, 
-        pedidoItemQuantidade, pedidoItemValor, 
-        pedidoItemValorTotal, pedidoData, pedidoValorTotal, produtoNome) {
-        this.#pedidoItemId = pedidoItemId;
-        this.#pedidoId = pedidoId;
+
+    constructor(itemVendaId, vendaId, produtoId, 
+        itemVendaQuantidade, itemVendaValor, 
+        itemVendaValorTotal, vendaData, vendaValorTotal, produtoNome, pessoaNome) {
+        this.#itemVendaId = itemVendaId;
+        this.#vendaId = vendaId;
         this.#produtoId = produtoId;
-        this.#pedidoItemQuantidade = pedidoItemQuantidade;
-        this.#pedidoItemValor = pedidoItemValor;
-        this.#pedidoItemValorTotal = pedidoItemValorTotal;
-        this.#pedidoData = pedidoData;
-        this.#pedidoValorTotal = pedidoValorTotal;
+        this.#itemVendaQuantidade = itemVendaQuantidade;
+        this.#itemVendaValor = itemVendaValor;
+        this.#itemVendaValorTotal = itemVendaValorTotal;
+        this.#vendaData = vendaData;
+        this.#vendaValorTotal = vendaValorTotal;
         this.#produtoNome = produtoNome;
+        this.#pessoaNome = pessoaNome;
     }
 
     async listar(termoFiltragem) {
@@ -103,19 +112,20 @@ class PedidoItemModel {
                 valores.push('%'+ termoFiltragem +'%')
             }
             else {
-                //sql para filtrar pelo nro do pedido
-                sqlWhere = " where ped.ped_id = " + termoFiltragem;
+                //sql para filtrar pelo nro da venda
+                sqlWhere = " where v.ven_idVenda = " + termoFiltragem;
             }
         }
 
-        let sql = `select ped.ped_id, ped.ped_data, ped.ped_valorTotal, 
-                    pi.peditem_quantidade, 
-                    pi.peditem_valorUnidade, pi.peditem_valorTotal, p.prod_nome
-                    from tb_Pedido ped 
-                    inner join tb_PedidoItens pi on ped.ped_id = pi.peditem_idPedido
-                    inner join tb_Produto p on p.prod_id = pi.peditem_idProduto
+        let sql = `select v.ven_idVenda, v.ven_data, v.ven_valorTotal, 
+                    iv.itven_qtd, 
+                    iv.itven_precoUnitario, p.prod_nome, pes.pessoa_nome
+                    from tb_Venda v 
+                    inner join tb_ItemVenda iv on v.ven_idVenda = iv.itven_idVenda
+                    inner join tb_Produto p on p.prod_id = iv.itven_idProduto
+                    left join tb_Pessoa pes on pes.pessoa_id = v.ven_idPessoa
                     ${sqlWhere}
-                    order by ped.ped_data desc`;
+                    order by v.ven_data desc`;
 
         
 
@@ -125,16 +135,17 @@ class PedidoItemModel {
 
         for(let i = 0; i< rows.length; i++) {
             let row = rows[i];
-            listaItens.push(new PedidoItemModel(0, row["ped_id"], 0, row["peditem_quantidade"], row["peditem_valorUnidade"], row["peditem_valorTotal"], row["ped_data"], row["ped_valorTotal"], row["prod_nome"]));
+            let valorTotal = row["itven_precoUnitario"] * row["itven_qtd"];
+            listaItens.push(new ItemVendaModel(0, row["ven_idVenda"], 0, row["itven_qtd"], row["itven_precoUnitario"], valorTotal, row["ven_data"], row["ven_valorTotal"], row["prod_nome"], row["pessoa_nome"]));
         }
 
         return listaItens;
     }
 
     async gravar() {
-        let sql = "insert into tb_PedidoItens (peditem_idPedido, peditem_idProduto, peditem_quantidade, peditem_valorUnidade, peditem_valorTotal) values (?, ?, ?, ?, ?)";
+        let sql = "insert into tb_ItemVenda (itven_idVenda, itven_idProduto, itven_qtd, itven_precoUnitario) values (?, ?, ?, ?)";
 
-        let valores = [this.#pedidoId, this.#produtoId, this.#pedidoItemQuantidade, this.#pedidoItemValor, this.#pedidoItemValorTotal];
+        let valores = [this.#vendaId, this.#produtoId, this.#itemVendaQuantidade, this.#itemVendaValor];
 
         let result = await banco.ExecutaComandoNonQuery(sql, valores);
 
@@ -143,15 +154,16 @@ class PedidoItemModel {
 
     toJSON() {
         return {
-            pedido: this.#pedidoId,
-            data: this.#pedidoData,
+            venda: this.#vendaId,
+            data: this.#vendaData,
             produto: this.#produtoNome,
-            quantidade: this.#pedidoItemQuantidade,
-            valorUnitario: this.#pedidoItemValor,
-            valorTotal: this.#pedidoValorTotal
+            cliente: this.#pessoaNome,
+            quantidade: this.#itemVendaQuantidade,
+            valorUnitario: this.#itemVendaValor,
+            valorTotal: this.#vendaValorTotal
         };
     }
 
 }
 
-module.exports = PedidoItemModel;
+module.exports = ItemVendaModel;

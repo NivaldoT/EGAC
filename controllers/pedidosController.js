@@ -1,5 +1,5 @@
-const PedidoItemModel = require("../models/pedidoItemModel");
-const PedidoModel = require("../models/pedidoModel");
+const ItemVendaModel = require("../models/pedidoItemModel");
+const VendaModel = require("../models/pedidoModel");
 const ProdutoModel = require("../models/produtoModel");
 
 class PedidosController {
@@ -13,8 +13,8 @@ class PedidosController {
         if(req.query.termo) {
             termo = req.query.termo;
         }
-        let pedidoItem = new PedidoItemModel();
-        let lista = await pedidoItem.listar(termo);
+        let itemVenda = new ItemVendaModel();
+        let lista = await itemVenda.listar(termo);
         res.send({lista});
     }
 
@@ -23,34 +23,34 @@ class PedidosController {
         let ok = false;
         let msg = "";
 
-        //processo de gravação do pedido
+        //processo de gravação da venda
         if(req.body.length > 0) {
             let itensPedido = req.body;
             
-            // Calcular valor total do pedido
+            // Calcular valor total da venda
             let valorTotal = 0;
             for(let i = 0; i < itensPedido.length; i++) {
                 valorTotal += parseFloat(itensPedido[i].price) * parseInt(itensPedido[i].quantity);
             }
             
-            let pedidoModel = new PedidoModel();
-            pedidoModel.pedidoValorTotal = valorTotal;
-            let pedidoId = await pedidoModel.gravar();
+            let vendaModel = new VendaModel();
+            vendaModel.vendaValorTotal = valorTotal;
+            vendaModel.vendaIdPessoa = null; // Por enquanto null, pode ser vinculado ao usuário logado
+            let vendaId = await vendaModel.gravar();
             
-            if(pedidoId > 0) {
+            if(vendaId > 0) {
                 let produtoModel = new ProdutoModel();
                 for(let i = 0; i < itensPedido.length; i++) {
                     let produtoId = itensPedido[i].id;
                     let produtoEncontrado = await produtoModel.buscarId(produtoId);
                     if(produtoEncontrado != null) {
-                        let itemPedidoModel = new PedidoItemModel();
-                        itemPedidoModel.produtoId = produtoId;
-                        itemPedidoModel.pedidoId = pedidoId;
-                        itemPedidoModel.pedidoItemValor = produtoEncontrado.preco;
-                        itemPedidoModel.pedidoItemQuantidade = itensPedido[i].quantity;
-                        itemPedidoModel.pedidoItemValorTotal = produtoEncontrado.preco * itensPedido[i].quantity;
+                        let itemVendaModel = new ItemVendaModel();
+                        itemVendaModel.produtoId = produtoId;
+                        itemVendaModel.vendaId = vendaId;
+                        itemVendaModel.itemVendaValor = produtoEncontrado.preco;
+                        itemVendaModel.itemVendaQuantidade = itensPedido[i].quantity;
 
-                        await itemPedidoModel.gravar();
+                        await itemVendaModel.gravar();
                     }
                 }
 
