@@ -1,0 +1,68 @@
+<script src="/js/compras/comprar.js" defer></script>
+<div class="container">
+    <h1>Efetuar Compra</h1>
+    <div class="row">
+        <div class="form-floating mb-3 col-sm-4" id="procurarFunc">
+            <input type="text" class="form-control" id="procurarFuncval" placeholder=" " maxlength="100" disabled>
+            <label for="procurarFuncval">Funcionario Logado:</label>
+        </div>
+        <div class="form-floating mb-3 col-lg-8" id="func">
+            <select name="func" id="funcval" class="form-control">
+                <option value="<%=func.id%>"><%=func.nome%></option>
+            </select>
+            <label for="funcval">Funcionário:</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-floating mb-3 col-sm-4" id="procurarFornecedor">
+            <input type="text" class="form-control" id="procurarFornecedorval" placeholder=" " maxlength="100">
+            <label for="procurarFornecedorval">Insira o nome do Fornecedor:</label>
+        </div>
+        <div class="form-floating mb-3 col-lg-8" id="Fornecedor">
+            <select name="Fornecedor" id="Fornecedorval" class="form-control">
+                <option value="0" selected>Busque o Fornecedor no campo ao lado...</option>
+            </select>
+            <label for="Fornecedorval">Fornecedor:</label>
+        </div>
+    </div>
+
+    <div class="row shadow-lg p-3">  
+        <h4>Adicionar Produtos a Compra</h4>
+        <div class="form-floating mb-3 col-sm-4" id="nomeProd">
+            <input type="text" name="nomeProd" id="nomeProdval" class="form-control" placeholder=" ">
+            <label for="nomeProdval">Nome Produto:</label>
+        </div>
+        <div class="form-floating mb-3 col-sm-5" id="func">
+            <select name="func" id="prod" class="form-control">
+            <option value="0" selected>Busque o produto no campo ao lado...</option>
+            </select>
+            <label for="prod">Funcionário responsável:</label>
+        </div>            
+        <div class="form-floating mb-3 col-sm-3" id="qtd">
+            <input type="text" class="form-control" id="qtdval" placeholder=" " maxlength="100">
+            <label for="qtdval">Quantidade:</label>
+        </div>
+        <div>
+            <button class="btn btn-primary mb-4" id="AddSubItem">Adicionar Sub-Item à Ordem de Serviço</button>
+            <span class="text-danger align-items-center" id="msgErroSubItem"></span>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered mt-3" id="tableSubItem" style="color: #000;">
+                <thead>
+                    <th>ID - Funcionário</th>
+                    <th>Funcionário</th>
+                    <th>Sub-Item</th>
+                    <th>Remover</th>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+
+
+</div>
+<style>
+    .row label{
+        padding-left: 1.5rem
+    }
+</style>

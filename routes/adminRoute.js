@@ -12,6 +12,7 @@ const PJController = require("../controllers/PJController");
 const PessoaController = require("../controllers/pessoaController");
 const OrdemServicoController = require('../controllers/ordemServicoController');
 const PedidosController = require('../controllers/pedidosController');
+const CompraController = require("../controllers/compraController");
 const router = express.Router();
 
 // Configuração do Multer para upload de imagens
@@ -41,6 +42,8 @@ const pessoaController = new PessoaController();
 
 const ordemServicoController = new OrdemServicoController();
 const pedidosController = new PedidosController();
+
+const compraController = new CompraController();
 
 router.get("/", adminController.homeView);
 
@@ -104,6 +107,10 @@ router.post('/ordemServicos/receber', ordemServicoController.receberOS);
                 //VENDAS/PEDIDOS
 router.get('/vendas', pedidosController.pedidosView);
 router.get('/vendas/listar', pedidosController.listarPedidos);
+
+                //COMPRAS   
+router.get('/compras', compraController.homeView);
+router.get('/comprar', compraController.comprarView);
 
 router.get('/alterarItem/:tipo/:id', adminController.alterarItemView);
 router.get('/alterarCliente/:tipo/:id', adminController.alterarClienteView);
