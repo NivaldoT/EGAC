@@ -73,7 +73,7 @@ class pessoaModel{
         let result = await banco.ExecutaComando(sql,valores);
 
         if(result.length>0){
-            let pessoa = new pessoaModel(result['0']['PF_id'],result['0']['pessoa_nome'],result['0']['pessoa_telefone'],result['0']['pessoa_tipo'], result['0']['pessoa_email'],result['0']['pessoa_senha']);
+            let pessoa = new pessoaModel(result['0']['pessoa_id'],result['0']['pessoa_nome'],result['0']['pessoa_telefone'],result['0']['pessoa_tipo'], result['0']['pessoa_email'],result['0']['pessoa_senha']);
             return pessoa;
         }
         else

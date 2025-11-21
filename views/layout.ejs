@@ -35,6 +35,36 @@
     <link rel="stylesheet" href="/css/cart.css">
 
 	<link rel="stylesheet" href="/css/cadastro.css">
+	
+	<style>
+		/* Estilos para dropdown de perfil */
+		#nav-perfil .dropdown-menu {
+			background: #fff;
+			border: 1px solid #ddd;
+			border-radius: 4px;
+			box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+			min-width: 200px;
+		}
+		#nav-perfil .dropdown-item {
+			color: #333;
+			padding: 10px 20px;
+			transition: background 0.3s;
+		}
+		#nav-perfil .dropdown-item:hover {
+			background: #f8f9fa;
+			color: #82ae46;
+		}
+		#nav-perfil .dropdown-divider {
+			border-color: #e9ecef;
+		}
+		#nav-perfil .icon-user,
+		#nav-perfil .icon-sign-out {
+			margin-right: 8px;
+		}
+		#user-name {
+			font-weight: 500;
+		}
+	</style>
   </head>
   <body class="goto-here">
 		<div class="py-1 bg-primary">
@@ -74,7 +104,23 @@
 	          <li class="nav-item"><a href="/about" class="nav-link">Sobre</a></li>
 	          <li class="nav-item"><a href="/blog" class="nav-link">Notícias</a></li>
 	          <li class="nav-item"><a href="/contact" class="nav-link">Contato</a></li>
-			  <li class="nav-item"><a href="/usuario/login" class="nav-link">Entrar</a></li>
+			  <li class="nav-item" id="nav-login">
+			  	<a href="/usuario/login" class="nav-link">Entrar</a>
+			  </li>
+			  <li class="nav-item dropdown" id="nav-perfil" style="display: none;">
+			  	<a href="#" class="nav-link dropdown-toggle" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<i class="icon-user"></i> <span id="user-name">Perfil</span>
+				</a>
+				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+					<a class="dropdown-item" href="#" id="user-info">
+						<i class="icon-user"></i> <span id="user-email"></span>
+					</a>
+					<div class="dropdown-divider"></div>
+					<a class="dropdown-item" href="#" onclick="logout()">
+						<i class="icon-sign-out"></i> Sair
+					</a>
+				</div>
+			  </li>
 	          <li class="nav-item cta cta-colored"><a href="/shop" class="nav-link btn-cart"><span class="icon-shopping_cart"></span>[0]</a></li>
 
 	        </ul>
@@ -82,6 +128,69 @@
 	    </div>
 	  </nav>
     <!-- END nav -->
+	
+	<script>
+		// Função para pegar cookie
+		function getCookie(name) {
+			const value = `; ${document.cookie}`;
+			const parts = value.split(`; ${name}=`);
+			if (parts.length === 2) return parts.pop().split(';').shift();
+			return null;
+		}
+		
+		// Verificar se usuário está logado
+		function checkUserLogin() {
+			const navLogin = document.getElementById('nav-login');
+			const navPerfil = document.getElementById('nav-perfil');
+			
+			if (!navLogin || !navPerfil) {
+				// Elementos ainda não existem, tentar novamente
+				setTimeout(checkUserLogin, 100);
+				return;
+			}
+			
+			const userEmail = getCookie('UsuarioEmail');
+			const userName = getCookie('UsuarioNome');
+			
+			if (userEmail) {
+				// Usuário está logado
+				navLogin.style.display = 'none';
+				navPerfil.style.display = 'block';
+				
+				// Exibir nome ou email
+				if (userName) {
+					document.getElementById('user-name').textContent = decodeURIComponent(userName);
+				} else {
+					document.getElementById('user-name').textContent = decodeURIComponent(userEmail).split('@')[0];
+				}
+				document.getElementById('user-email').textContent = decodeURIComponent(userEmail);
+			} else {
+				// Usuário não está logado
+				navLogin.style.display = 'block';
+				navPerfil.style.display = 'none';
+			}
+		}
+		
+		// Função de logout
+		function logout() {
+			event.preventDefault();
+			// Limpar cookies
+			document.cookie = 'UsuarioEmail=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+			document.cookie = 'UsuarioSenha=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+			document.cookie = 'UsuarioNome=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+			
+			// Limpar carrinho
+			localStorage.removeItem('cart');
+			
+			// Redirecionar
+			window.location.href = '/';
+		}
+		
+		// Executar ao carregar e também imediatamente
+		checkUserLogin();
+		document.addEventListener('DOMContentLoaded', checkUserLogin);
+	</script>
+	
 	<body>
 		<main id="main-content">
 			<%- body %>

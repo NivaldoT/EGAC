@@ -1,6 +1,7 @@
 const ItemVendaModel = require("../models/pedidoItemModel");
 const VendaModel = require("../models/pedidoModel");
 const ProdutoModel = require("../models/produtoModel");
+const PessoaModel = require("../models/pessoaModel");
 
 class PedidosController {
 
@@ -19,13 +20,34 @@ class PedidosController {
     }
 
     async gravar(req, res) {
-        console.log(req.body);
         let ok = false;
         let msg = "";
 
         //processo de gravação da venda
         if(req.body.length > 0) {
             let itensPedido = req.body;
+            
+            // Buscar ID do cliente logado pelos cookies
+            let idPessoa = null;
+            let nomeCliente = null;
+            
+            if(req.cookies && req.cookies.UsuarioEmail && req.cookies.UsuarioSenha) {
+                let pessoa = new PessoaModel(null, null, null, null, req.cookies.UsuarioEmail, req.cookies.UsuarioSenha);
+                pessoa = await pessoa.logarEmailSenha();
+                
+                if(pessoa) {
+                    idPessoa = pessoa.id;
+                    nomeCliente = pessoa.nome;
+                }
+            }
+            
+            // VALIDAÇÃO: Rejeitar vendas anônimas
+            if(!idPessoa) {
+                ok = false;
+                msg = "É necessário estar logado para realizar uma compra!";
+                res.send({ok, msg});
+                return;
+            }
             
             // Calcular valor total da venda
             let valorTotal = 0;
@@ -35,7 +57,7 @@ class PedidosController {
             
             let vendaModel = new VendaModel();
             vendaModel.vendaValorTotal = valorTotal;
-            vendaModel.vendaIdPessoa = null; // Por enquanto null, pode ser vinculado ao usuário logado
+            vendaModel.vendaIdPessoa = idPessoa; // Vincula ao cliente logado
             let vendaId = await vendaModel.gravar();
             
             if(vendaId > 0) {
@@ -55,11 +77,11 @@ class PedidosController {
                 }
 
                 ok = true;
-                msg = "Pedido gravado com sucesso!";
+                msg = `Compra realizada com sucesso, ${nomeCliente}!`;
             }
             else {
                 ok = false;
-                msg = "Erro ao gerar pedido!";
+                msg = "Erro ao processar compra!";
             }
         }
         else {

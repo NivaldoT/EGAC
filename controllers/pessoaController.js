@@ -41,13 +41,24 @@ class pessoaController{
                     ok = true;
                     msg = 'Login de Funcionário realizado com Sucesso!';
                     redirecionarPara = '/admin';
+                } else {
+                    // Se for tipo 1 mas não é funcionário, é um cliente comum
+                    res.clearCookie('FuncionarioEmail');
+                    res.clearCookie('FuncionarioSenha');
+                    res.cookie('UsuarioEmail', usuario.email);
+                    res.cookie('UsuarioSenha', usuario.senha);
+                    res.cookie('UsuarioNome', usuario.nome);
+                    ok = true;
+                    msg = 'Login realizado com Sucesso!';
+                    redirecionarPara = '/';
                 }
             } else {
-                // Se for cliente, salva os cookies e redireciona para '/'
+                // Se for tipo != 1 (pessoa jurídica ou outro), salva os cookies e redireciona para '/'
                 res.clearCookie('FuncionarioEmail');
                 res.clearCookie('FuncionarioSenha');
                 res.cookie('UsuarioEmail', usuario.email);
                 res.cookie('UsuarioSenha', usuario.senha);
+                res.cookie('UsuarioNome', usuario.nome);
                 ok = true;
                 msg = 'Login realizado com Sucesso!';
                 redirecionarPara = '/';
