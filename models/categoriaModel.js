@@ -54,12 +54,20 @@ class categoriaModel{
         return result;
     }
 
-    async verificarChild(){
-        let sql = 'select count(*), c.categoria_nome from tb_Produto p inner join tb_Categoria c on p.prod_categoria = c.categoria_id where c.categoria_id = ? group by c.categoria_nome;'
+    async verificarProdutos(){
+        let sql = 'select count(*) as total from tb_Produto where prod_categoria = ?';
         let valores = [this.#id];
         let banco = new Database();
-        let result = banco.ExecutaComandoNonQuery(sql, valores)
-        return result;
+        let result = await banco.ExecutaComando(sql, valores);
+        return result[0].total;
+    }
+
+    async verificarEquipamentos(){
+        let sql = 'select count(*) as total from tb_EquipamentoAgricola where eq_categoria = ?';
+        let valores = [this.#id];
+        let banco = new Database();
+        let result = await banco.ExecutaComando(sql, valores);
+        return result[0].total;
     }
 
     async excluir(id){

@@ -124,12 +124,29 @@ class adminController {
         }
         
         if(tipo == 6){
-            prod = new categoriaModel();
-            let result = await prod.excluir(id);
+            let categoria = new categoriaModel(id, null);
+            
+            // Verificar se há produtos vinculados
+            const temProdutos = await categoria.verificarProdutos();
+            console.log(`Categoria ID ${id}: ${temProdutos} produtos vinculados`);
+            if(temProdutos > 0){
+                res.send({ok: false, msg: `Não é possível excluir esta categoria! Existem ${temProdutos} produto(s) vinculado(s) a ela.`});
+                return;
+            }
+
+            // Verificar se há equipamentos vinculados
+            const temEquipamentos = await categoria.verificarEquipamentos();
+            console.log(`Categoria ID ${id}: ${temEquipamentos} equipamentos vinculados`);
+            if(temEquipamentos > 0){
+                res.send({ok: false, msg: `Não é possível excluir esta categoria! Existem ${temEquipamentos} equipamento(s) agrícola(s) vinculado(s) a ela.`});
+                return;
+            }
+            
+            let result = await categoria.excluir(id);
             if(result)
                 res.send({ok: true , msg: 'Categoria Excluida com Sucesso!'});
             else
-                res.send({ok: false, msg: 'Falha na Exclusão do Categoria!'});
+                res.send({ok: false, msg: 'Falha na Exclusão da Categoria!'});
         }
     }
 

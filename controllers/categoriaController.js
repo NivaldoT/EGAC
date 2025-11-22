@@ -36,12 +36,23 @@ class categoriaController{
     async excluir(req,res) {
         const categoria = new categoriaModel(req.body.id,req.body.nome);
 
-        if(await categoria.verificarChild()){
+        // Verificar se há produtos vinculados
+        const temProdutos = await categoria.verificarProdutos();
+        if(temProdutos > 0){
             console.log('não pode excluir, existem produtos vinculados');
-            res.send({msg: 'Não é possível excluir esta categoria, existem produtos vinculados a ela!'});
+            res.send({msg: `Não é possível excluir esta categoria! Existem ${temProdutos} produto(s) vinculado(s) a ela.`});
+            return;
         }
 
-        const result = await categoria.excluir();
+        // Verificar se há equipamentos vinculados
+        const temEquipamentos = await categoria.verificarEquipamentos();
+        if(temEquipamentos > 0){
+            console.log('não pode excluir, existem equipamentos vinculados');
+            res.send({msg: `Não é possível excluir esta categoria! Existem ${temEquipamentos} equipamento(s) agrícola(s) vinculado(s) a ela.`});
+            return;
+        }
+
+        const result = await categoria.excluir(req.body.id);
 
         if(result) 
             res.send({msg: 'Categoria excluída com Sucesso!'});
