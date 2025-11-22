@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if(corpo.lista.length > 0) {
                 for(let i = 0; i < corpo.lista.length; i++) {
                     let item = corpo.lista[i];
-                    html += `<tr>
+                    html += `<tr style="cursor: pointer;" onclick="window.location.href='/admin/vendas/detalhes/${item.venda}'" onmouseover="this.style.backgroundColor='#f5f5f5'" onmouseout="this.style.backgroundColor=''">
                                 <td><strong>#${item.venda}</strong></td>
                                 <td>${new Date(item.data).toLocaleString('pt-BR')}</td>
                                 <td>${item.cliente || 'N/A'}</td>

@@ -109,6 +109,7 @@ router.post('/ordemServicos/receber', ordemServicoController.receberOS);
                 //VENDAS/PEDIDOS
 router.get('/vendas', pedidosController.pedidosView);
 router.get('/vendas/listar', pedidosController.listarPedidos);
+router.get('/vendas/detalhes/:id', pedidosController.detalhesView);
 
                 //COMPRAS   
 router.get('/compras', compraController.homeView);
