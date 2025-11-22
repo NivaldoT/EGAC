@@ -1,5 +1,16 @@
 var mysql = require('mysql2');
 
+// Pool global único
+const pool = mysql.createPool({
+    host: '132.226.245.178',
+    database: 'PFS1_10442427754',
+    user: '10442427754',
+    password: '10442427754',
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
+});
+
 class Database {
 
     #conexao;
@@ -8,14 +19,8 @@ class Database {
     set conexao(conexao) { this.#conexao = conexao; }
 
     constructor() {
-
-        this.#conexao = mysql.createPool({
-            host: '132.226.245.178', //endereço do nosso banco de dados na nuvem
-            database: 'PFS1_10442427754', //a database de cada um de vocês possui a nomenclatura DB_(RA)
-            user: '10442427754', // usuario e senha de cada um de vocês é o RA
-            password: '10442427754',
-        });
-        
+        // da pool global
+        this.#conexao = pool;
     }
 
     ExecutaComando(sql, valores) {
