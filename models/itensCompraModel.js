@@ -31,7 +31,7 @@ class ItensCompraModel{
     }
 
     async gravar(){
-        let sql = 'insert into tb_ItemCompra(itcomp_idCompra,itcomp_idProduto,itcomp_qtd,itcomp_precoUnitario) values(?,?,?<?,?)';
+        let sql = 'insert into tb_ItemCompra(itcomp_idCompra,itcomp_idProduto,itcomp_qtd,itcomp_precoUnitario) values(?,?,?,?)';
         let valores = [this.#idCompra,this.#idProduto,this.#qtd,this.#precoUnitario];
         let banco = new Database();
         let result = await banco.ExecutaComandoNonQuery(sql,valores)
@@ -51,3 +51,4 @@ class ItensCompraModel{
         return lista;
     }
 }
+module.exports = ItensCompraModel;

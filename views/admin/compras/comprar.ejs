@@ -28,38 +28,46 @@
 
     <div class="row shadow-lg p-3">  
         <h4>Adicionar Produtos a Compra</h4>
-        <div class="form-floating mb-3 col-sm-4" id="nomeProd">
-            <input type="text" name="nomeProd" id="nomeProdval" class="form-control" placeholder=" ">
-            <label for="nomeProdval">Nome Produto:</label>
+        <div class="form-floating mb-3 col-sm-4" id="procurarProduto">
+            <input type="text" name="procurarProduto" id="procurarProdutoval" class="form-control" placeholder=" ">
+            <label for="procurarProdutoval">Nome Produto:</label>
         </div>
-        <div class="form-floating mb-3 col-sm-5" id="func">
-            <select name="func" id="prod" class="form-control">
+        <div class="form-floating mb-3 col-sm-4" id="prod">
+            <select name="prod" id="Produtoval" class="form-control">
             <option value="0" selected>Busque o produto no campo ao lado...</option>
             </select>
-            <label for="prod">Funcionário responsável:</label>
+            <label for="Produtoval">Funcionário responsável:</label>
         </div>            
-        <div class="form-floating mb-3 col-sm-3" id="qtd">
-            <input type="text" class="form-control" id="qtdval" placeholder=" " maxlength="100">
-            <label for="qtdval">Quantidade:</label>
+        <div class="form-floating mb-3 col-sm-2" id="quantidadeProduto">
+            <input type="text" class="form-control" id="quantidadeProdutoval" placeholder=" " maxlength="100">
+            <label for="quantidadeProdutoval">Quantidade:</label>
+        </div>
+        <div class="form-floating mb-3 col-sm-2" id="precoProduto">
+            <input type="text" class="form-control" id="precoProdutoval" placeholder=" " maxlength="100">
+            <label for="precoProdutoval">Preço Unidade:</label>
         </div>
         <div>
-            <button class="btn btn-primary mb-4" id="AddSubItem">Adicionar Sub-Item à Ordem de Serviço</button>
-            <span class="text-danger align-items-center" id="msgErroSubItem"></span>
+            <button class="btn btn-primary mb-4" id="AddProduto">Adicionar Produto à Compra</button>
+            <span class="text-danger align-items-center" id="msgErroProduto"></span>
         </div>
         <div class="table-responsive">
-            <table class="table table-bordered mt-3" id="tableSubItem" style="color: #000;">
+            <table class="table table-bordered mt-3" id="tableProduto" style="color: #000;">
                 <thead>
-                    <th>ID - Funcionário</th>
-                    <th>Funcionário</th>
-                    <th>Sub-Item</th>
+                    <th>ID - Produto</th>
+                    <th>Produto</th>
+                    <th>Quantidade</th>
+                    <th>Preço Unidade</th>
+                    <th>Preço Total</th>
                     <th>Remover</th>
                 </thead>
             </table>
         </div>
     </div>
 
-
-
+    <br><br>
+    <div id="msgErroFinal" style="display: none;"></div>
+    <button class="btn btn-primary" id="comprar">Efetuar Compra</button>
+    <a href="/admin/compras" class="btn btn-secondary">Voltar</a>
 </div>
 <style>
     .row label{

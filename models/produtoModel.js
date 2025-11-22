@@ -144,6 +144,18 @@ class produtoModel{
         return result;
     }
 
+    async buscarProdutoNome(){
+        let sql = 'select * from tb_Produto where prod_nome like ?';
+        let valores = [this.#nome];
+        let banco = new Database();
+        let rows = await banco.ExecutaComando(sql,valores);
+
+        let lista = [];
+        for(let i=0; i<rows.length;i++){
+            lista.push(new produtoModel(rows[i]['prod_id'],null,rows[i]['prod_nome']))
+        }
+        return lista;
+    }
     async buscarInsumoNome(){
         let sql = 'select * from tb_Produto where prod_nome like ? and prod_tipo = 2;';
         let valores = [this.#nome];
@@ -157,7 +169,7 @@ class produtoModel{
         return lista;
     }
     async atualizarEstoque(qtd){
-        let sql = 'update tb_Produto set prod_estoque = prod_estoque +(?) where prod_id = ?';
+        let sql = 'update tb_Produto set prod_estoque = prod_estoque +(?) where prod_id = ?;';
         let valores = [qtd, this.#id];
         let banco = new Database();
         let result = await banco.ExecutaComandoNonQuery(sql,valores);

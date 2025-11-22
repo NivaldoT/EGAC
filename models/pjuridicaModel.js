@@ -77,6 +77,22 @@ class PJModel extends pessoaModel{
 
         return result;
     }
+
+    async buscarFornecedorNome(){
+        let sql =  `select * from tb_Pessoa p
+                    inner join tb_PJuridica pj on pj.PJ_id = p.pessoa_id
+                    where pessoa_nome like ?;`;
+        let valores = [this.nome];
+        const banco = new Database();
+
+        let rows = await banco.ExecutaComando(sql,valores);
+        
+        let lista = [];
+        for(let i=0;i<rows.length;i++){
+            lista.push(new pessoaModel(rows[i]['pessoa_id'],rows[i]['pessoa_nome']));
+        }
+        return lista;
+    }
 }
 
 module.exports = PJModel;
