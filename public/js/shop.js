@@ -215,12 +215,82 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function finalizarCompra() {
+    // Verificar se usuário está logado
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+    }
+    
+    const userEmail = getCookie('UsuarioEmail');
+    
+    if (!userEmail) {
+        // Usuário não está logado - redirecionar para login
+        if (confirm('Você precisa estar logado para finalizar a compra.\n\nDeseja fazer login agora?')) {
+            window.location.href = '/usuario/login';
+        }
+        return;
+    }
+    
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     if (cart.length === 0) {
         alert('Seu carrinho está vazio!');
         return;
     }
     
-    // Redireciona para a página de carrinho completo
-    window.location.href = '/cart';
+    // Processar compra diretamente
+    if (confirm(`Confirmar compra de ${cart.length} produto(s)?`)) {
+        // Preparar itens para envio
+        const selectedItems = cart.map(item => ({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity,
+            img: item.img
+        }));
+        
+        // Enviar pedido para o servidor
+        fetch('/pedido/gravar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify(selectedItems)
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(text => {
+                    console.error('Server error:', text);
+                    throw new Error(`Erro ${response.status}: ${text.substring(0, 100)}`);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.ok) {
+                // Limpar carrinho
+                localStorage.removeItem('cart');
+                updateCartCount();
+                renderSidebarCart();
+                
+                // Fechar sidebar
+                document.querySelector('.cart-section').classList.remove('cart-active');
+                document.querySelector('.cart-section').classList.add('cart-inactive');
+                
+                // Mostrar mensagem de sucesso
+                alert('' + data.msg + '\n\nSua compra foi registrada com sucesso!');
+                
+                // Recarregar página
+                window.location.reload();
+            } else {
+                alert('Erro ao processar a compra ' + data.msg);
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao finalizar pedido:', error);
+            alert('Erro ao processar a compra: ' + error.message + '\n\nTente novamente ou acesse o carrinho completo.');
+        });
+    }
 }
