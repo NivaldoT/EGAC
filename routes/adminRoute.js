@@ -48,6 +48,7 @@ const compraController = new CompraController();
 router.get("/", adminController.homeView);
 
                 // Clientes
+router.get('/clientes/:tipo', adminController.clientesView)
 router.get('/clientes', adminController.clientesView)
 router.get('/PFCadastro', adminController.PFCadastroView)
 router.get('/PJCadastro', adminController.PJCadastroView)

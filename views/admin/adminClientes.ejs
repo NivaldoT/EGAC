@@ -1,17 +1,20 @@
 <script src="/js/js/adminClientes.js" defer></script>
 <div class="container-sm">
-    <h1>Listagem de Clientes</h1>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Listagem de Clientes</h1>
+        <a href="/admin/PFCadastro" id="btnCadastrar" class="btn btn-success">Cadastrar Pessoa Física</a>
+    </div>
     <a href="/admin" class="btn btn-secondary">Voltar</a>
     <div class="form-floating mt-3">
         <select name="select" id="select" class="form-control">
-            <option value="1">Pessoa Física</option>
-            <option value="2">Pessoa Jurídica</option>
-            <option value="3">Funcionários</option>
+            <option value="pf" <% if(tipoSelecionado == 'pf'){%>selected<%}%>>Pessoa Física</option>
+            <option value="pj" <% if(tipoSelecionado == 'pj'){%>selected<%}%>>Pessoa Jurídica</option>
+            <option value="funcionarios" <% if(tipoSelecionado == 'funcionarios'){%>selected<%}%>>Funcionários</option>
         </select>
         <label for="select">Selecione:</label>
     </div>
 
-    <table class="table table-bordered mt-3" style="color: #000;" id="1"> <!--LISTA PF-->
+    <table class="table table-bordered mt-3" style="color: #000;" id="pf"> <!--LISTA PF-->
         <thead>
             <th>ID</th>
             <th>Nome</th>
@@ -40,7 +43,7 @@
         </tbody>
     </table>
 
-    <table class="table table-bordered mt-3" style="color: #000;" id="2"> <!--LISTA PJ-->
+    <table class="table table-bordered mt-3" style="color: #000;" id="pj"> <!--LISTA PJ-->
         <thead>
             <th>ID</th>
             <th>Nome</th>
@@ -69,7 +72,7 @@
         </tbody>
     </table>
 
-    <table class="table table-bordered mt-3" style="color: #000;" id="3"> <!--LISTA PF-->
+    <table class="table table-bordered mt-3" style="color: #000;" id="funcionarios"> <!--LISTA FUNCIONARIOS-->
         <thead>
             <th>ID</th>
             <th>Nome</th>

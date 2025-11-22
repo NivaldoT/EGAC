@@ -1,8 +1,12 @@
 document.addEventListener('DOMContentLoaded', function(){
     const select = document.getElementById('select');
+    const btnCadastrar = document.getElementById('btnCadastrar');
     
     change();
-    select.addEventListener('change', change);
+    select.addEventListener('change', function(){
+        // Redirecionar para a rota correta
+        window.location.href = '/admin/clientes/' + select.value;
+    });
 
     function change(){    
         let listas = document.querySelectorAll('table');            // SELECIONA A TABELA A EXIBIR
@@ -11,6 +15,18 @@ document.addEventListener('DOMContentLoaded', function(){
                 listas[i].style.display = 'table';
             else
                 listas[i].style.display = 'none';
+        }
+        
+        // Atualizar botão de cadastro conforme seleção
+        if(select.value == 'pf') {
+            btnCadastrar.href = '/admin/PFCadastro';
+            btnCadastrar.textContent = 'Cadastrar Pessoa Física';
+        } else if(select.value == 'pj') {
+            btnCadastrar.href = '/admin/PJCadastro';
+            btnCadastrar.textContent = 'Cadastrar Pessoa Jurídica';
+        } else if(select.value == 'funcionarios') {
+            btnCadastrar.href = '/admin/PFCadastro';
+            btnCadastrar.textContent = 'Cadastrar Funcionário';
         }
     }
 
