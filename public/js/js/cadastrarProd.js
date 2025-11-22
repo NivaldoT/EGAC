@@ -15,12 +15,23 @@ document.addEventListener('DOMContentLoaded', function(){
         if(precomax.value>9999999.00)
             precomax.value = 9999999.00;
     })
+    precomax.addEventListener('input', function(){
+        if(precomax.value < 0)
+            precomax.value = 0;
+    })
+
+    let estoqueInput = document.getElementById('estoqueval');
+    estoqueInput.addEventListener('input', function(){
+        if(estoqueInput.value < 0)
+            estoqueInput.value = 0;
+    })
     
     let btn = document.getElementById('cadastrar');
     btn.addEventListener('click', function(){
 
         const nome = document.getElementById('nomeval');
         const preco = document.getElementById('precoval');
+        const estoque = document.getElementById('estoqueval');
         const descricao = document.getElementById('descricaoval');
         const tipoItem = document.getElementById('tipoItem');
         const categoria = document.getElementById('categoriaval');
@@ -37,6 +48,11 @@ document.addEventListener('DOMContentLoaded', function(){
             vetorVal.push(preco);
         else
             preco.style.borderColor = '';
+
+        if(!isFinite(Number(estoque.value)) || estoque.value < 0 || !estoque.value)
+            vetorVal.push(estoque);
+        else
+            estoque.style.borderColor = '';
 
         if(!descricao.value)
             vetorVal.push(descricao);
@@ -63,12 +79,13 @@ document.addEventListener('DOMContentLoaded', function(){
             inputImagem.style.borderColor = '';
 
         if(vetorVal.length == 0){
-            if(nome.value && isFinite(Number(preco.value)) && preco.value && descricao.value && inputImagem.files.length > 0){
+            if(nome.value && isFinite(Number(preco.value)) && preco.value && isFinite(Number(estoque.value)) && estoque.value >= 0 && descricao.value && inputImagem.files.length > 0){
                 // Usar FormData para enviar arquivo
                 let formData = new FormData();
                 formData.append('tipoItem', tipoItem.value);
                 formData.append('nome', nome.value);
                 formData.append('preco', preco.value);
+                formData.append('estoque', estoque.value);
                 formData.append('descricao', descricao.value);
                 formData.append('categoria', categoria.value);
                 formData.append('marca', marca.value);

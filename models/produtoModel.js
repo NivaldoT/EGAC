@@ -49,8 +49,8 @@ class produtoModel{
     }
 
     async cadastrar(){
-        const sql = 'insert into tb_Produto(prod_nome,prod_tipo,prod_preco,prod_descricao, prod_categoria, prod_marca, prod_imagem) values(?,?,?,?,?,?,?)';
-        const valores = [this.#nome, this.#tipo, this.#preco, this.#descricao, this.#categoria,this.#marca, this.#imagem];
+        const sql = 'insert into tb_Produto(prod_nome,prod_tipo,prod_preco,prod_descricao, prod_categoria, prod_marca, prod_estoque, prod_imagem) values(?,?,?,?,?,?,?,?)';
+        const valores = [this.#nome, this.#tipo, this.#preco, this.#descricao, this.#categoria,this.#marca, this.#estoque, this.#imagem];
         const banco = new Database();
 
         let result = await banco.ExecutaComandoNonQuery(sql,valores);
@@ -174,6 +174,24 @@ class produtoModel{
         let banco = new Database();
         let result = await banco.ExecutaComandoNonQuery(sql,valores);
         return result;
+    }
+
+    async verificarEstoque(qtd){
+        let sql = 'select prod_estoque, prod_nome from tb_Produto where prod_id = ?;';
+        let valores = [this.#id];
+        let banco = new Database();
+        let rows = await banco.ExecutaComando(sql,valores);
+        
+        if(rows.length > 0){
+            const estoqueAtual = rows[0]['prod_estoque'];
+            const nomeProduto = rows[0]['prod_nome'];
+            return {
+                disponivel: estoqueAtual >= qtd,
+                estoqueAtual: estoqueAtual,
+                nomeProduto: nomeProduto
+            };
+        }
+        return {disponivel: false, estoqueAtual: 0, nomeProduto: ''};
     }
 
     toJSON(){

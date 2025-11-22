@@ -21,12 +21,13 @@ class produtosController{
         const tipoItem = req.body.tipoItem;
         const nome = req.body.nome;
         const preco = req.body.preco;
+        const estoque = req.body.estoque;
         const descricao = req.body.descricao;
         const categoria = req.body.categoria;
         const marca = req.body.marca;
         const imagem = req.file ? req.file.filename : null;
 
-        let prod = new produtoModel(null,tipoItem,nome,preco,descricao,categoria,null,marca,null,null,imagem);
+        let prod = new produtoModel(null,tipoItem,nome,preco,descricao,categoria,null,marca,null,estoque,imagem);
         
         let result = await prod.cadastrar();
         if(result)
