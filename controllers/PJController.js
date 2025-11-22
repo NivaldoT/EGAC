@@ -68,5 +68,14 @@ class PJController{
         }
         res.send({ok,msg});
     }
+
+    async buscarFornecedorNome(req,res){
+        let nome = '%'+req.body.nome+'%';
+        let pessoa = new PJModel(null,nome);
+
+        let lista = await pessoa.buscarFornecedorNome();
+        
+        res.send({lista});
+    }
 }
 module.exports = PJController;

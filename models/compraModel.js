@@ -41,7 +41,7 @@ class CompraModel{
         let sql = 'insert into tb_Compra(comp_data, comp_idFuncionario, comp_idFornecedor, comp_valorTotal, comp_qtdParcelas) values(?,?,?,?,?);';
         let valores = [this.#data,this.#idFuncionario,this.#idFornecedor,this.#valorTotal,this.#qtdParcelas];
         let banco = new Database();
-        let result = await banco.ExecutaComandoNonQuery(sql,valores);
+        let result = await banco.ExecutaComandoLastInserted(sql,valores);
         return result;
     }
 
@@ -56,3 +56,4 @@ class CompraModel{
         return lista;
     }
 }
+module.exports = CompraModel;
