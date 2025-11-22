@@ -37,7 +37,7 @@
                         <span>Total</span>
                         <span>R$ <span id="total-value">0</span>,<span class="price-cents" id="total-cents">00</span></span>
                     </div>
-                    <button class="btn-checkout" id="finalizarCompra">Continuar a compra</button>
+                    <button class="btn-checkout" id="finalizarCompra">Efetuar a compra</button>
                 </div>
             </div>
         </div>
@@ -246,7 +246,12 @@ document.addEventListener('DOMContentLoaded', function() {
             credentials: 'include', // IMPORTANTE: Envia cookies com a requisição
             body: JSON.stringify(selectedItems)
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.ok) {
                 // Remover itens selecionados do carrinho
@@ -272,7 +277,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => {
             console.error('Erro ao finalizar pedido:', error);
-            alert('✗ Erro ao processar a compra. Verifique sua conexão e tente novamente.');
+            alert('✗ Erro ao processar a compra: ' + error.message + '\n\nVerifique o console do navegador (F12) para mais detalhes.');
         });
     });
 });
