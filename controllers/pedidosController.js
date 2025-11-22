@@ -19,6 +19,29 @@ class PedidosController {
         res.send({lista});
     }
 
+    async detalhesView(req, res) {
+        const vendaId = req.params.id;
+        
+        // Buscar dados da venda
+        let vendaModel = new VendaModel();
+        let venda = await vendaModel.buscarPorId(vendaId);
+        
+        // Buscar itens da venda
+        let itemVenda = new ItemVendaModel();
+        let itens = await itemVenda.listar(vendaId);
+        
+        // Converter itens para JSON
+        let itensJSON = itens.map(item => item.toJSON());
+        
+        console.log('Itens JSON:', JSON.stringify(itensJSON, null, 2));
+        
+        res.render("admin/vendaDetalhes", {
+            layout: 'layout_admin',
+            venda: venda,
+            itens: itensJSON
+        });
+    }
+
     async gravar(req, res) {
         let ok = false;
         let msg = "";

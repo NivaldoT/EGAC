@@ -61,6 +61,32 @@ class VendaModel {
         return listaVendas;
     }
 
+    async buscarPorId(id) {
+        let sql = `select v.*, p.pessoa_nome, p.pessoa_email, p.pessoa_telefone, pf.PF_cpf
+                   from tb_Venda v
+                   left join tb_Pessoa p on v.ven_idPessoa = p.pessoa_id
+                   left join tb_PFisica pf on p.pessoa_id = pf.PF_id
+                   where v.ven_idVenda = ?`;
+        
+        let valores = [id];
+        let rows = await banco.ExecutaComando(sql, valores);
+        
+        if(rows.length > 0) {
+            let row = rows[0];
+            return {
+                id: row["ven_idVenda"],
+                data: row["ven_data"],
+                idPessoa: row["ven_idPessoa"],
+                valorTotal: row["ven_valorTotal"],
+                clienteNome: row["pessoa_nome"],
+                clienteEmail: row["pessoa_email"],
+                clienteTelefone: row["pessoa_telefone"],
+                clienteCpf: row["PF_cpf"]
+            };
+        }
+        return null;
+    }
+
     async gravar() {
         let sql = "insert into tb_Venda (ven_data, ven_idPessoa, ven_valorTotal) values (now(), ?, ?)";     
         let valores = [this.#vendaIdPessoa, this.#vendaValorTotal];

@@ -160,7 +160,7 @@ class ItemVendaModel {
             cliente: this.#pessoaNome,
             quantidade: this.#itemVendaQuantidade,
             valorUnitario: this.#itemVendaValor,
-            valorTotal: this.#vendaValorTotal
+            valorTotal: this.#itemVendaValorTotal
         };
     }
 
