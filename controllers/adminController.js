@@ -151,6 +151,8 @@ class adminController {
     }
 
     async clientesView(req,res){
+        const tipo = req.params.tipo || 'pf'; // pf, pj ou funcionarios
+        
         let listaPF = [];
         let pf = new PFModel();
         listaPF = await pf.listar();
@@ -159,7 +161,7 @@ class adminController {
         let pj = new PJModel();
         listaPJ = await pj.listar();
         
-        res.render('admin/adminClientes',{layout: 'layout_admin', listaPF: listaPF, listaPJ: listaPJ});
+        res.render('admin/adminClientes',{layout: 'layout_admin', listaPF: listaPF, listaPJ: listaPJ, tipoSelecionado: tipo});
     }
     PFCadastroView(req,res){
         res.render('admin/PFCadastro',{layout: 'layout_admin'});

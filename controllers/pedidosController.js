@@ -72,6 +72,23 @@ class PedidosController {
                 return;
             }
             
+            // VERIFICAR ESTOQUE ANTES DE PROCESSAR A VENDA
+            let produtoModel = new ProdutoModel();
+            for(let i = 0; i < itensPedido.length; i++) {
+                let produtoId = itensPedido[i].id;
+                let quantidade = parseInt(itensPedido[i].quantity);
+                
+                produtoModel.id = produtoId;
+                let verificacao = await produtoModel.verificarEstoque(quantidade);
+                
+                if(!verificacao.disponivel) {
+                    ok = false;
+                    msg = `Produto "${verificacao.nomeProduto}" não possui estoque suficiente! Estoque disponível: ${verificacao.estoqueAtual}`;
+                    res.send({ok, msg});
+                    return;
+                }
+            }
+            
             // Calcular valor total da venda
             let valorTotal = 0;
             for(let i = 0; i < itensPedido.length; i++) {
@@ -84,18 +101,23 @@ class PedidosController {
             let vendaId = await vendaModel.gravar();
             
             if(vendaId > 0) {
-                let produtoModel = new ProdutoModel();
                 for(let i = 0; i < itensPedido.length; i++) {
                     let produtoId = itensPedido[i].id;
+                    let quantidade = parseInt(itensPedido[i].quantity);
                     let produtoEncontrado = await produtoModel.buscarId(produtoId);
+                    
                     if(produtoEncontrado != null) {
                         let itemVendaModel = new ItemVendaModel();
                         itemVendaModel.produtoId = produtoId;
                         itemVendaModel.vendaId = vendaId;
                         itemVendaModel.itemVendaValor = produtoEncontrado.preco;
-                        itemVendaModel.itemVendaQuantidade = itensPedido[i].quantity;
+                        itemVendaModel.itemVendaQuantidade = quantidade;
 
                         await itemVendaModel.gravar();
+                        
+                        // DIMINUIR ESTOQUE (quantidade negativa)
+                        produtoModel.id = produtoId;
+                        await produtoModel.atualizarEstoque(-quantidade);
                     }
                 }
 
