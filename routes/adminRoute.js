@@ -13,6 +13,8 @@ const PessoaController = require("../controllers/pessoaController");
 const OrdemServicoController = require('../controllers/ordemServicoController');
 const PedidosController = require('../controllers/pedidosController');
 const CompraController = require("../controllers/compraController");
+const ContasController = require("../controllers/contasController");
+const CaixaController = require("../controllers/caixaController");
 const router = express.Router();
 
 // Configuração do Multer para upload de imagens
@@ -45,6 +47,10 @@ const pedidosController = new PedidosController();
 
 const compraController = new CompraController();
 
+const contasController = new ContasController()
+
+const caixaController = new CaixaController();
+
 router.get("/", adminController.homeView);
 
                 // Clientes
@@ -59,7 +65,6 @@ router.post('/FuncionarioCadastro', pfController.cadastrar);
 router.post('/excluirCliente', adminController.excluirCliente)
 router.post('/alterarPF', pfController.alterar);
 router.post('/alterarPJ', pjController.alterar);
-//router.post('/alterarFuncionario', funcController.alterar);
 
 router.post('/buscarCliente', pessoaController.buscarClienteNome);
 router.post('/buscarEqAgricolaCliente', equipAgricolaController.buscarEqAgCliente);
@@ -115,6 +120,18 @@ router.get('/vendas/detalhes/:id', pedidosController.detalhesView);
 router.get('/compras', compraController.homeView);
 router.get('/comprar', compraController.comprarView);
 router.post('/comprar', compraController.comprar);
+
+                //CONTAS A RECEBER
+router.get('/contas', contasController.contasView);
+
+router.get('/contas/listar',contasController.listar);
+router.post('/contas/receber', contasController.receber);
+router.post('/contas/receber', contasController.pagar);
+
+
+                // CAIXA
+router.get('/caixa/getStatus', caixaController.getStatus);
+router.post('/caixa/abrir', caixaController.abrir);
 
 router.get('/alterarItem/:tipo/:id', adminController.alterarItemView);
 router.get('/alterarCliente/:tipo/:id', adminController.alterarClienteView);
