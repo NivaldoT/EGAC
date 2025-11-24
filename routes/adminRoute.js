@@ -54,8 +54,8 @@ const caixaController = new CaixaController();
 router.get("/", adminController.homeView);
 
                 // Clientes
-router.get('/clientes/:tipo', adminController.clientesView)
 router.get('/clientes', adminController.clientesView)
+router.get('/clientes/:tipo', adminController.clientesView)
 router.get('/PFCadastro', adminController.PFCadastroView)
 router.get('/PJCadastro', adminController.PJCadastroView)
 router.get('/FuncionarioCadastro', adminController.FuncionarioCadastroView)
@@ -94,7 +94,8 @@ router.post('/alterarMarca', marcaController.alterar);
 router.post('/alterarServico', servicoController.alterar);
 router.post('/alterarCategoria', categoriaController.alterar);
 router.post('/alterarEquipAgricola', equipAgricolaController.alterar);
-
+router.get('/alterarItem/:tipo/:id', adminController.alterarItemView);
+router.get('/alterarCliente/:tipo/:id', adminController.alterarClienteView);
                 // EXCLUIR
 router.post('/excluir', adminController.excluirItem);
 
@@ -134,6 +135,6 @@ router.post('/contas/receber', contasController.pagar);
 router.get('/caixa/getStatus', caixaController.getStatus);
 router.post('/caixa/abrir', caixaController.abrir);
 
-router.get('/alterarItem/:tipo/:id', adminController.alterarItemView);
-router.get('/alterarCliente/:tipo/:id', adminController.alterarClienteView);
+// router.get('/alterarItem/:tipo/:id', adminController.alterarItemView);
+// router.get('/alterarCliente/:tipo/:id', adminController.alterarClienteView);
 module.exports = router;
