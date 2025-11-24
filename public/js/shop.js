@@ -226,31 +226,46 @@ function finalizarCompra() {
     const userEmail = getCookie('UsuarioEmail');
     
     if (!userEmail) {
-        // Usuário não está logado - redirecionar para login
-        if (confirm('Você precisa estar logado para finalizar a compra.\n\nDeseja fazer login agora?')) {
-            window.location.href = '/usuario/login';
+        // Usuário não está logado - mostrar mensagem no carrinho
+        const errorDiv = document.getElementById('cart-error-message');
+        const errorText = document.getElementById('cart-error-text');
+        const errorImg = document.getElementById('cart-error-img');
+        
+        if (errorDiv && errorText && errorImg) {
+            errorText.textContent = 'Você precisa estar logado para finalizar a compra.';
+            errorDiv.style.display = 'block';
+            errorImg.style.display = 'none';
+            document.querySelector('.cart-body').scrollTop = 0;
         }
         return;
     }
     
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     if (cart.length === 0) {
-        alert('Seu carrinho está vazio!');
+        const errorDiv = document.getElementById('cart-error-message');
+        const errorText = document.getElementById('cart-error-text');
+        const errorImg = document.getElementById('cart-error-img');
+        
+        if (errorDiv && errorText && errorImg) {
+            errorText.textContent = 'Seu carrinho está vazio!';
+            errorDiv.style.display = 'block';
+            errorImg.style.display = 'none';
+            document.querySelector('.cart-body').scrollTop = 0;
+        }
         return;
     }
     
-    // Processar compra diretamente
-    if (confirm(`Confirmar compra de ${cart.length} produto(s)?`)) {
-        // Preparar itens para envio
-        const selectedItems = cart.map(item => ({
-            id: item.id,
-            name: item.name,
-            price: item.price,
-            quantity: item.quantity,
-            img: item.img
-        }));
-        
-        // Enviar pedido para o servidor
+    // Processar compra diretamente sem confirm
+    // Preparar itens para envio
+    const selectedItems = cart.map(item => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        img: item.img
+    }));
+    
+    // Enviar pedido para o servidor
         fetch('/pedido/gravar', {
             method: 'POST',
             headers: {
@@ -270,27 +285,74 @@ function finalizarCompra() {
         })
         .then(data => {
             if (data.ok) {
-                // Limpar carrinho
-                localStorage.removeItem('cart');
-                updateCartCount();
-                renderSidebarCart();
+                // Mostrar mensagem de sucesso no carrinho
+                const successDiv = document.getElementById('cart-success-message');
+                const successText = document.getElementById('cart-success-text');
                 
-                // Fechar sidebar
-                document.querySelector('.cart-section').classList.remove('cart-active');
-                document.querySelector('.cart-section').classList.add('cart-inactive');
+                if (successDiv && successText) {
+                    successText.textContent = data.msg;
+                    successDiv.style.display = 'block';
+                    
+                    // Scroll para o topo do carrinho
+                    document.querySelector('.cart-body').scrollTop = 0;
+                }
                 
-                // Mostrar mensagem de sucesso
-                alert('' + data.msg + '\n\nSua compra foi registrada com sucesso!');
-                
-                // Recarregar página
-                window.location.reload();
+                // Limpar carrinho após 2 segundos
+                setTimeout(function() {
+                    localStorage.removeItem('cart');
+                    updateCartCount();
+                    renderSidebarCart();
+                    
+                    // Recarregar página após mais 1 segundo
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 1000);
+                }, 2000);
             } else {
-                alert('Erro ao processar a compra ' + data.msg);
+                // Encontrar produto com erro no carrinho
+                let produtoComErro = null;
+                const mensagem = data.msg || '';
+                
+                // Tentar extrair nome do produto da mensagem de erro
+                const match = mensagem.match(/Produto "(.+?)" não possui/);
+                if (match && match[1]) {
+                    const nomeProduto = match[1];
+                    produtoComErro = cart.find(item => item.name.includes(nomeProduto));
+                }
+                
+                // Mostrar erro no carrinho
+                const errorDiv = document.getElementById('cart-error-message');
+                const errorText = document.getElementById('cart-error-text');
+                const errorImg = document.getElementById('cart-error-img');
+                
+                if (errorDiv && errorText) {
+                    errorText.textContent = data.msg;
+                    errorDiv.style.display = 'block';
+                    
+                    if (produtoComErro && errorImg) {
+                        errorImg.src = produtoComErro.img;
+                        errorImg.style.display = 'block';
+                    } else if (errorImg) {
+                        errorImg.style.display = 'none';
+                    }
+                    
+                    // Scroll para o topo do carrinho para ver o erro
+                    document.querySelector('.cart-body').scrollTop = 0;
+                }
             }
         })
         .catch(error => {
             console.error('Erro ao finalizar pedido:', error);
-            alert('Erro ao processar a compra: ' + error.message + '\n\nTente novamente ou acesse o carrinho completo.');
+            
+            const errorDiv = document.getElementById('cart-error-message');
+            const errorText = document.getElementById('cart-error-text');
+            const errorImg = document.getElementById('cart-error-img');
+            
+            if (errorDiv && errorText && errorImg) {
+                errorText.textContent = 'Erro ao processar a compra. Tente novamente.';
+                errorDiv.style.display = 'block';
+                errorImg.style.display = 'none';
+                document.querySelector('.cart-body').scrollTop = 0;
+            }
         });
-    }
 }

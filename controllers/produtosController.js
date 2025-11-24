@@ -69,6 +69,34 @@ class produtosController{
             res.send({ok:false, msg: 'Erro ao alterar produto!'});
     }
 
+    async atualizarEstoque(req, res){
+        let id = req.body.id;
+        let quantidade = req.body.quantidade;
+
+        let produto = new produtoModel();
+        produto = await produto.buscarId(id);
+
+        let estoqueAtual = produto.estoque;
+        let novoEstoque = estoqueAtual + quantidade;
+
+        if(novoEstoque < 0){
+            res.send({ok: false, msg: 'Estoque não pode ficar negativo!'});
+            return;
+        }
+
+        let prod = new produtoModel();
+        prod.id = id;
+        let result = await prod.atualizarEstoque(quantidade);
+
+        if(result){
+            res.send({ok: true, msg: 'Estoque atualizado!', estoque: novoEstoque});
+        }
+        else{
+            res.send({ok: false, msg: 'Erro ao atualizar estoque!'});
+        }
+    }
+
+
     async buscarProdutoNome(req,res){
         let nome = '%'+req.body.nome+'%';
         let Produto = new produtoModel(null,null,nome);

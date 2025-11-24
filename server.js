@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const expressEjsLayouts = require('express-ejs-layouts');
 const routerHome = require("./routes/homeRoute");
 const routerUsuario = require("./routes/usuarioRoute");
@@ -14,7 +15,7 @@ const server = express();
 server.set("view engine", 'ejs')
 
 //Expor a pasta de estilização/script para o navegador
-server.use(express.static('public'));
+server.use(express.static(path.join(__dirname, 'public')));
 
 //Configuração arquivo de Layout
 server.set('layout', './layout.ejs');

@@ -109,8 +109,16 @@ class produtoModel{
         const rows = await banco.ExecutaComando(sql);
         
         let lista = [];
+        const fs = require('fs');
         for(let i=0; i<rows.length;i++){
-            lista.push(new produtoModel(rows[i]['prod_id'],rows[i]['prod_tipo'], rows[i]['prod_nome'], rows[i]['prod_preco'], rows[i]['prod_descricao'], rows[i]['prod_categoria'], rows[i]['categoria_nome'], rows[i]['prod_marca'], rows[i]['marca_nome'], rows[i]['prod_estoque'], rows[i]['prod_imagem']));
+            let imagemPath = "";
+            if(rows[i]['prod_imagem'] != null && rows[i]['prod_imagem'] != '' && fs.existsSync(global.CAMINHO_IMG_PRODUTOS_ABS + rows[i]['prod_imagem'])) {
+                imagemPath = global.CAMINHO_IMG_PRODUTOS + rows[i]['prod_imagem'];
+            } else {
+                imagemPath = "/images/produto-sem-imagem.webp";
+            }
+
+            lista.push(new produtoModel(rows[i]['prod_id'],rows[i]['prod_tipo'], rows[i]['prod_nome'], rows[i]['prod_preco'], rows[i]['prod_descricao'], rows[i]['prod_categoria'], rows[i]['categoria_nome'], rows[i]['prod_marca'], rows[i]['marca_nome'], rows[i]['prod_estoque'], imagemPath));
         }
 
         return lista;
