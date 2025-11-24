@@ -13,6 +13,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/css/admin.css">
+
+    <script src="/js/layout/layout_admin.js" defer></script>
   </head>
   <body class="admin-layout d-flex flex-column">
 
@@ -103,21 +105,23 @@
                   <div class="row p-3">
                     <div class="col-md-4">
                       <h6 class="dropdown-header">Caixa</h6>
-                      <a class="dropdown-item" href="/admin/caixa/abrir">Abrir Caixa</a>
-                      <a class="dropdown-item" href="/admin/caixa/fechar">Fechar Caixa</a>
+                      <a class="dropdown-item" id="abrirCaixa">Abrir Caixa</a>
+                      <a class="dropdown-item" id="fecharCaixa">Fechar Caixa</a>
                       <a class="dropdown-item" href="/admin/controleCaixa">Controle de Caixa</a>
                     </div>
                     <div class="col-md-4">
                       <h6 class="dropdown-header">Gestão Financeira</h6>
                       <a class="dropdown-item" href="/admin/pagamento">Efetuar Pagamento</a>
-                      <a class="dropdown-item" href="/admin/contasPagar">Contas a Pagar</a>
-                      <a class="dropdown-item" href="/admin/contasReceber">Contas a Receber</a>
+                      <a class="dropdown-item" href="/admin/contas">Contas a Pagar</a>
+                      <a class="dropdown-item" href="/admin/contas">Contas a Receber</a>
                     </div>
                   </div>
                 </li>
               </ul>
             </li>
           </ul>
+          <button class="btn btn-outline-success" id="caixaStatus">Caixa: Fechado </button>
+          <button class="btn btn-outline-success" id="caixaValor">Valor: R$00,00</button>
 
           <ul class="navbar-nav ms-auto">
             <li class="nav-item dropdown">

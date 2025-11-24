@@ -42,7 +42,7 @@ class ContaPagarModel{
         this.#totParcelas = totParcelas;
     }
 
-    gravar(){
+    async gravar(){
         let sql;
         let valores;
         if(this.#operacao == 1){        //Compra
@@ -56,8 +56,38 @@ class ContaPagarModel{
 
         }
         let banco = new Database();
-        let result = banco.ExecutaComandoNonQuery(sql,valores);
+        let result = await banco.ExecutaComandoNonQuery(sql,valores);
         return result;
+    }
+
+    async listar(termo){
+        let sqlWhere = '';
+        if(termo){
+            sqlWhere = 'where contaPG_id = '+termo+'';
+        }
+        let sql = `select * from tb_ContaPagar ${sqlWhere}`;
+        let banco = new Database();
+        let rows = await banco.ExecutaComando(sql);
+
+        let lista = [];
+        for(let i=0;i<rows.length;i++){
+            lista.push(new ContaPagarModel(rows[i]['contaPG_id'],rows[i]['contaPG_operacao'],rows[i]['contaPG_idCompra'],rows[i]['contaPG_idDevoVenda'],rows[i]['contaPG_valor'],new Date(rows[i]['contaPG_dataVencimento']),rows[i]['contaPG_isPago'],rows[i]['contaPG_numParcela'],rows[i]['contaPG_totParcelas']));
+        }
+        return lista;
+    }
+
+    toJSON(){
+        return {
+            id: this.#id,
+            operacao: this.#operacao,
+            idCompra: this.#idCompra,
+            idDevoVenda: this.#idDevoVenda,
+            valor: this.#valor,
+            dataVencimento: this.#dataVencimento,
+            isPago: this.#isPago,
+            numParcela: this.#numParcela,
+            totParcelas: this.#totParcelas
+        }
     }
 }
 module.exports = ContaPagarModel;
