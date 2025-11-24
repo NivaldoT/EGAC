@@ -22,65 +22,107 @@
 
     
 
-    <table class="table table-bordered mt-3" style="color: #000;" id="1"> <!--LISTA PRODUTOS-->
-        <thead>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Preço</th>
-            <th>Quantidade em Estoque</th>
-            <th>Descrição</th>
-            <th>Categoria</th>
-            <th>Marca</th>
-            <th>Alterar/Excluir</th>
-        </thead>
-        <tbody>
-            <%for(let i=0;i<listaProdutos.length;i++) {%>
-                <tr>
-                    <td><%=listaProdutos[i].id%></td>
-                    <td><%=listaProdutos[i].nome%></td>
-                    <td><%=listaProdutos[i].preco%>R$</td>
-                    <td><%=listaProdutos[i].estoque%></td>
-                    <td><%=listaProdutos[i].descricao%></td>
-                    <td><%=listaProdutos[i].categoria_nome%></td>
-                    <td><%=listaProdutos[i].marca_nome%></td>
-                    <td>
-                        <a href="/admin/alterarItem/1/<%=listaProdutos[i].id%>" class="btn btn-primary"><i class="bi bi-pencil-square"></i></a>
-                        <button data-id="<%=listaProdutos[i].id%>" data-tipo="1"  data-nome='<%=listaProdutos[i].nome%>' class="btn btn-danger btnExcluir"><i class="bi bi-trash-fill"></i></button>
-                    </td>
-                </tr>
-            <%}%>
-        </tbody>
-    </table>
+    <div class="row" id="1"> <!--LISTA PRODUTOS-->
+        <%for(let i=0;i<listaProdutos.length;i++) {%>
+            <div class="col-12 mb-3">
+                <div class="card">
+                    <div class="card-body p-3">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <img src="<%= listaProdutos[i].imagem %>"
+                                     alt="<%=listaProdutos[i].nome%>"
+                                     style="width: 80px; height: 80px; object-fit: contain; border-radius: 8px; background-color: #f0f0f0;">
+                            </div>
+                            <div class="col">
+                                <h5 class="mb-1"><%=listaProdutos[i].nome%></h5>
+                                <div class="d-flex gap-3 text-muted">
+                                    <small><strong>ID:</strong> <%=listaProdutos[i].id%></small>
+                                    <small><strong>Preço:</strong> R$ <%=listaProdutos[i].preco%></small>
+                                    <small><strong>Estoque:</strong> <%=listaProdutos[i].estoque%></small>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="d-flex align-items-center gap-2">
+                                    <button class="btn btn-sm btn-danger btnDiminuirEstoque" 
+                                            data-id="<%=listaProdutos[i].id%>" 
+                                            data-estoque="<%=listaProdutos[i].estoque%>">
+                                        <i class="bi bi-dash"></i>
+                                    </button>
+                                    <span class="badge bg-secondary" style="min-width: 50px;"><%=listaProdutos[i].estoque%></span>
+                                    <button class="btn btn-sm btn-success btnAumentarEstoque" 
+                                            data-id="<%=listaProdutos[i].id%>" 
+                                            data-estoque="<%=listaProdutos[i].estoque%>">
+                                        <i class="bi bi-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="d-flex gap-2">
+                                    <a href="/admin/alterarItem/1/<%=listaProdutos[i].id%>" class="btn btn-primary btn-sm">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <button data-id="<%=listaProdutos[i].id%>" data-tipo="1" data-nome='<%=listaProdutos[i].nome%>' class="btn btn-danger btn-sm btnExcluir">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <%}%>
+    </div>
 
-    <table class="table table-bordered mt-3" style="color: #000;" id="2"> <!--LISTA INSUMOS-->
-        <thead>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Preço</th>
-            <th>Quantidade em Estoque</th>
-            <th>Descrição</th>
-            <th>Categoria</th>
-            <th>Marca</th>
-            <th>Alterar/Excluir</th>
-        </thead>
-        <tbody>
-            <%for(let i=0;i<listaInsumos.length;i++) {%>
-                <tr>
-                    <td><%=listaInsumos[i].id%></td>
-                    <td><%=listaInsumos[i].nome%></td>
-                    <td><%=listaInsumos[i].preco%>R$</td>
-                    <td><%=listaInsumos[i].estoque%></td>
-                    <td><%=listaInsumos[i].descricao%></td>
-                    <td><%=listaInsumos[i].categoria_nome%></td>
-                    <td><%=listaInsumos[i].marca_nome%></td>
-                    <td>
-                        <a href="/admin/alterarItem/2/<%=listaInsumos[i].id%>" class="btn btn-primary"><i class="bi bi-pencil-square"></i></a>
-                        <button data-id="<%=listaInsumos[i].id%>" data-tipo="1"  data-nome='<%=listaInsumos[i].nome%>' class="btn btn-danger btnExcluir"><i class="bi bi-trash-fill"></i></button>
-                    </td>
-                </tr>
-            <%}%>
-        </tbody>
-    </table>
+    <div class="row" id="2"> <!--LISTA INSUMOS-->
+        <%for(let i=0;i<listaInsumos.length;i++) {%>
+            <div class="col-12 mb-3">
+                <div class="card">
+                    <div class="card-body p-3">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <img src="<%= listaInsumos[i].imagem %>"
+                                     alt="<%=listaInsumos[i].nome%>"
+                                     style="width: 80px; height: 80px; object-fit: contain; border-radius: 8px; background-color: #f0f0f0;">
+                            </div>
+                            <div class="col">
+                                <h5 class="mb-1"><%=listaInsumos[i].nome%></h5>
+                                <div class="d-flex gap-3 text-muted">
+                                    <small><strong>ID:</strong> <%=listaInsumos[i].id%></small>
+                                    <small><strong>Preço:</strong> R$ <%=listaInsumos[i].preco%></small>
+                                    <small><strong>Estoque:</strong> <%=listaInsumos[i].estoque%></small>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="d-flex align-items-center gap-2">
+                                    <button class="btn btn-sm btn-danger btnDiminuirEstoque" 
+                                            data-id="<%=listaInsumos[i].id%>" 
+                                            data-estoque="<%=listaInsumos[i].estoque%>">
+                                        <i class="bi bi-dash"></i>
+                                    </button>
+                                    <span class="badge bg-secondary" style="min-width: 50px;"><%=listaInsumos[i].estoque%></span>
+                                    <button class="btn btn-sm btn-success btnAumentarEstoque" 
+                                            data-id="<%=listaInsumos[i].id%>" 
+                                            data-estoque="<%=listaInsumos[i].estoque%>">
+                                        <i class="bi bi-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="d-flex gap-2">
+                                    <a href="/admin/alterarItem/2/<%=listaInsumos[i].id%>" class="btn btn-primary btn-sm">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <button data-id="<%=listaInsumos[i].id%>" data-tipo="1" data-nome='<%=listaInsumos[i].nome%>' class="btn btn-danger btn-sm btnExcluir">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <%}%>
+    </div>
 
     <table class="table table-bordered mt-3" style="color: #000;" id="3"> <!--LISTA Serviços-->
         <thead>

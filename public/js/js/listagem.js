@@ -5,10 +5,10 @@ document.addEventListener('DOMContentLoaded', function(){
     select.addEventListener('change', change);
 
     function change(){    
-        let listas = document.querySelectorAll('table');            // SELECIONA A TABELA A EXIBIR
+        let listas = document.querySelectorAll('.row[id], table[id]');            // SELECIONA A LISTA A EXIBIR
         for(let i=0; i< listas.length; i++){
             if(listas[i].id == select.value)
-                listas[i].style.display = 'table';
+                listas[i].style.display = listas[i].tagName === 'TABLE' ? 'table' : 'flex';
             else
                 listas[i].style.display = 'none';
         }
