@@ -48,7 +48,10 @@
                                             data-estoque="<%=listaProdutos[i].estoque%>">
                                         <i class="bi bi-dash"></i>
                                     </button>
-                                    <span class="badge bg-secondary" style="min-width: 50px;"><%=listaProdutos[i].estoque%></span>
+                                    <input type="number" class="form-control text-center inputEstoque" 
+                                           data-id="<%=listaProdutos[i].id%>"
+                                           value="<%=listaProdutos[i].estoque%>" 
+                                           style="width: 70px;" min="0">
                                     <button class="btn btn-sm btn-success btnAumentarEstoque" 
                                             data-id="<%=listaProdutos[i].id%>" 
                                             data-estoque="<%=listaProdutos[i].estoque%>">
@@ -99,7 +102,10 @@
                                             data-estoque="<%=listaInsumos[i].estoque%>">
                                         <i class="bi bi-dash"></i>
                                     </button>
-                                    <span class="badge bg-secondary" style="min-width: 50px;"><%=listaInsumos[i].estoque%></span>
+                                    <input type="number" class="form-control text-center inputEstoque" 
+                                           data-id="<%=listaInsumos[i].id%>"
+                                           value="<%=listaInsumos[i].estoque%>" 
+                                           style="width: 70px;" min="0">
                                     <button class="btn btn-sm btn-success btnAumentarEstoque" 
                                             data-id="<%=listaInsumos[i].id%>" 
                                             data-estoque="<%=listaInsumos[i].estoque%>">
