@@ -38,7 +38,7 @@
                                 <div class="d-flex gap-3 text-muted">
                                     <small><strong>ID:</strong> <%=listaProdutos[i].id%></small>
                                     <small><strong>Preço:</strong> R$ <%=listaProdutos[i].preco%></small>
-                                    <small><strong>Estoque:</strong> <%=listaProdutos[i].estoque%></small>
+                                    <small data-estoque-text><strong>Estoque:</strong> <span data-estoque-valor><%=listaProdutos[i].estoque%></span></small>
                                 </div>
                             </div>
                             <div class="col-auto">
@@ -89,7 +89,7 @@
                                 <div class="d-flex gap-3 text-muted">
                                     <small><strong>ID:</strong> <%=listaInsumos[i].id%></small>
                                     <small><strong>Preço:</strong> R$ <%=listaInsumos[i].preco%></small>
-                                    <small><strong>Estoque:</strong> <%=listaInsumos[i].estoque%></small>
+                                    <small data-estoque-text><strong>Estoque:</strong> <span data-estoque-valor><%=listaInsumos[i].estoque%></span></small>
                                 </div>
                             </div>
                             <div class="col-auto">

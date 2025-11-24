@@ -18,6 +18,52 @@ document.addEventListener('DOMContentLoaded', function(){
     for(let i=0;i<btnExcluir.length;i++)
         btnExcluir[i].addEventListener('click',excluir);
     
+    const btnAumentar = document.querySelectorAll('.btnAumentarEstoque');
+    for(let i=0; i<btnAumentar.length; i++)
+        btnAumentar[i].addEventListener('click', aumentarEstoque);
+
+    const btnDiminuir = document.querySelectorAll('.btnDiminuirEstoque');
+    for(let i=0; i<btnDiminuir.length; i++)
+        btnDiminuir[i].addEventListener('click', diminuirEstoque);
+
+    function aumentarEstoque(){
+        let id = this.dataset.id;
+        let quantidade = 1;
+        atualizarEstoque(id, quantidade, this);
+    }
+
+    function diminuirEstoque(){
+        let id = this.dataset.id;
+        let quantidade = -1;
+        atualizarEstoque(id, quantidade, this);
+    }
+
+    function atualizarEstoque(id, quantidade, botao){
+        fetch('/admin/atualizarEstoque', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({id: id, quantidade: quantidade})
+        })
+        .then(function(resposta){
+            return resposta.json();
+        })
+        .then(function(corpo){
+            if(corpo.ok){
+                let card = botao.parentElement.parentElement.parentElement.parentElement;
+                let badge = card.querySelector('.badge');
+                badge.textContent = corpo.estoque;
+                
+                let textoEstoque = card.querySelector('[data-estoque-valor]');
+                textoEstoque.textContent = corpo.estoque;
+            }
+            else{
+                alert(corpo.msg);
+            }
+        })
+    }
+
     function excluir(){
 
         let btn = this;

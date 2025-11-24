@@ -75,6 +75,7 @@ router.post('/buscarFornecedor', pjController.buscarFornecedorNome);
 router.post('/buscarInsumoNome', produtosController.buscarInsumoNome);
 router.post('/buscarProdutoNome', produtosController.buscarProdutoNome);
 router.post('/buscarProdPorId', produtosController.buscarId)
+router.post('/atualizarEstoque', produtosController.atualizarEstoque)
                 // CADASTRAR ITENS
 router.get('/cadastrarProduto', produtosController.cadastrarView);
 router.get('/cadastrarServico', servicoController.cadastrarView);
