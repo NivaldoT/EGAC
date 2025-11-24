@@ -2,10 +2,11 @@
 <script src="/js/js/listagem-header.js" defer></script>
 
 <div class="container-fluid">
-    <div class="d-flex align-items-center mb-4">
-        <h2 class="mb-0" style="font-size: 24px; font-weight: 600;">
+    <div class="d-flex align-items-center mb-4" style="gap:12px;">
+        <h2 class="mb-0" style="font-size: 24px; font-weight: 600; flex-shrink:0;">
             <span id="titleSelected"><% if(tipoListar == 1){ %>Produtos<% } else if(tipoListar == 2){ %>Insumos<% } else if(tipoListar == 3){ %>Serviços<% } else if(tipoListar == 4){ %>Equipamentos Agricolas<% } else if(tipoListar == 5){ %>Marcas<% } else if(tipoListar == 6){ %>Categorias<% } else { %>Listagem de Itens<% } %></span>
         </h2>
+        <input type="text" id="searchItens" placeholder="Digite o nome ou ID do item..." style="max-width:300px;" class="form-control" />
         <a href="<% if(tipoListar == 1){ %>/admin/CadastrarProduto<% } else if(tipoListar == 2){ %>/admin/CadastrarProduto<% } else if(tipoListar == 3){ %>/admin/CadastrarServico<% } else if(tipoListar == 4){ %>/admin/CadastrarEqAgricola<% } else if(tipoListar == 5){ %>/admin/CadastrarMarca<% } else if(tipoListar == 6){ %>/admin/CadastrarCategoria<% } else { %>/admin<% } %>" class="btn btn-success ms-auto">+ Incluir cadastro</a>
     </div>
     <div class="form-floating mt-3 d-none">

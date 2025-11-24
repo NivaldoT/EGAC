@@ -125,4 +125,53 @@ document.addEventListener('DOMContentLoaded', function(){
             })
         }
     }
+
+    // PESQUISA SIMPLES
+    const campoPesquisa = document.getElementById('searchItens');
+    if(campoPesquisa){
+        campoPesquisa.addEventListener('keyup', function(){
+            let termo = this.value.toLowerCase();
+            // Produtos / Insumos (cards)
+            let div1 = document.querySelector('div.row[id="1"]');
+            let div2 = document.querySelector('div.row[id="2"]');
+            if(div1){
+                let cards = div1.querySelectorAll('.card');
+                for(let i=0;i<cards.length;i++){
+                    let titulo = cards[i].querySelector('h5');
+                    let idTexto = cards[i].querySelector('small');
+                    if(!titulo) continue;
+                    let nome = titulo.innerText.toLowerCase();
+                    let id = idTexto ? idTexto.innerText.toLowerCase() : '';
+                    let mostrar = nome.includes(termo) || id.includes(termo);
+                    cards[i].parentElement.style.display = mostrar ? '' : 'none';
+                }
+            }
+            if(div2){
+                let cards = div2.querySelectorAll('.card');
+                for(let i=0;i<cards.length;i++){
+                    let titulo = cards[i].querySelector('h5');
+                    let idTexto = cards[i].querySelector('small');
+                    if(!titulo) continue;
+                    let nome = titulo.innerText.toLowerCase();
+                    let id = idTexto ? idTexto.innerText.toLowerCase() : '';
+                    let mostrar = nome.includes(termo) || id.includes(termo);
+                    cards[i].parentElement.style.display = mostrar ? '' : 'none';
+                }
+            }
+            // Tabelas (servicos, marcas, categorias, equipamentos)
+            let tabela3 = document.querySelector('table[id="3"]');
+            let tabela4 = document.querySelector('table[id="4"]');
+            let tabela5 = document.querySelector('table[id="5"]');
+            let tabela6 = document.querySelector('table[id="6"]');
+            let tabelas = [tabela3, tabela4, tabela5, tabela6];
+            for(let t=0;t<tabelas.length;t++){
+                if(!tabelas[t]) continue;
+                let linhas = tabelas[t].querySelectorAll('tbody tr');
+                for(let j=0;j<linhas.length;j++){
+                    let txtLinha = linhas[j].innerText.toLowerCase();
+                    linhas[j].style.display = txtLinha.includes(termo) ? '' : 'none';
+                }
+            }
+        });
+    }
 })
