@@ -285,7 +285,36 @@ function finalizarCompra() {
                 // Recarregar página
                 window.location.reload();
             } else {
-                alert('Erro ao processar a compra ' + data.msg);
+                // Encontrar produto com erro no carrinho
+                let produtoComErro = null;
+                const mensagem = data.msg || '';
+                
+                // Tentar extrair nome do produto da mensagem de erro
+                const match = mensagem.match(/Produto "(.+?)" não possui/);
+                if (match && match[1]) {
+                    const nomeProduto = match[1];
+                    produtoComErro = cart.find(item => item.name.includes(nomeProduto));
+                }
+                
+                // Mostrar erro no carrinho
+                const errorDiv = document.getElementById('cart-error-message');
+                const errorText = document.getElementById('cart-error-text');
+                const errorImg = document.getElementById('cart-error-img');
+                
+                if (errorDiv && errorText) {
+                    errorText.textContent = data.msg;
+                    errorDiv.style.display = 'block';
+                    
+                    if (produtoComErro && errorImg) {
+                        errorImg.src = produtoComErro.img;
+                        errorImg.style.display = 'block';
+                    } else if (errorImg) {
+                        errorImg.style.display = 'none';
+                    }
+                    
+                    // Scroll para o topo do carrinho para ver o erro
+                    document.querySelector('.cart-body').scrollTop = 0;
+                }
             }
         })
         .catch(error => {

@@ -144,6 +144,16 @@
 				<button class="btn-cart-close" style="background: none; border: none; color: #fff; font-size: 30px; cursor: pointer; line-height: 1;">&times;</button>
 			</div>
 			<div class="cart-body" style="padding: 20px; max-height: calc(100vh - 280px); overflow-y: auto; background: #fff;">
+				<div id="cart-error-message" style="display: none; background: #ffebee; border-left: 4px solid #f44336; padding: 15px; margin-bottom: 15px; border-radius: 4px;">
+					<div style="display: flex; align-items: center; gap: 12px;">
+						<img id="cart-error-img" src="" style="width: 50px; height: 50px; object-fit: contain; border-radius: 4px; background: #fff; padding: 4px;">
+						<div style="flex: 1;">
+							<div style="font-weight: 500; color: #d32f2f; margin-bottom: 4px; font-size: 14px;">Estoque Insuficiente</div>
+							<div id="cart-error-text" style="font-size: 13px; color: #666;"></div>
+						</div>
+						<button onclick="document.getElementById('cart-error-message').style.display='none'" style="background: none; border: none; color: #999; font-size: 20px; cursor: pointer; padding: 0; line-height: 1;">&times;</button>
+					</div>
+				</div>
 				<div id="cart-items-sidebar">
 					<!-- Itens do carrinho aqui -->
 				</div>
