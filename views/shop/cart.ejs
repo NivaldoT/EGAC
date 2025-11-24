@@ -24,6 +24,30 @@
             <div class="col-lg-4">
                 <!-- Resumo -->
                 <div class="cart-summary">
+                    <div id="cart-error-message" style="display: none; background: #ffebee; border-left: 4px solid #f44336; padding: 15px; margin-bottom: 15px; border-radius: 4px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <img id="cart-error-img" src="" style="width: 50px; height: 50px; object-fit: contain; border-radius: 4px; background: #fff; padding: 4px;">
+                            <div style="flex: 1;">
+                                <div style="font-weight: 500; color: #d32f2f; margin-bottom: 4px; font-size: 14px;">Estoque Insuficiente</div>
+                                <div id="cart-error-text" style="font-size: 13px; color: #666;"></div>
+                            </div>
+                            <button onclick="document.getElementById('cart-error-message').style.display='none'" style="background: none; border: none; color: #999; font-size: 20px; cursor: pointer; padding: 0; line-height: 1;">&times;</button>
+                        </div>
+                    </div>
+                    <div id="cart-success-message" style="display: none; background: #e8f5e9; border-left: 4px solid #4caf50; padding: 15px; margin-bottom: 15px; border-radius: 4px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="width: 50px; height: 50px; background: #4caf50; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 500; color: #2e7d32; margin-bottom: 4px; font-size: 14px;">Compra Realizada!</div>
+                                <div id="cart-success-text" style="font-size: 13px; color: #666;"></div>
+                            </div>
+                            <button onclick="document.getElementById('cart-success-message').style.display='none'" style="background: none; border: none; color: #999; font-size: 20px; cursor: pointer; padding: 0; line-height: 1;">&times;</button>
+                        </div>
+                    </div>
                     <h5>Resumo da compra</h5>
                     <div class="cart-summary-row">
                         <span class="cart-summary-label">Produtos (<span id="total-items">0</span>)</span>
@@ -202,9 +226,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const userEmail = getCookie('UsuarioEmail');
         
         if (!userEmail) {
-            // Usuário não está logado - redirecionar para login
-            if (confirm('Você precisa estar logado para finalizar a compra.\n\nDeseja fazer login agora?')) {
-                window.location.href = '/usuario/login';
+            // Usuário não está logado - mostrar mensagem
+            const errorDiv = document.getElementById('cart-error-message');
+            const errorText = document.getElementById('cart-error-text');
+            const errorImg = document.getElementById('cart-error-img');
+            
+            if (errorDiv && errorText && errorImg) {
+                errorText.textContent = 'Você precisa estar logado para finalizar a compra.';
+                errorDiv.style.display = 'block';
+                errorImg.style.display = 'none';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
             return;
         }
@@ -212,7 +243,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
         
         if (cart.length === 0) {
-            alert('Seu carrinho está vazio!');
+            const errorDiv = document.getElementById('cart-error-message');
+            const errorText = document.getElementById('cart-error-text');
+            const errorImg = document.getElementById('cart-error-img');
+            
+            if (errorDiv && errorText && errorImg) {
+                errorText.textContent = 'Seu carrinho está vazio!';
+                errorDiv.style.display = 'block';
+                errorImg.style.display = 'none';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
             return;
         }
         
@@ -233,7 +273,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         if (selectedItems.length === 0) {
-            alert('Selecione pelo menos um produto!');
+            const errorDiv = document.getElementById('cart-error-message');
+            const errorText = document.getElementById('cart-error-text');
+            const errorImg = document.getElementById('cart-error-img');
+            
+            if (errorDiv && errorText && errorImg) {
+                errorText.textContent = 'Selecione pelo menos um produto!';
+                errorDiv.style.display = 'block';
+                errorImg.style.display = 'none';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
             return;
         }
         
@@ -254,30 +303,77 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(data => {
             if (data.ok) {
-                // Remover itens selecionados do carrinho
-                const remainingItems = cart.filter((_, index) => {
-                    const item = document.querySelectorAll('.cart-product-item')[index];
-                    const checkbox = item?.querySelector('.cart-item-checkbox');
-                    return !(checkbox && checkbox.checked);
-                });
+                // Mostrar mensagem de sucesso
+                const successDiv = document.getElementById('cart-success-message');
+                const successText = document.getElementById('cart-success-text');
                 
-                localStorage.setItem('cart', JSON.stringify(remainingItems));
-                
-                // Atualizar contador do carrinho no header
-                if (typeof updateCartCount === 'function') {
-                    updateCartCount();
+                if (successDiv && successText) {
+                    successText.textContent = data.msg;
+                    successDiv.style.display = 'block';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
                 
-                // Mostrar mensagem de sucesso e recarregar
-                alert('✓ ' + data.msg + '\n\nSua compra foi registrada com sucesso!');
-                window.location.reload();
+                // Limpar carrinho após 2 segundos
+                setTimeout(function() {
+                    const remainingItems = cart.filter((_, index) => {
+                        const item = document.querySelectorAll('.cart-product-item')[index];
+                        const checkbox = item?.querySelector('.cart-item-checkbox');
+                        return !(checkbox && checkbox.checked);
+                    });
+                    
+                    localStorage.setItem('cart', JSON.stringify(remainingItems));
+                    
+                    if (typeof updateCartCount === 'function') {
+                        updateCartCount();
+                    }
+                    
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 1000);
+                }, 2000);
             } else {
-                alert('✗ ' + data.msg);
+                // Encontrar produto com erro
+                let produtoComErro = null;
+                const mensagem = data.msg || '';
+                
+                const match = mensagem.match(/Produto "(.+?)" não possui/);
+                if (match && match[1]) {
+                    const nomeProduto = match[1];
+                    produtoComErro = cart.find(item => item.name.includes(nomeProduto));
+                }
+                
+                const errorDiv = document.getElementById('cart-error-message');
+                const errorText = document.getElementById('cart-error-text');
+                const errorImg = document.getElementById('cart-error-img');
+                
+                if (errorDiv && errorText) {
+                    errorText.textContent = data.msg;
+                    errorDiv.style.display = 'block';
+                    
+                    if (produtoComErro && errorImg) {
+                        errorImg.src = produtoComErro.img;
+                        errorImg.style.display = 'block';
+                    } else if (errorImg) {
+                        errorImg.style.display = 'none';
+                    }
+                    
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
             }
         })
         .catch(error => {
             console.error('Erro ao finalizar pedido:', error);
-            alert('✗ Erro ao processar a compra: ' + error.message + '\n\nVerifique o console do navegador (F12) para mais detalhes.');
+            
+            const errorDiv = document.getElementById('cart-error-message');
+            const errorText = document.getElementById('cart-error-text');
+            const errorImg = document.getElementById('cart-error-img');
+            
+            if (errorDiv && errorText && errorImg) {
+                errorText.textContent = 'Erro ao processar a compra. Tente novamente.';
+                errorDiv.style.display = 'block';
+                errorImg.style.display = 'none';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
         });
     });
 });
