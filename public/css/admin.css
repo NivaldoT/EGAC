@@ -171,3 +171,10 @@ body.admin-layout {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
+
+/* Estilos de Pesquisa */
+#searchItens:focus,
+#inputBusca:focus {
+  border-color: #82ae46 !important;
+  box-shadow: 0 0 0 0.2rem rgba(130, 174, 70, 0.25) !important;
+}
