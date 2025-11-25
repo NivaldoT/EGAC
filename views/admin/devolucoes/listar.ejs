@@ -1,0 +1,196 @@
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Gerenciar Devoluções</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="/admin">Home</a></li>
+                        <li class="breadcrumb-item active">Devoluções</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            
+            <!-- Estatísticas -->
+            <div class="row">
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-warning">
+                        <div class="inner">
+                            <h3><%= devolucoes.filter(function(d) { return d.status === 'pendente'; }).length %></h3>
+                            <p>Pendentes</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-success">
+                        <div class="inner">
+                            <h3><%= devolucoes.filter(function(d) { return d.status === 'aprovada'; }).length %></h3>
+                            <p>Aprovadas</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-danger">
+                        <div class="inner">
+                            <h3><%= devolucoes.filter(function(d) { return d.status === 'recusada'; }).length %></h3>
+                            <p>Recusadas</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-times"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                            <h3><%= devolucoes.length %></h3>
+                            <p>Total</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fas fa-undo"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de Devoluções -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Lista de Solicitações</h3>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Data</th>
+                                <th>Cliente</th>
+                                <th>Pedido</th>
+                                <th>Motivo</th>
+                                <th>Tipo Reembolso</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (devolucoes && devolucoes.length > 0) { %>
+                                <% devolucoes.forEach(function(dev) { %>
+                                    <tr>
+                                        <td><%= dev.id %></td>
+                                        <td><%= new Date(dev.venda.data).toLocaleDateString('pt-BR') %></td>
+                                        <td>
+                                            <%= dev.cliente.nome %><br>
+                                            <small class="text-muted"><%= dev.cliente.email %></small>
+                                        </td>
+                                        <td>#<%= dev.idVenda %></td>
+                                        <td><span class="badge badge-secondary"><%= dev.motivo %></span></td>
+                                        <td><span class="badge badge-info"><%= dev.tipoReembolso.toUpperCase() %></span></td>
+                                        <td>
+                                            <% if (dev.status === 'pendente') { %>
+                                                <span class="badge badge-warning">Pendente</span>
+                                            <% } else if (dev.status === 'aprovada') { %>
+                                                <span class="badge badge-success">Aprovada</span>
+                                            <% } else { %>
+                                                <span class="badge badge-danger">Recusada</span>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <a href="/admin/devolucoes/<%= dev.id %>" class="btn btn-sm btn-info" title="Visualizar">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <% if (dev.status === 'pendente') { %>
+                                                <button class="btn btn-sm btn-success" onclick="aprovarDevolucao(<%= dev.id %>)" title="Aprovar">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-danger" onclick="recusarDevolucao(<%= dev.id %>)" title="Recusar">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            <% } %>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="8" class="text-center py-4">
+                                        <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                                        <p class="text-muted">Nenhuma solicitação de devolução encontrada</p>
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<script>
+async function aprovarDevolucao(id) {
+    if (!confirm('Deseja realmente aprovar esta devolução?\n\nUma conta a pagar será gerada automaticamente.')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/admin/devolucoes/${id}/aprovar`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (data.ok) {
+            alert(data.msg);
+            location.reload();
+        } else {
+            alert(data.msg || 'Erro ao aprovar devolução');
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        alert('Erro ao processar solicitação');
+    }
+}
+
+async function recusarDevolucao(id) {
+    if (!confirm('Deseja realmente recusar esta devolução?')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/admin/devolucoes/${id}/recusar`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (data.ok) {
+            alert(data.msg);
+            location.reload();
+        } else {
+            alert(data.msg || 'Erro ao recusar devolução');
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        alert('Erro ao processar solicitação');
+    }
+}
+</script>

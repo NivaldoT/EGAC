@@ -80,6 +80,19 @@ class pessoaModel{
             return null;
     }
 
+    async buscarPorEmail(email){
+        let sql = 'select * from tb_Pessoa where pessoa_email = ?;'
+        let valores = [email || this.email];
+        const banco = new Database();
+        let result = await banco.ExecutaComando(sql,valores);
+
+        if(result.length>0){
+            return result[0];
+        }
+        else
+            return null;
+    }
+
     toJSON(){
         return{
             id : this.#id,

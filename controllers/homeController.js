@@ -2,6 +2,7 @@ const CategoriaModel = require('../models/categoriaModel');
 const ProdutoModel = require('../models/produtoModel');
 const VendaModel = require('../models/pedidoModel');
 const ItemVendaModel = require('../models/pedidoItemModel');
+const DevolucaoVendaModel = require('../models/devolucaoVendaModel');
 
 class HomeController {
     homeView(req, res) {
@@ -43,10 +44,14 @@ class HomeController {
             let vendaModel = new VendaModel();
             let vendas = await vendaModel.listarPorCliente(userEmail);
 
-            // Para cada venda, buscar os itens
+            // Para cada venda, buscar os itens e verificar se há devolução
             let itemVendaModel = new ItemVendaModel();
+            let devolucaoModel = new DevolucaoVendaModel();
+            
             for(let venda of vendas) {
                 venda.itens = await itemVendaModel.listarPorVenda(venda.id);
+                // Verificar se existe devolução para esta venda
+                venda.devolucao = await devolucaoModel.verificarDevolucaoExistente(venda.id);
             }
 
             res.render('shop/minhas-compras', { vendas: vendas });

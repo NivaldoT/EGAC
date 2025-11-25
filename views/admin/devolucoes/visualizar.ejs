@@ -1,0 +1,303 @@
+<style>
+    .foto-evidencia {
+        max-width: 100%;
+        max-height: 500px;
+        cursor: pointer;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .item-devolucao {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+        background: #f8f9fa;
+    }
+    .item-devolucao img {
+        max-width: 80px;
+        height: auto;
+        border-radius: 4px;
+    }
+    .info-card {
+        background: #fff;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        margin-bottom: 20px;
+    }
+    .info-label {
+        font-weight: 600;
+        color: #6c757d;
+        margin-bottom: 5px;
+    }
+    .info-value {
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+    }
+</style>
+
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Devolução #<%= devolucao.id %></h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="/admin">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/admin/devolucoes">Devoluções</a></li>
+                        <li class="breadcrumb-item active">Visualizar</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            
+            <div class="row">
+                
+                <!-- Informações Principais -->
+                <div class="col-md-8">
+                    
+                    <!-- Status e Ações -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Status da Devolução</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p class="mb-2"><strong>Status Atual:</strong></p>
+                                    <% if (devolucao.status === 'pendente') { %>
+                                        <span class="badge badge-warning badge-lg">PENDENTE</span>
+                                    <% } else if (devolucao.status === 'aprovada') { %>
+                                        <span class="badge badge-success badge-lg">APROVADA</span>
+                                    <% } else { %>
+                                        <span class="badge badge-danger badge-lg">RECUSADA</span>
+                                    <% } %>
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <% if (devolucao.status === 'pendente') { %>
+                                        <button class="btn btn-success" onclick="aprovarDevolucao(<%= devolucao.id %>)">
+                                            <i class="fas fa-check"></i> Aprovar
+                                        </button>
+                                        <button class="btn btn-danger" onclick="recusarDevolucao(<%= devolucao.id %>)">
+                                            <i class="fas fa-times"></i> Recusar
+                                        </button>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Informações do Pedido -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Informações do Pedido</h3>
+                        </div>
+                        <div class="card-body info-card">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="info-label">Número do Pedido</div>
+                                    <div class="info-value">#<%= devolucao.idVenda %></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-label">Data da Compra</div>
+                                    <div class="info-value"><%= new Date(devolucao.venda.data).toLocaleDateString('pt-BR') %></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-label">Motivo da Devolução</div>
+                                    <div class="info-value">
+                                        <span class="badge badge-secondary"><%= devolucao.motivo %></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="info-label">Tipo de Reembolso</div>
+                                    <div class="info-value">
+                                        <span class="badge badge-info"><%= devolucao.tipoReembolso.toUpperCase() %></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Itens da Devolução -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Itens para Devolução</h3>
+                        </div>
+                        <div class="card-body">
+                            <% if (itens && itens.length > 0) { %>
+                                <% var totalDevolucao = 0; %>
+                                <% itens.forEach(function(item) { %>
+                                    <% var subtotal = item.preco * item.quantidade; %>
+                                    <% totalDevolucao += subtotal; %>
+                                    <div class="item-devolucao">
+                                        <div class="row align-items-center">
+                                            <div class="col-md-2 text-center">
+                                                <% if (item.produto.imagem1) { %>
+                                                    <img src="/images/produtos/<%= item.produto.imagem1 %>" alt="<%= item.produto.nome %>">
+                                                <% } else { %>
+                                                    <div class="bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; border-radius: 4px;">
+                                                        <i class="fas fa-image"></i>
+                                                    </div>
+                                                <% } %>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <h5 class="mb-1"><%= item.produto.nome %></h5>
+                                                <small class="text-muted">Código: <%= item.idProduto %></small>
+                                            </div>
+                                            <div class="col-md-2 text-center">
+                                                <div class="info-label">Quantidade</div>
+                                                <strong><%= item.quantidade %> un</strong>
+                                            </div>
+                                            <div class="col-md-3 text-right">
+                                                <div class="info-label">Preço Unit.</div>
+                                                <div>R$ <%= item.preco.toFixed(2).replace('.', ',') %></div>
+                                                <div class="info-label mt-2">Subtotal</div>
+                                                <strong>R$ <%= subtotal.toFixed(2).replace('.', ',') %></strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <% }); %>
+                                
+                                <div class="text-right mt-3">
+                                    <h4>Total a Reembolsar: <strong class="text-success">R$ <%= totalDevolucao.toFixed(2).replace('.', ',') %></strong></h4>
+                                </div>
+                            <% } else { %>
+                                <p class="text-muted text-center py-3">Nenhum item encontrado</p>
+                            <% } %>
+                        </div>
+                    </div>
+
+                    <!-- Foto de Evidência -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Foto de Evidência</h3>
+                        </div>
+                        <div class="card-body text-center">
+                            <% if (devolucao.foto) { %>
+                                <img src="/<%= devolucao.foto %>" alt="Evidência" class="foto-evidencia" onclick="window.open('/<%= devolucao.foto %>', '_blank')">
+                                <p class="text-muted mt-2"><small>Clique na imagem para ampliar</small></p>
+                            <% } else { %>
+                                <p class="text-muted">Nenhuma foto anexada</p>
+                            <% } %>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Sidebar - Informações do Cliente -->
+                <div class="col-md-4">
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Informações do Cliente</h3>
+                        </div>
+                        <div class="card-body info-card">
+                            <div class="info-label">Nome</div>
+                            <div class="info-value"><%= devolucao.cliente.nome %></div>
+                            
+                            <div class="info-label">E-mail</div>
+                            <div class="info-value"><%= devolucao.cliente.email %></div>
+                            
+                            <% if (devolucao.cliente.telefone) { %>
+                                <div class="info-label">Telefone</div>
+                                <div class="info-value"><%= devolucao.cliente.telefone %></div>
+                            <% } %>
+                            
+                            <% if (devolucao.cliente.cpf) { %>
+                                <div class="info-label">CPF</div>
+                                <div class="info-value"><%= devolucao.cliente.cpf %></div>
+                            <% } else if (devolucao.cliente.cnpj) { %>
+                                <div class="info-label">CNPJ</div>
+                                <div class="info-value"><%= devolucao.cliente.cnpj %></div>
+                            <% } %>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Ações Rápidas</h3>
+                        </div>
+                        <div class="card-body">
+                            <a href="/admin/devolucoes" class="btn btn-secondary btn-block">
+                                <i class="fas fa-arrow-left"></i> Voltar para Lista
+                            </a>
+                            <a href="/admin/pedidos/<%= devolucao.idVenda %>" class="btn btn-info btn-block">
+                                <i class="fas fa-shopping-cart"></i> Ver Pedido Original
+                            </a>
+                            <% if (devolucao.status === 'aprovada') { %>
+                                <a href="/admin/contas-pagar" class="btn btn-warning btn-block">
+                                    <i class="fas fa-dollar-sign"></i> Ver Contas a Pagar
+                                </a>
+                            <% } %>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<script>
+async function aprovarDevolucao(id) {
+    if (!confirm('Deseja realmente aprovar esta devolução?\n\nUma conta a pagar será gerada automaticamente para o reembolso.')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/admin/devolucoes/${id}/aprovar`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (data.ok) {
+            alert(data.msg);
+            location.reload();
+        } else {
+            alert(data.msg || 'Erro ao aprovar devolução');
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        alert('Erro ao processar solicitação');
+    }
+}
+
+async function recusarDevolucao(id) {
+    if (!confirm('Deseja realmente recusar esta devolução?\n\nO cliente será notificado sobre a recusa.')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/admin/devolucoes/${id}/recusar`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (data.ok) {
+            alert(data.msg);
+            location.reload();
+        } else {
+            alert(data.msg || 'Erro ao recusar devolução');
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        alert('Erro ao processar solicitação');
+    }
+}
+</script>

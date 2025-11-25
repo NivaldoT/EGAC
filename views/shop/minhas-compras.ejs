@@ -10,9 +10,14 @@
 <section class="ftco-section" style="padding-top: 50px;">
     <div class="container">
         <div class="row mb-4">
-            <div class="col-12">
+            <div class="col-md-8">
                 <h2 class="titulo-pagina">Minhas Compras</h2>
                 <p class="subtitulo-pagina">Acompanhe o histórico de todos os seus pedidos</p>
+            </div>
+            <div class="col-md-4 text-right">
+                <a href="/minhas-devolucoes" class="btn btn-outline-danger">
+                    <i class="icon-refresh"></i> Minhas Devoluções
+                </a>
             </div>
         </div>
         
@@ -75,6 +80,28 @@
                                             </div>
                                         </div>
                                     <% }); %>
+                                    <div class="compra-footer">
+                                        <% if (venda.devolucao) { %>
+                                            <div class="alert alert-info mb-0">
+                                                <i class="icon-info-circle"></i>
+                                                <% if (venda.devolucao.devo_status === 'pendente') { %>
+                                                    <strong>Devolução em análise</strong> - Aguardando aprovação do administrador
+                                                <% } else if (venda.devolucao.devo_status === 'aprovada') { %>
+                                                    <strong>Devolução aprovada</strong> - Reembolso será processado em breve
+                                                <% } else if (venda.devolucao.devo_status === 'recusada') { %>
+                                                    <strong>Devolução recusada</strong> - Entre em contato para mais informações
+                                                <% } %>
+                                                <a href="/minhas-devolucoes" class="btn btn-sm btn-outline-primary ml-3">Ver Detalhes</a>
+                                            </div>
+                                        <% } else { %>
+                                            <button class="btn btn-outline-danger btn-sm" 
+                                                    data-venda-id="<%= venda.id %>" 
+                                                    data-itens='<%- JSON.stringify(venda.itens) %>'
+                                                    onclick="abrirModalDevolucao(this)">
+                                                <i class="icon-refresh"></i> Solicitar Devolução
+                                            </button>
+                                        <% } %>
+                                    </div>
                                 <% } else { %>
                                     <p class="text-muted text-center mb-0">Nenhum item encontrado para este pedido.</p>
                                 <% } %>
@@ -106,6 +133,71 @@
 
     </div>
 </section>
+
+<!-- Modal de Devolução -->
+<div class="modal fade" id="modalDevolucao" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Solicitar Devolução</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="formDevolucao" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <input type="hidden" id="devolucaoIdVenda" name="idVenda">
+                    
+                    <h6 class="mb-3">Selecione os itens para devolução:</h6>
+                    <div id="itensDevolucao" class="mb-4">
+                        <!-- Itens serão inseridos aqui via JavaScript -->
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="devolucaoMotivo">Motivo da Devolução *</label>
+                        <select class="form-control" id="devolucaoMotivo" name="motivo" required>
+                            <option value="">Selecione o motivo</option>
+                            <option value="Produto com defeito">Produto com defeito</option>
+                            <option value="Produto errado/diferente do solicitado">Produto errado/diferente do solicitado</option>
+                            <option value="Insatisfação com o produto">Insatisfação com o produto</option>
+                            <option value="Atraso na entrega">Atraso na entrega</option>
+                            <option value="Outro motivo">Outro motivo</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="devolucaoTipoReembolso">Tipo de Reembolso *</label>
+                        <select class="form-control" id="devolucaoTipoReembolso" name="tipoReembolso" required>
+                            <option value="">Selecione o tipo de reembolso</option>
+                            <option value="pix">PIX</option>
+                            <option value="cartao">Cartão de Crédito</option>
+                            <option value="boleto">Boleto Bancário</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="devolucaoFoto">Foto/Evidência *</label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="devolucaoFoto" name="foto" 
+                                   accept="image/jpeg,image/png,image/jpg,image/gif" required>
+                            <label class="custom-file-label" for="devolucaoFoto">Escolher arquivo...</label>
+                        </div>
+                        <small class="form-text text-muted">Anexe uma foto do produto defeituoso ou evidência que comprove o motivo da devolução</small>
+                    </div>
+                    
+                    <div id="mensagemDevolucao" style="display: none;" class="alert"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger" id="btnEnviarDevolucao">
+                        <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                        Enviar Solicitação
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <style>
     .titulo-pagina {
@@ -265,6 +357,38 @@
         background: linear-gradient(135deg, #6d9639 0%, #5d8230 100%);
     }
     
+    .compra-footer {
+        padding: 15px 25px;
+        background: #f9f9f9;
+        border-top: 1px solid #e8e8e8;
+        text-align: right;
+    }
+    
+    .item-devolucao {
+        border: 2px solid #e8e8e8;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .item-devolucao:hover {
+        border-color: #dc3545;
+        background: #fff5f5;
+    }
+    
+    .item-devolucao.selecionado {
+        border-color: #dc3545;
+        background: #fff5f5;
+    }
+    
+    .item-devolucao input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+    }
+    
     @media (max-width: 768px) {
         .titulo-pagina {
             font-size: 26px;
@@ -317,6 +441,155 @@
         }
     }
 </style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+let itensSelecionados = [];
+
+function abrirModalDevolucao(button) {
+    // Obter dados do botão
+    const idVenda = button.getAttribute('data-venda-id');
+    const itens = JSON.parse(button.getAttribute('data-itens'));
+    
+    // Resetar formulário
+    document.getElementById('formDevolucao').reset();
+    document.getElementById('mensagemDevolucao').style.display = 'none';
+    document.getElementById('devolucaoIdVenda').value = idVenda;
+    itensSelecionados = [];
+    
+    // Preencher itens
+    const container = document.getElementById('itensDevolucao');
+    container.innerHTML = '';
+    
+    itens.forEach((item, index) => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'item-devolucao';
+        itemDiv.onclick = function() { toggleItem(index); };
+        
+        itemDiv.innerHTML = `
+            <div class="row align-items-center">
+                <div class="col-1">
+                    <input type="checkbox" class="item-checkbox" id="item-${index}" data-index="${index}">
+                </div>
+                <div class="col-2">
+                    <img src="/images/produtos/${item.produtoImagem || 'sem-imagem.png'}" 
+                         style="width: 100%; border-radius: 4px;">
+                </div>
+                <div class="col-5">
+                    <strong>${item.produtoNome}</strong><br>
+                    <small>Qtd: ${item.quantidade}</small>
+                </div>
+                <div class="col-4 text-right">
+                    <strong>R$ ${parseFloat(item.valorUnitario).toFixed(2).replace('.', ',')}</strong>
+                </div>
+            </div>
+        `;
+        
+        container.appendChild(itemDiv);
+        
+        // Armazenar dados do item
+        itensSelecionados.push({
+            selecionado: false,
+            produtoId: item.produtoId,
+            quantidade: item.quantidade,
+            preco: item.valorUnitario
+        });
+    });
+    
+    // Abrir modal
+    $('#modalDevolucao').modal('show');
+}
+
+function toggleItem(index) {
+    const checkbox = document.getElementById(`item-${index}`);
+    const itemDiv = checkbox.closest('.item-devolucao');
+    
+    checkbox.checked = !checkbox.checked;
+    itensSelecionados[index].selecionado = checkbox.checked;
+    
+    if (checkbox.checked) {
+        itemDiv.classList.add('selecionado');
+    } else {
+        itemDiv.classList.remove('selecionado');
+    }
+}
+
+// Atualizar label do input file
+document.getElementById('devolucaoFoto').addEventListener('change', function(e) {
+    const fileName = e.target.files[0]?.name || 'Escolher arquivo...';
+    const label = document.querySelector('.custom-file-label');
+    label.textContent = fileName;
+});
+
+// Enviar formulário de devolução
+document.getElementById('formDevolucao').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const btnEnviar = document.getElementById('btnEnviarDevolucao');
+    const spinner = btnEnviar.querySelector('.spinner-border');
+    const mensagemDiv = document.getElementById('mensagemDevolucao');
+    
+    // Validar itens selecionados
+    const itensSel = itensSelecionados.filter(i => i.selecionado);
+    if (itensSel.length === 0) {
+        mensagemDiv.className = 'alert alert-danger';
+        mensagemDiv.textContent = 'Selecione pelo menos um item para devolução';
+        mensagemDiv.style.display = 'block';
+        return;
+    }
+    
+    // Desabilitar botão e mostrar spinner
+    btnEnviar.disabled = true;
+    spinner.classList.remove('d-none');
+    mensagemDiv.style.display = 'none';
+    
+    try {
+        const formData = new FormData(this);
+        
+        // Adicionar itens selecionados
+        formData.append('itens', JSON.stringify(itensSel.map(i => ({
+            produtoId: i.produtoId,
+            quantidade: i.quantidade,
+            preco: i.preco
+        }))));
+        
+        const response = await fetch('/solicitar-devolucao', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (data.ok) {
+            mensagemDiv.className = 'alert alert-success';
+            mensagemDiv.textContent = data.msg;
+            mensagemDiv.style.display = 'block';
+            
+            // Resetar formulário
+            this.reset();
+            document.querySelector('.custom-file-label').textContent = 'Escolher arquivo...';
+            
+            // Fechar modal após 2 segundos
+            setTimeout(() => {
+                $('#modalDevolucao').modal('hide');
+                location.reload();
+            }, 2000);
+        } else {
+            mensagemDiv.className = 'alert alert-danger';
+            mensagemDiv.textContent = data.msg || 'Erro ao enviar solicitação';
+            mensagemDiv.style.display = 'block';
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        mensagemDiv.className = 'alert alert-danger';
+        mensagemDiv.textContent = 'Erro ao processar solicitação. Tente novamente.';
+        mensagemDiv.style.display = 'block';
+    } finally {
+        btnEnviar.disabled = false;
+        spinner.classList.add('d-none');
+    }
+});
+</script>
 
 </body>
 </html>
