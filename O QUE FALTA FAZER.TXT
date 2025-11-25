@@ -6,7 +6,7 @@ Relatório final do caixa mostrando os movimentos
 
 Adicionar endereço a pessoaModel
 
-Devolução de venda: Solicitação pelo cliente e conclusão pelo admin(fazer possibilidade do admin realizar a solicitação tmb)
+Arrumar contas a pagar de devolução de venda
 
 Devoluçaõ de compra
 
