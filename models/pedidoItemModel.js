@@ -152,6 +152,33 @@ class ItemVendaModel {
         return result;
     }
 
+    async listarPorVenda(vendaId) {
+        let sql = `select iv.*, p.prod_nome, p.prod_imagem
+                   from tb_ItemVenda iv
+                   inner join tb_Produto p on iv.itven_idProduto = p.prod_id
+                   where iv.itven_idVenda = ?
+                   order by p.prod_nome`;
+        
+        let valores = [vendaId];
+        let rows = await banco.ExecutaComando(sql, valores);
+        
+        let listaItens = [];
+        for(let i = 0; i < rows.length; i++) {
+            let row = rows[i];
+            let valorTotal = row["itven_precoUnitario"] * row["itven_qtd"];
+            listaItens.push({
+                produtoId: row["itven_idProduto"],
+                produtoNome: row["prod_nome"],
+                produtoImagem: row["prod_imagem"],
+                quantidade: row["itven_qtd"],
+                valorUnitario: row["itven_precoUnitario"],
+                valorTotal: valorTotal
+            });
+        }
+        
+        return listaItens;
+    }
+
     toJSON() {
         return {
             venda: this.#vendaId,

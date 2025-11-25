@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Compras - EGAC</title>
+</head>
+<body>
+    
+<section class="ftco-section" style="padding-top: 50px;">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="titulo-pagina">Minhas Compras</h2>
+                <p class="subtitulo-pagina">Acompanhe o histórico de todos os seus pedidos</p>
+            </div>
+        </div>
+        
+        <% if (vendas && vendas.length > 0) { %>
+            <div class="row">
+                <% vendas.forEach(function(venda) { %>
+                    <div class="col-md-12 mb-4">
+                        <div class="compra-card">
+                            <div class="compra-header">
+                                <div class="row align-items-center">
+                                    <div class="col-md-3 col-6">
+                                        <small class="text-muted d-block mb-1">Pedido</small>
+                                        <strong>#<%= venda.id %></strong>
+                                    </div>
+                                    <div class="col-md-3 col-6">
+                                        <small class="text-muted d-block mb-1">Data</small>
+                                        <strong><%= new Date(venda.data).toLocaleDateString('pt-BR') %></strong>
+                                    </div>
+                                    <div class="col-md-3 col-6 mt-3 mt-md-0">
+                                        <small class="text-muted d-block mb-1">Horário</small>
+                                        <strong><%= new Date(venda.data).toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'}) %></strong>
+                                    </div>
+                                    <div class="col-md-3 col-6 mt-3 mt-md-0 text-md-right">
+                                        <small class="text-muted d-block mb-1">Total</small>
+                                        <strong class="valor-total">R$ <%= parseFloat(venda.valorTotal).toFixed(2).replace('.', ',') %></strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="compra-body">
+                                <% if (venda.itens && venda.itens.length > 0) { %>
+                                    <% venda.itens.forEach(function(item) { %>
+                                        <div class="item-compra">
+                                            <div class="row align-items-center">
+                                                <div class="col-md-2 col-3">
+                                                    <div class="item-imagem">
+                                                        <% if (item.produtoImagem) { %>
+                                                            <img src="/images/produtos/<%= item.produtoImagem %>" 
+                                                                 alt="<%= item.produtoNome %>">
+                                                        <% } else { %>
+                                                            <img src="/images/produto-sem-imagem.png" 
+                                                                 alt="Sem imagem">
+                                                        <% } %>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 col-9">
+                                                    <h6 class="item-nome"><%= item.produtoNome %></h6>
+                                                </div>
+                                                <div class="col-md-2 col-4 mt-3 mt-md-0">
+                                                    <small class="text-muted d-block">Quantidade</small>
+                                                    <strong><%= item.quantidade %></strong>
+                                                </div>
+                                                <div class="col-md-2 col-4 mt-3 mt-md-0">
+                                                    <small class="text-muted d-block">Preço Unit.</small>
+                                                    <strong>R$ <%= parseFloat(item.valorUnitario).toFixed(2).replace('.', ',') %></strong>
+                                                </div>
+                                                <div class="col-md-2 col-4 mt-3 mt-md-0 text-md-right">
+                                                    <small class="text-muted d-block">Subtotal</small>
+                                                    <strong class="item-subtotal">R$ <%= parseFloat(item.valorTotal).toFixed(2).replace('.', ',') %></strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <% }); %>
+                                <% } else { %>
+                                    <p class="text-muted text-center mb-0">Nenhum item encontrado para este pedido.</p>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <div class="row">
+                <div class="col-12">
+                    <div class="alert-compras-vazio">
+                        <div class="icone-carrinho">
+                            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#82ae46" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="9" cy="21" r="1"></circle>
+                                <circle cx="20" cy="21" r="1"></circle>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                            </svg>
+                        </div>
+                        <h4>Você ainda não realizou nenhuma compra</h4>
+                        <p>Quando você fizer compras em nossa loja, elas aparecerão aqui.</p>
+                        <a href="/shop" class="btn btn-primary btn-lg mt-3">
+                            <i class="icon-shopping_cart"></i> Ir às Compras
+                        </a>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+
+    </div>
+</section>
+
+<style>
+    .titulo-pagina {
+        font-size: 32px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 8px;
+    }
+    
+    .subtitulo-pagina {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 0;
+    }
+    
+    .compra-card {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        overflow: hidden;
+        transition: box-shadow 0.3s ease;
+        border: 1px solid #e8e8e8;
+    }
+    
+    .compra-card:hover {
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    
+    .compra-header {
+        background: linear-gradient(135deg, #82ae46 0%, #6d9639 100%);
+        color: #fff;
+        padding: 18px 25px;
+    }
+    
+    .compra-header small {
+        color: rgba(255,255,255,0.95);
+        font-size: 13px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+    
+    .compra-header strong {
+        font-size: 17px;
+        color: #fff;
+        font-weight: 600;
+    }
+    
+    .compra-header .valor-total {
+        font-size: 22px;
+        font-weight: 700;
+    }
+    
+    .compra-body {
+        padding: 0;
+        background: #fafafa;
+    }
+    
+    .item-compra {
+        padding: 20px 25px;
+        border-bottom: 1px solid #e8e8e8;
+        transition: background 0.2s ease;
+        background: #fff;
+    }
+    
+    .item-compra:last-child {
+        border-bottom: none;
+    }
+    
+    .item-compra:hover {
+        background: #f9fdf5;
+    }
+    
+    .item-imagem {
+        width: 100%;
+        aspect-ratio: 1;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #f5f5f5;
+        border: 2px solid #e8e8e8;
+    }
+    
+    .item-imagem img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .item-nome {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        line-height: 1.4;
+    }
+    
+    .item-compra small {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+        color: #555;
+    }
+    
+    .item-compra strong {
+        font-size: 16px;
+        color: #222;
+        font-weight: 600;
+        display: block;
+        margin-top: 4px;
+    }
+    
+    .item-subtotal {
+        color: #82ae46;
+        font-weight: 700;
+        font-size: 17px;
+    }
+    
+    .alert-compras-vazio {
+        text-align: center;
+        padding: 80px 20px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        border: 1px solid #e8e8e8;
+    }
+    
+    .icone-carrinho {
+        margin-bottom: 25px;
+    }
+    
+    .alert-compras-vazio h4 {
+        color: #333;
+        margin-bottom: 15px;
+        font-size: 24px;
+        font-weight: 600;
+    }
+    
+    .alert-compras-vazio p {
+        color: #666;
+        font-size: 16px;
+        margin-bottom: 0;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, #82ae46 0%, #6d9639 100%);
+        border: none;
+        padding: 12px 35px;
+        font-weight: 600;
+        border-radius: 50px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(130, 174, 70, 0.4);
+        background: linear-gradient(135deg, #6d9639 0%, #5d8230 100%);
+    }
+    
+    @media (max-width: 768px) {
+        .titulo-pagina {
+            font-size: 26px;
+        }
+        
+        .subtitulo-pagina {
+            font-size: 14px;
+        }
+        
+        .compra-header {
+            padding: 15px 20px;
+        }
+        
+        .compra-header small {
+            font-size: 11px;
+        }
+        
+        .compra-header strong {
+            font-size: 15px;
+        }
+        
+        .compra-header .valor-total {
+            font-size: 19px;
+        }
+        
+        .item-compra {
+            padding: 15px 20px;
+        }
+        
+        .item-nome {
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        
+        .item-compra small {
+            font-size: 11px;
+        }
+        
+        .item-compra strong {
+            font-size: 14px;
+        }
+        
+        .alert-compras-vazio {
+            padding: 50px 20px;
+        }
+        
+        .icone-carrinho svg {
+            width: 60px;
+            height: 60px;
+        }
+    }
+</style>
+
+</body>
+</html>

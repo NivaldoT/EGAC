@@ -96,6 +96,31 @@ class VendaModel {
         return result;
     }
 
+    async listarPorCliente(emailCliente) {
+        let sql = `select v.*, p.pessoa_nome, p.pessoa_email
+                   from tb_Venda v
+                   inner join tb_Pessoa p on v.ven_idPessoa = p.pessoa_id
+                   where p.pessoa_email = ?
+                   order by v.ven_data desc`;
+        
+        let valores = [emailCliente];
+        let rows = await banco.ExecutaComando(sql, valores);
+        
+        let listaVendas = [];
+        for(let i = 0; i < rows.length; i++) {
+            let row = rows[i];
+            listaVendas.push({
+                id: row["ven_idVenda"],
+                data: row["ven_data"],
+                valorTotal: row["ven_valorTotal"],
+                clienteNome: row["pessoa_nome"],
+                clienteEmail: row["pessoa_email"]
+            });
+        }
+        
+        return listaVendas;
+    }
+
 }
 
 module.exports = VendaModel;

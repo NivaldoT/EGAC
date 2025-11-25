@@ -1,5 +1,7 @@
 const CategoriaModel = require('../models/categoriaModel');
 const ProdutoModel = require('../models/produtoModel');
+const VendaModel = require('../models/pedidoModel');
+const ItemVendaModel = require('../models/pedidoItemModel');
 
 class HomeController {
     homeView(req, res) {
@@ -26,6 +28,32 @@ class HomeController {
     }
     contactView(req, res) {
         res.render('home/contact');
+    }
+
+    async minhasComprasView(req, res) {
+        try {
+            // Pegar email do cookie
+            const userEmail = req.cookies.UsuarioEmail;
+            
+            if (!userEmail) {
+                return res.redirect('/usuario/login');
+            }
+
+            // Buscar vendas do cliente
+            let vendaModel = new VendaModel();
+            let vendas = await vendaModel.listarPorCliente(userEmail);
+
+            // Para cada venda, buscar os itens
+            let itemVendaModel = new ItemVendaModel();
+            for(let venda of vendas) {
+                venda.itens = await itemVendaModel.listarPorVenda(venda.id);
+            }
+
+            res.render('shop/minhas-compras', { vendas: vendas });
+        } catch (error) {
+            console.error('Erro ao buscar compras:', error);
+            res.status(500).send('Erro ao carregar suas compras');
+        }
     }
 }
 module.exports = HomeController;
