@@ -91,20 +91,20 @@
                                     <tr>
                                         <td><%= dev.id %></td>
                                         <td><%= new Date(dev.venda.data).toLocaleDateString('pt-BR') %></td>
-                                        <td>
+                                        <td style="color: #212529;">
                                             <%= dev.cliente.nome %><br>
                                             <small class="text-muted"><%= dev.cliente.email %></small>
                                         </td>
-                                        <td>#<%= dev.idVenda %></td>
-                                        <td><span class="badge badge-secondary"><%= dev.motivo %></span></td>
-                                        <td><span class="badge badge-info"><%= dev.tipoReembolso.toUpperCase() %></span></td>
+                                        <td style="color: #212529;">#<%= dev.idVenda %></td>
+                                        <td><span class="badge badge-dark" style="background-color: #343a40; color: white;"><%= dev.motivo %></span></td>
+                                        <td><span class="badge badge-primary" style="background-color: #007bff; color: white;"><%= dev.tipoReembolso.toUpperCase() %></span></td>
                                         <td>
                                             <% if (dev.status === 'pendente') { %>
-                                                <span class="badge badge-warning">Pendente</span>
+                                                <span class="badge badge-warning" style="background-color: #ffc107; color: #212529;">Pendente</span>
                                             <% } else if (dev.status === 'aprovada') { %>
-                                                <span class="badge badge-success">Aprovada</span>
+                                                <span class="badge badge-success" style="background-color: #28a745; color: white;">Aprovada</span>
                                             <% } else { %>
-                                                <span class="badge badge-danger">Recusada</span>
+                                                <span class="badge badge-danger" style="background-color: #dc3545; color: white;">Recusada</span>
                                             <% } %>
                                         </td>
                                         <td>

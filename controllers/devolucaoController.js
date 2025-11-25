@@ -2,6 +2,7 @@ const DevolucaoVendaModel = require('../models/devolucaoVendaModel');
 const ItemDevolVendaModel = require('../models/itemDevolVendaModel');
 const PessoaModel = require('../models/pessoaModel');
 const ContaPagarModel = require('../models/contaPagarModel');
+const ProdutoModel = require('../models/produtoModel');
 const multer = require('multer');
 const path = require('path');
 
@@ -245,15 +246,36 @@ class DevolucaoController {
                 return res.status(500).json({ ok: false, msg: 'Erro ao aprovar devolução' });
             }
 
+            // Atualizar estoque dos produtos devolvidos
+            console.log('=== ATUALIZANDO ESTOQUE ===');
+            console.log('Total de itens:', itens.length);
+            for (let item of itens) {
+                console.log(`Produto ID: ${item.idProduto}, Quantidade a adicionar: ${item.quantidade}`);
+                let produtoModel = new ProdutoModel(item.idProduto, null, null, null, null, null, null, null, null, null, null);
+                let resultEstoque = await produtoModel.atualizarEstoque(item.quantidade);
+                console.log(`Resultado atualização estoque:`, resultEstoque);
+            }
+            console.log('=== FIM ATUALIZAÇÃO ESTOQUE ===');
+
             // Gerar conta a pagar
+            console.log('=== GERANDO CONTA A PAGAR ===');
+            console.log('Valor total:', valorTotal);
+            console.log('ID Devolução:', id);
+            
             let contaPagarModel = new ContaPagarModel();
+            contaPagarModel.operacao = 2; // 2 = Devolução de Venda
+            contaPagarModel.idDevoVenda = id;
             contaPagarModel.valor = valorTotal;
-            contaPagarModel.dataVencimento = new Date(); // Vencimento imediato
-            contaPagarModel.idPessoa = devolucao.cliente.id;
-            contaPagarModel.descricao = `Reembolso - Devolução #${id} - Pedido #${devolucao.idVenda} - Tipo: ${devolucao.tipoReembolso}`;
-            contaPagarModel.status = 'pendente';
+            const hoje = new Date();
+            const vencimentoStr = hoje.toISOString().slice(0, 10);
+            contaPagarModel.dataVencimento = vencimentoStr;
+            contaPagarModel.isPago = 0; // 0 = não pago
+            contaPagarModel.numParcela = 1;
+            contaPagarModel.totParcelas = 1;
 
             let resultConta = await contaPagarModel.gravar();
+            console.log('Resultado gravar conta:', resultConta);
+            console.log('=== FIM GERAR CONTA A PAGAR ===');
 
             if (resultConta) {
                 return res.json({ 
