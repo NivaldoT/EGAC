@@ -53,8 +53,9 @@ const contasController = new ContasController()
 
 
 // CAIXA
-const caixaController = require("../controllers/caixaController");
-const movimentoController = require("../controllers/movimentoController");
+// const caixaController = require("../controllers/caixaController");
+const caixaController = new CaixaController();
+const movimentoController = new MovimentoController();
 
 const devolucaoController = new DevolucaoController();
 
@@ -138,9 +139,8 @@ router.get('/contas/listar',contasController.listar);
 router.post('/contas/receber', contasController.receber);
 router.post('/contas/receber', contasController.pagar);
 
-
                 // CAIXA
-router.get('/caixa', (req, res) => res.render('admin/caixa/index'));
+router.get('/caixa', (req, res) => res.render('admin/caixa/index', {layout: 'layout_admin'}));
 router.get('/caixa/getStatus', function(req, res) { caixaController.getStatus(req, res); });
 router.post('/caixa/abrir', function(req, res) { caixaController.abrir(req, res); });
 router.post('/caixa/fechar', function(req, res) { caixaController.fechar(req, res); });
