@@ -46,4 +46,4 @@ class CaixaController{
     }
 }
 
-module.exports = CaixaController;
+module.exports = new CaixaController();
