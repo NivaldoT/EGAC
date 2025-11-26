@@ -139,7 +139,7 @@ router.post('/contas/receber', contasController.pagar);
                 // CAIXA
 router.get('/caixa/getStatus', caixaController.getStatus);
 router.post('/caixa/abrir', caixaController.abrirCaixa);
-router.post('/caixa/fechar', caixaController.fecharCaixa);
+router.post('/caixa/fechar', (req, res) => caixaController.fechar(req, res));
 router.get('/caixa/resumo', caixaController.resumoCaixa);
 router.post('/caixa/movimento', movimentoController.registrarMovimento);
 

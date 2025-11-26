@@ -30,5 +30,20 @@ class CaixaController{
 
         res.send({ok});
     }
+
+    async fechar(req,res){
+        let ok;
+        let valorFinal = req.body.valorFinal;
+        let obs = req.body.obs || '';
+        let func = new PFisicaModel(null,null,null,req.cookies.FuncionarioEmail,req.cookies.FuncionarioSenha);
+        func = await func.logarEmailSenha();
+
+        let caixa = new CaixaModel();
+        if(await caixa.fecharCaixa(valorFinal, func.id, obs)){
+            ok = true;
+        }else{ok = false;}
+        res.send({ok});
+    }
 }
+
 module.exports = CaixaController;
