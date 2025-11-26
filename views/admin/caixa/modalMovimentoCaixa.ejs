@@ -1,0 +1,36 @@
+<!-- Modal Registrar Movimento no Caixa -->
+<div class="modal fade" id="modalMovimentoCaixa">
+  <div class="modal-dialog">
+    <form id="formMovimentoCaixa">
+      <div class="modal-content">
+        <div class="modal-header"><h5>Registrar Movimento</h5></div>
+        <div class="modal-body">
+          <label>Tipo de Operação</label>
+          <select name="operacao" class="form-control" required>
+            <option value="entrada">Entrada</option>
+            <option value="saida">Saída</option>
+          </select>
+          <label>Valor</label>
+          <input type="number" name="valor" class="form-control" required>
+          <label>Tipo</label>
+          <input type="text" name="tipo" class="form-control" placeholder="Ex: Dinheiro, Cartão, Pix" required>
+          <label>Observações</label>
+          <textarea name="obs" class="form-control"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Registrar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+$('#formMovimentoCaixa').submit(async function(e){
+  e.preventDefault();
+  const dados = $(this).serialize();
+  const resp = await fetch('/admin/caixa/movimento', {method:'POST',body: dados, headers:{'Content-Type':'application/x-www-form-urlencoded'}});
+  const json = await resp.json();
+  alert(json.msg);
+  if(json.ok) location.reload();
+});
+</script>

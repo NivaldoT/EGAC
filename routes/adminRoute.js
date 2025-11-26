@@ -51,7 +51,10 @@ const compraController = new CompraController();
 
 const contasController = new ContasController()
 
-const caixaController = new CaixaController();
+
+// CAIXA
+const caixaController = require("../controllers/caixaController");
+const movimentoController = require("../controllers/movimentoController");
 
 const devolucaoController = new DevolucaoController();
 
@@ -137,11 +140,12 @@ router.post('/contas/receber', contasController.pagar);
 
 
                 // CAIXA
-router.get('/caixa/getStatus', caixaController.getStatus);
-//router.post('/caixa/abrir', caixaController.abrirCaixa);
-router.post('/caixa/fechar', (req, res) => caixaController.fechar(req, res));
-//router.get('/caixa/resumo', caixaController.resumoCaixa);
-//router.post('/caixa/movimento', movimentoController.registrarMovimento);
+router.get('/caixa', (req, res) => res.render('admin/caixa/index'));
+router.get('/caixa/getStatus', function(req, res) { caixaController.getStatus(req, res); });
+router.post('/caixa/abrir', function(req, res) { caixaController.abrir(req, res); });
+router.post('/caixa/fechar', function(req, res) { caixaController.fechar(req, res); });
+router.get('/caixa/resumo', function(req, res) { caixaController.resumoCaixa(req, res); });
+router.post('/caixa/movimento', function(req, res) { movimentoController.registrarMovimento(req, res); });
 
                 // DEVOLUÇÕES
 router.get('/devolucoes', devolucaoController.listarDevolucoes);
