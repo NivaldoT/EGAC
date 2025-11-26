@@ -1,0 +1,29 @@
+<!-- Modal Fechamento de Caixa -->
+<div class="modal fade" id="modalFecharCaixa">
+  <div class="modal-dialog">
+    <form id="formFecharCaixa">
+      <div class="modal-content">
+        <div class="modal-header"><h5>Fechar Caixa</h5></div>
+        <div class="modal-body">
+          <label>Valor Final</label>
+          <input type="number" name="valorFinal" class="form-control" required>
+          <label>Justificativa/Diferenças</label>
+          <textarea name="obs" class="form-control"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-danger">Fechar Caixa</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+$('#formFecharCaixa').submit(async function(e){
+  e.preventDefault();
+  const dados = $(this).serialize();
+  const resp = await fetch('/admin/caixa/fechar', {method:'POST',body: dados, headers:{'Content-Type':'application/x-www-form-urlencoded'}});
+  const json = await resp.json();
+  alert(json.msg);
+  if(json.ok) location.reload();
+});
+</script>

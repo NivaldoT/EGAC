@@ -60,5 +60,10 @@ class MovimentoModel{
         }
         return lista;
     }
+    async listarPorCaixa(idCaixa) {
+        let sql = `SELECT * FROM tb_Movimento WHERE movi_idCaixa = ? ORDER BY movi_data`;
+        let banco = new Database();
+        return await banco.ExecutaComando(sql, [idCaixa]);
+    }
 }
 module.exports = MovimentoModel;

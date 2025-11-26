@@ -16,6 +16,7 @@ const CompraController = require("../controllers/compraController");
 const ContasController = require("../controllers/contasController");
 const CaixaController = require("../controllers/caixaController");
 const DevolucaoController = require("../controllers/devolucaoController");
+const MovimentoController = require('../controllers/movimentoController');
 const router = express.Router();
 
 // Configuração do Multer para upload de imagens
@@ -137,7 +138,10 @@ router.post('/contas/receber', contasController.pagar);
 
                 // CAIXA
 router.get('/caixa/getStatus', caixaController.getStatus);
-router.post('/caixa/abrir', caixaController.abrir);
+router.post('/caixa/abrir', caixaController.abrirCaixa);
+router.post('/caixa/fechar', caixaController.fecharCaixa);
+router.get('/caixa/resumo', caixaController.resumoCaixa);
+router.post('/caixa/movimento', movimentoController.registrarMovimento);
 
                 // DEVOLUÇÕES
 router.get('/devolucoes', devolucaoController.listarDevolucoes);

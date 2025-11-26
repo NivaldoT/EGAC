@@ -1,0 +1,29 @@
+<!-- Modal Abertura de Caixa -->
+<div class="modal fade" id="modalAbrirCaixa">
+  <div class="modal-dialog">
+    <form id="formAbrirCaixa">
+      <div class="modal-content">
+        <div class="modal-header"><h5>Abrir Caixa</h5></div>
+        <div class="modal-body">
+          <label>Valor Inicial</label>
+          <input type="number" name="valorInicial" class="form-control" required>
+          <label>Observações</label>
+          <textarea name="obs" class="form-control"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Abrir Caixa</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+$('#formAbrirCaixa').submit(async function(e){
+  e.preventDefault();
+  const dados = $(this).serialize();
+  const resp = await fetch('/admin/caixa/abrir', {method:'POST',body: dados, headers:{'Content-Type':'application/x-www-form-urlencoded'}});
+  const json = await resp.json();
+  alert(json.msg);
+  if(json.ok) location.reload();
+});
+</script>

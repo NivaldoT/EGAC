@@ -1,0 +1,29 @@
+<div class="container">
+  <h2>Resumo do Caixa</h2>
+  <% if (caixa) { %>
+    <p><strong>Valor Inicial:</strong> R$ <%= caixa.caixa_valor %></p>
+    <p><strong>Data Abertura:</strong> <%= caixa.caixa_dataAbertura %></p>
+    <p><strong>Status:</strong> <%= caixa.caixa_status == 1 ? 'Aberto' : 'Fechado' %></p>
+    <% if (caixa.caixa_status == 0) { %>
+      <p><strong>Valor Final:</strong> R$ <%= caixa.caixa_valor %></p>
+      <p><strong>Data Fechamento:</strong> <%= caixa.caixa_dataFechamento %></p>
+    <% } %>
+    <h4>Movimentos</h4>
+    <table class="table">
+      <thead><tr><th>Data</th><th>Tipo</th><th>Valor</th><th>Operação</th><th>Usuário</th></tr></thead>
+      <tbody>
+        <% movimentos.forEach(function(mov){ %>
+          <tr>
+            <td><%= mov.movi_data %></td>
+            <td><%= mov.movi_tipo %></td>
+            <td>R$ <%= mov.movi_valor %></td>
+            <td><%= mov.movi_operacao %></td>
+            <td><%= mov.movi_idFunc %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p>Nenhum caixa aberto.</p>
+  <% } %>
+</div>
