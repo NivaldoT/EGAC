@@ -7,6 +7,7 @@ class pessoaModel{
     #tipo;
     #email;
     #senha;
+    #endereco;
 
     set id(valor){ this.#id = valor}
     get id(){return this.#id}
@@ -20,14 +21,17 @@ class pessoaModel{
     get email(){return this.#email}
     set senha(valor){ this.#senha = valor}
     get senha(){return this.#senha}
+    set endereco(valor){ this.#endereco = valor}
+    get endereco(){return this.#endereco}
 
-    constructor(id,nome,telefone,tipo,email,senha){
+    constructor(id,nome,telefone,tipo,email,senha,endereco){
         this.#id = id;
         this.#nome = nome;
         this.#telefone = telefone;
         this.#tipo = tipo;
         this.#email = email;
         this.#senha = senha;
+        this.#endereco = endereco;
     }
 
     async excluir(){
@@ -44,7 +48,6 @@ class pessoaModel{
         const banco = new Database();
         let result = await banco.ExecutaComando(sql,valores);
 
-        // let pf = new PFisicaModel(result['0']['PF_email']);
         if(result.length > 0){
             let id = result['0']['pessoa_id'];
             return id;
@@ -96,7 +99,12 @@ class pessoaModel{
     toJSON(){
         return{
             id : this.#id,
-            nome : this.#nome
+            nome : this.#nome,
+            telefone: this.#telefone,
+            tipo: this.#tipo,
+            email: this.#email,
+            senha: this.#senha,
+            endereco: this.#endereco
         }
     }
 }
