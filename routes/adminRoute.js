@@ -137,15 +137,23 @@ router.get('/contas', contasController.contasView);
 
 router.get('/contas/listar',contasController.listar);
 router.post('/contas/receber', contasController.receber);
-router.post('/contas/receber', contasController.pagar);
+router.post('/contas/pagar', contasController.pagar);
+
+// router.get('/caixa', (req, res) => res.render('admin/caixa/index', {layout: 'layout_admin'}));       ACHO QUE NÃO PRECISA DESSAS FUNÇÕES
+// router.get('/caixa/getStatus', function(req, res) { caixaController.getStatus(req, res); });
+// router.post('/caixa/abrir', function(req, res) { caixaController.abrir(req, res); });
+// router.post('/caixa/fechar', function(req, res) { caixaController.fechar(req, res); });
+// router.get('/caixa/resumo', function(req, res) { caixaController.resumoCaixa(req, res); });
+// router.post('/caixa/movimento', function(req, res) { movimentoController.registrarMovimento(req, res); });
 
                 // CAIXA
-router.get('/caixa', (req, res) => res.render('admin/caixa/index', {layout: 'layout_admin'}));
-router.get('/caixa/getStatus', function(req, res) { caixaController.getStatus(req, res); });
-router.post('/caixa/abrir', function(req, res) { caixaController.abrir(req, res); });
-router.post('/caixa/fechar', function(req, res) { caixaController.fechar(req, res); });
-router.get('/caixa/resumo', function(req, res) { caixaController.resumoCaixa(req, res); });
-router.post('/caixa/movimento', function(req, res) { movimentoController.registrarMovimento(req, res); });
+router.get('/caixa', caixaController.caixaView);
+router.get('/caixa/getStatus', caixaController.getStatus);
+// router.get('/caixa/resumo', caixaController.resumoCaixa);
+
+router.post('/caixa/abrir', caixaController.abrir);
+router.post('/caixa/fechar', caixaController.fechar);
+router.post('/caixa/movimento', movimentoController.registrarMovimento);
 
                 // DEVOLUÇÕES
 router.get('/devolucoes', devolucaoController.listarDevolucoes);

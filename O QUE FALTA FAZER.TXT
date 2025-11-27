@@ -4,7 +4,7 @@ Fechar caixa
 
 Relatório final do caixa mostrando os movimentos 
 
-Adicionar endereço a pessoaModel
+Feito - Adicionar endereço a pessoaModel
 
 Arrumar contas a pagar de devolução de venda
 
@@ -19,3 +19,5 @@ Liberar para funcionário fazer compras como cliente tmb.
 
 ATUALIZAR DIAGRAMA CASO DE USO, INSERIR CONTA A RECEBER
 
+SERIA BOM SE DER TEMPO:
+    -Nas listagens, exibir 10 por vez pra evitar pesquisas muito grandes

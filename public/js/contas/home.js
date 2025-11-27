@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 console.log(corpo);
                 let html = "";
                 if(corpo.lista.length > 0) {
-                    if(tipoBusca==1)
+                    if(tipoBusca==1) // CONTAS A PAGAR
                         for(let i = 0; i < corpo.lista.length; i++) {
                             let conta = corpo.lista[i];
                             //  onclick="window.location.href='/admin/vendas/detalhes/${conta.id}'"
@@ -43,10 +43,10 @@ document.addEventListener("DOMContentLoaded", function() {
                             <td>R$${conta.valor}</td>
                             <td>${new Date(conta.dataVencimento).toLocaleString('pt-BR')}</td>
                             <td>${conta.isPago?'Paga':'Não Paga'}</td>
-                            <td><button class = "btn btn-success confirmarPG" data-id="${conta.id}"><i class="bi bi-credit-card"></i>   Realizar Pagamento</button></td>
+                            <td><button class = "btn btn-success confirmarPG ${conta.isPago?'disabled':''}" data-id="${conta.id}"><i class="bi bi-credit-card"></i>   Realizar Pagamento</button></td>
                             </tr>`;
                         }
-                    if(tipoBusca == 2)
+                    if(tipoBusca == 2) // CONTAS A RECEBER
                         for(let i = 0; i < corpo.lista.length; i++) {
                             let conta = corpo.lista[i];
                             //  onclick="window.location.href='/admin/vendas/detalhes/${conta.id}'" 
@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             <td>R$${conta.valor}</td>
                             <td>${new Date(conta.dataVencimento).toLocaleString('pt-BR')}</td>
                             <td>${conta.isPago?'Paga':'Não Paga'}</td>
-                            <td><button class = "btn btn-success confirmarRE${conta.isPago?' disabled':''}" data-id="${conta.id}"><i class="bi bi-credit-card"></i>   Confirmar Recebimento</button></td>
+                            <td><button class = "btn btn-success confirmarRE ${conta.isPago?'disabled':''}" data-id="${conta.id}"><i class="bi bi-credit-card"></i>   Confirmar Recebimento</button></td>
                             </tr>`;
                         }
                     document.querySelector("#pedidos > tbody").innerHTML = html;
@@ -113,7 +113,24 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function Pagar(){
-        alert('Pague');
+        let id = {id: this.dataset.id};
+        if(confirm('Confirma o Pagamento da Conta ID: '+id.id+'?')){
+            fetch('/admin/contas/pagar',{
+                method:'POST',
+                headers:{
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(id)
+            })
+            .then(function(resposta){
+                return resposta.json();
+            })
+            .then(function(corpo){
+                alert(corpo.ok+corpo.msg);
+                carregarPedidos();
+                getCaixa();
+            })
+        }
     }
 
     let caixa = document.getElementById('caixaStatus');

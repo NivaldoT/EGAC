@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded',  function(){
                 return resposta.json()
             })
             .then(function (corpo){
-                alert(corpo.ok)
+                alert(corpo.msg)
                 getCaixa();
             })
         }

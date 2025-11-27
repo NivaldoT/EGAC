@@ -76,6 +76,25 @@ class ContaPagarModel{
         return lista;
     }
 
+    async buscarId(){
+        let sql = 'select * from tb_ContaPagar where contaPG_id = ?';
+        let valores = [this.#id];
+        let banco = new Database();
+        let row = await banco.ExecutaComando(sql,valores);
+
+        let contaPG = new ContaPagarModel(row['0']['contaPG_id'],row['0']['contaPG_operacao'],row['0']['contaPG_idCompra'],row['0']['contaPG_idDevoVenda'],row['0']['contaPG_valor'],row['0']['contaPG_dataVencimento'],row['0']['contaPG_isPago'],row['0']['contaPG_numParcela'],row['0']['contaPG_totParcelas']);
+        return contaPG;
+    }
+
+    async pagar(){
+        let sql = 'update tb_ContaPagar set contaPG_isPago = 1 where contaPG_id = ?;';
+        let valores = [this.#id];
+        let banco = new Database();
+        let result = await banco.ExecutaComandoNonQuery(sql,valores);
+
+        return result;
+    }
+
     toJSON(){
         return {
             id: this.#id,

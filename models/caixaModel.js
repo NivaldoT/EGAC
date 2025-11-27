@@ -34,10 +34,10 @@ class CaixaModel{
         this.#nomeFunc = nomeFunc;
     }
 
-    async getCaixa(){
-        let sql = 'select * from tb_Caixa inner join tb_Pessoa on pessoa_id = caixa_idFunc where caixa_status = 1';
+    async buscarCaixaFunc(){ // RETORNA TRUE SE TIVER CAIXA ABERTO DO MESMO FUNCIONÁRIO, CASO NÃO TENHA, RETORNA FALSE
+        let sql = 'select * from tb_Caixa inner join tb_Pessoa on pessoa_id = caixa_idFunc where caixa_status = 1 and caixa_idFunc = ?';
         let banco = new Database();
-        let row = await banco.ExecutaComando(sql);
+        let row = await banco.ExecutaComando(sql,[this.idFunc]);
 
         if(row.length>0){
             this.#id = row['0']['caixa_id'];
@@ -74,6 +74,7 @@ class CaixaModel{
         let result = await banco.ExecutaComandoNonQuery(sql,valores);
         return result;
     }
+
     async buscarCaixaAberto(idFunc) {
         let sql = `SELECT * FROM tb_Caixa WHERE caixa_status = 1 AND caixa_idFunc = ?`;
         let banco = new Database();
