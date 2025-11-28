@@ -13,15 +13,11 @@ class CaixaController{
 
         let func = new PFisicaModel(null,null,null,req.cookies.FuncionarioEmail,req.cookies.FuncionarioSenha);
         func = await func.logarEmailSenha();
-        let caixa = new CaixaModel(null,null,null,null,null,func.id)
-        if(await caixa.buscarCaixaFunc()){ // VERIFICA SE O FUNCIONARIO TEM UM CAIXA ABERTO
-            status = caixa.status;
-            valor = caixa.valor;
-        }
-        else{
-            status = 0;
-        }
-        res.send({status,valor});
+        let caixa = new CaixaModel(null,null,0,null,null,func.id)
+        await caixa.buscarCaixaFunc() // VERIFICA SE O FUNCIONARIO TEM UM CAIXA ABERTO
+            // status = caixa.status;
+            // valor = caixa.valor;
+        res.send({caixa});
     }
 
     async abrir(req,res){

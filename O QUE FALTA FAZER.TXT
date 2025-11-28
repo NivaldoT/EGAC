@@ -1,4 +1,4 @@
-Abrir caixa com modal
+Abrir caixa
 
 Fechar caixa
 
@@ -17,7 +17,7 @@ Adicionar Data a fazer o serviço na OS(Opcional, em casos onde o serviço seria
 Venda: Gerar conta a receber, e incluir opção de parcelar para o cliente, assim gerando uma ou mais contas a receber.
 Liberar para funcionário fazer compras como cliente tmb.
 
-ATUALIZAR DIAGRAMA CASO DE USO, INSERIR CONTA A RECEBER
+FEITO ATUALIZAR DIAGRAMA CASO DE USO, INSERIR CONTA A RECEBER
 
 SERIA BOM SE DER TEMPO:
     -Nas listagens, exibir 10 por vez pra evitar pesquisas muito grandes

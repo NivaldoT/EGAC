@@ -139,6 +139,8 @@ router.get('/contas/listar',contasController.listar);
 router.post('/contas/receber', contasController.receber);
 router.post('/contas/pagar', contasController.pagar);
 
+                //MOVIMENTOS
+router.get('/movimentos/buscarDeCaixa/:idCaixa', movimentoController.buscarDeCaixa);
 // router.get('/caixa', (req, res) => res.render('admin/caixa/index', {layout: 'layout_admin'}));       ACHO QUE NÃO PRECISA DESSAS FUNÇÕES
 // router.get('/caixa/getStatus', function(req, res) { caixaController.getStatus(req, res); });
 // router.post('/caixa/abrir', function(req, res) { caixaController.abrir(req, res); });

@@ -105,8 +105,8 @@
                   <div class="row p-3">
                     <div class="col-md-4">
                       <h6 class="dropdown-header">Caixa</h6>
-                      <a class="dropdown-item" id="abrirCaixa">Abrir Caixa</a>
-                      <a class="dropdown-item" id="fecharCaixa">Fechar Caixa</a>
+                      <a class="dropdown-item" id="">Abrir Caixa</a>
+                      <a class="dropdown-item" id="">Fechar Caixa</a>
                       <a class="dropdown-item" href="/admin/controleCaixa">Controle de Caixa</a>
                     </div>
                     <div class="col-md-4">
@@ -120,7 +120,7 @@
               </ul>
             </li>
           </ul>
-          <button class="btn btn-outline-success" id="caixaStatus">Caixa: Fechado </button>
+          <button class="btn btn-outline-success" id="caixaStatus" data-bs-toggle="modal" data-bs-target="#exampleModal">Caixa: Fechado </button>
           <button class="btn btn-outline-success" id="caixaValor">Valor: R$00,00</button>
 
           <ul class="navbar-nav ms-auto">
@@ -148,3 +148,51 @@
     <script src="/js/admin.js"></script>
   </body>
 </html>
+
+<!-- Modal Caixa -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" id="modalDialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Controle de Caixa</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="mb-3">
+            <!-- <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAbrirCaixa">Abrir Caixa</button>
+            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalFecharCaixa">Fechar Caixa</button>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalMovimentoCaixa">Registrar Movimento</button> -->
+            <a href="/admin/caixa/resumo" class="btn btn-secondary ">Histórico de Caixa</a>
+          </div>
+          <div id="statusCaixa"></div>
+        </div>
+        <div class="" id="caixaModal">
+          
+        </div>
+          <!-- <label>Observações</label>
+          <textarea name="obs" class="form-control"></textarea> -->
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Voltar</button>
+        <button type="button" class="btn btn-success" id="acaoBtnCaixa"></button><!--Gera de acordo com o caixa-->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <script>
+  async function atualizarStatusCaixa() {
+    const resp = await fetch('/admin/caixa/getStatus');
+    const json = await resp.json();
+    let html = '';
+    if(json.status == 1) {
+      html = `<div class='alert alert-success'>Caixa aberto - Valor atual: R$ ${json.valor}</div>`;
+    } else {
+      html = `<div class='alert alert-warning'>Nenhum caixa aberto</div>`;
+    }
+    document.getElementById('statusCaixa').innerHTML = html;
+  }
+  document.addEventListener('DOMContentLoaded', atualizarStatusCaixa);
+</script> -->

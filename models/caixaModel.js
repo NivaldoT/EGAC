@@ -45,6 +45,7 @@ class CaixaModel{
             this.#status = row['0']['caixa_status'];
             this.#idFunc = row['0']['caixa_idFunc'];
             this.#nomeFunc = row['0']['pessoa_nome'];
+            this.#dataAbertura = new Date(row['0']['caixa_dataAbertura']);
             return true;
         }
         else{
@@ -86,6 +87,17 @@ class CaixaModel{
         let sql = `SELECT * FROM tb_Movimento WHERE movi_idCaixa = ? ORDER BY movi_data`;
         let banco = new Database();
         return await banco.ExecutaComando(sql, [idCaixa]);
+    }
+    toJSON(){
+        return{
+            id : this.#id,
+            valor : this.#valor,
+            status : this.#status,
+            dataAbertura : this.#dataAbertura,
+            dataFechamento : this.#dataFechamento,
+            idFunc : this.#idFunc,
+            nomeFunc : this.#nomeFunc
+        }
     }
 }
 module.exports = CaixaModel;

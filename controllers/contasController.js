@@ -38,7 +38,7 @@ class ContasController{
         let msg;
         let idConta = req.body.id;
 
-        let func = new PFisicaModel(null,null,null,req.cookies.FuncionarioEmail,FuncionarioSenha); // funcionario logado
+        let func = new PFisicaModel(null,null,null,req.cookies.FuncionarioEmail,req.cookies.FuncionarioSenha); // funcionario logado
         func = await func.logarEmailSenha();
 
         let caixa = new CaixaModel(null,null,null,null,null,func.id,null);
