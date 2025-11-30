@@ -174,6 +174,17 @@ document.addEventListener('DOMContentLoaded', function(){
             .then(function(corpo) {//recebe o corpo em formato de obj genérico
                 if(corpo.ok){
                     msgErro.classList = 'alert alert-success d-block';
+
+                    listaProduto = [];      //Após a compra, remove os produtos da lista e da tabela html
+                    tableProduto.innerHTML = `
+                        <thead>
+                            <th>ID - Produto</th>
+                            <th>Produto</th>
+                            <th>Quantidade</th>
+                            <th>Preço Unidade</th>
+                            <th>Preço Total</th>
+                            <th>Remover</th>
+                        </thead>`;
                 }
                 if(!corpo.ok){
                     msgErro.classList = 'alert alert-danger d-block';

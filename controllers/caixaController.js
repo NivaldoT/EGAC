@@ -15,8 +15,7 @@ class CaixaController{
         func = await func.logarEmailSenha();
         let caixa = new CaixaModel(null,null,0,null,null,func.id)
         await caixa.buscarCaixaFunc() // VERIFICA SE O FUNCIONARIO TEM UM CAIXA ABERTO
-            // status = caixa.status;
-            // valor = caixa.valor;
+        
         res.send({caixa});
     }
 
@@ -47,16 +46,16 @@ class CaixaController{
 
     async fechar(req,res){
         let ok;
-        let valorFinal = req.body.valorFinal;
-        let obs = req.body.obs || '';
-        let func = new PFisicaModel(null,null,null,req.cookies.FuncionarioEmail,req.cookies.FuncionarioSenha);
-        func = await func.logarEmailSenha();
+        let msg;
 
-        let caixa = new CaixaModel();
-        if(await caixa.fecharCaixa(valorFinal, func.id, obs)){
+        let idCaixa = req.body.idCaixa;
+
+        let caixa = new CaixaModel(idCaixa);
+        if(await caixa.fechar()){
             ok = true;
-        }else{ok = false;}
-        res.send({ok});
+            msg = 'Caixa fechado com sucesso!';
+        }else{ok = false; msg = 'Erro ao Fechar Caixa!'};
+        res.send({ok,msg});
     }
 }
 
