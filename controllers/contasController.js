@@ -6,8 +6,8 @@ const PFisicaModel = require("../models/pfisicaModel");
 
 class ContasController{
     async contasView(req,res){
-
-        res.render('admin/contas/home.ejs',{layout: 'layout_admin'});
+        let tipo = req.params.tipo; //1 = PAGAR // 2 = RECEBER
+        res.render('admin/contas/home.ejs',{layout: 'layout_admin',tipo});
     }
 
     async listar(req, res) {
@@ -77,7 +77,7 @@ class ContasController{
 
             let contaPG = new ContaPagarModel(idConta);
             contaPG = await contaPG.buscarId();
-            if(caixa.valor > contaPG.valor){ //COMPARA SE TEM DINHEIRO NO CAIXA PARA PAGAR
+            if(Number(caixa.valor) >= Number(contaPG.valor)){ //COMPARA SE TEM DINHEIRO NO CAIXA PARA PAGAR
                 
                 if(await contaPG.pagar()){ //PAGA NO BANCO DE DADOS
     
@@ -85,12 +85,13 @@ class ContasController{
                     if(await movimento.gravar()){ //GRAVA O MOVIMENTO NO BANCO DE DADOS
     
                         if(await caixa.atualizarSaldo(-contaPG.valor)){ //ATUALIZA O SALDO DO CAIXA
+                            ok = true;
                             msg = 'Conta Paga com Sucesso!';
                         }
                     }else{ok = false; msg = 'Erro ao Gravar Movimento Banco de Dados!'};
     
                 }else{ok = false; msg = 'Erro ao Pagar Conta Banco de Dados!'};
-            }
+            }else{ok = false; msg = 'Não há dinheiro suficiente no caixa!'};
         }
         else{ok = false; msg = 'O caixa está fechado!'};
         

@@ -133,11 +133,12 @@ router.get('/comprar', compraController.comprarView);
 router.post('/comprar', compraController.comprar);
 
                 //CONTAS A RECEBER
-router.get('/contas', contasController.contasView);
-
+                
 router.get('/contas/listar',contasController.listar);
 router.post('/contas/receber', contasController.receber);
 router.post('/contas/pagar', contasController.pagar);
+
+router.get('/contas/:tipo', contasController.contasView);
 
                 //MOVIMENTOS
 router.get('/movimentos/buscarDeCaixa/:idCaixa', movimentoController.buscarDeCaixa);

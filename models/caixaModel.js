@@ -76,18 +76,18 @@ class CaixaModel{
         return result;
     }
 
-    async buscarCaixaAberto(idFunc) {
-        let sql = `SELECT * FROM tb_Caixa WHERE caixa_status = 1 AND caixa_idFunc = ?`;
-        let banco = new Database();
-        let rows = await banco.ExecutaComando(sql, [idFunc]);
-        return rows.length > 0 ? rows[0] : null;
-    }
+    // async buscarCaixaAberto(idFunc) {
+    //     let sql = `SELECT * FROM tb_Caixa WHERE caixa_status = 1 AND caixa_idFunc = ?`;
+    //     let banco = new Database();
+    //     let rows = await banco.ExecutaComando(sql, [idFunc]);
+    //     return rows.length > 0 ? rows[0] : null;
+    // }
 
-    async listarMovimentos(idCaixa) {
-        let sql = `SELECT * FROM tb_Movimento WHERE movi_idCaixa = ? ORDER BY movi_data`;
-        let banco = new Database();
-        return await banco.ExecutaComando(sql, [idCaixa]);
-    }
+    // async listarMovimentos(idCaixa) {
+    //     let sql = `SELECT * FROM tb_Movimento WHERE movi_idCaixa = ? ORDER BY movi_data`;
+    //     let banco = new Database();
+    //     return await banco.ExecutaComando(sql, [idCaixa]);
+    // }
     toJSON(){
         return{
             id : this.#id,
