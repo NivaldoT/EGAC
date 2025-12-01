@@ -159,6 +159,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 acaoBtnCaixa.textContent = 'Abrir Caixa';
                 acaoBtnCaixa.removeEventListener('click', fecharCaixa);
 
+                caixaValor.textContent = 'Valor: R$00,00';
+
+                document.getElementById('exportarCaixa').style.display = 'none';  //ESCONDE BOTÃO EXPORTAR CAIXA
+
                 document.getElementById('statusCaixa').innerHTML = htmlAlert;
             }
             if(caixaModel.status == 1){
@@ -167,6 +171,8 @@ document.addEventListener("DOMContentLoaded", function() {
                     return resposta.json()
                 })
                 .then(function(corpo){
+                    document.getElementById('nomeCaixaSpan').textContent = 'Funcionário Responsável: '+caixaModel.nomeFunc;
+                    document.getElementById('dataCaixaSpan').textContent = 'Data e Hora de Abertura: '+new Date(caixaModel.dataAbertura).toLocaleString('pt-br');
                     let listaMovimentos = corpo.lista;
                     let tbody = '';
                     if(listaMovimentos.length>0){
@@ -185,7 +191,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     caixa.textContent = 'Caixa: Aberto';
                     caixaModal.innerHTML = `
                         <div class="table-responsive">
-                            <table id="pedidos" class="table table-hover table-striped">
+                            <table id="movimentosCaixa" class="table table-hover table-striped">
                             <h5>Movimentos deste Caixa</h5>
                                 <thead class="table-light">
                                     <tr>
@@ -208,7 +214,9 @@ document.addEventListener("DOMContentLoaded", function() {
                     acaoBtnCaixa.textContent = 'Fechar Caixa';
                     acaoBtnCaixa.removeEventListener('click', abrirCaixa);
 
-                    document.getElementById('modalDialog').classList.add('modal-xl'); // AUMENTA O TAMANHO DO MODAL;
+                    document.getElementById('exportarCaixa').style.display = 'inline-flex';   //MOSTRA BOTÃO EXPORTAR CAIXA
+
+                    document.getElementById('modalDialog').classList.add('modal-xl'); // AUMENTA O TAMANHO DO MODAL
                     document.getElementById('statusCaixa').innerHTML = htmlAlert;
                 })
             }

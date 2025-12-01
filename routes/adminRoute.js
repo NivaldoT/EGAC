@@ -115,8 +115,10 @@ router.get('/listagem/:tipo', adminController.listarItemView);
                 //ORDEM DE SERVIÇO
 router.get('/ordemServicos', ordemServicoController.homeView);
 router.get('/ordemServicos/abrir', ordemServicoController.abrirView);
+router.get('/ordemServicos/listar',ordemServicoController.listar);
 router.get('/ordemServicos/concluir/:id', ordemServicoController.concluirView);
 router.get('/ordemServicos/receber/:id', ordemServicoController.receberView);
+
 
 router.post('/ordemServicos/abrir', ordemServicoController.abrirOS);
 router.post('/ordemServicos/concluir', ordemServicoController.concluirOS);
