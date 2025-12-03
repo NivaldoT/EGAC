@@ -143,13 +143,30 @@ document.addEventListener('DOMContentLoaded', function() {
 async function carregarResumo() {
   try {
     const response = await fetch('/admin/dashboard/resumo');
-    const data = await response.json();
     
-    document.getElementById('totalVendas').textContent = 'R$ ' + (data.totalVendas || 0).toFixed(2).replace('.', ',');
-    document.getElementById('totalClientes').textContent = data.totalClientes || 0;
-    document.getElementById('produtosBaixo').textContent = data.produtosBaixo || 0;
+    if (!response.ok) {
+      throw new Error('Erro ao carregar resumo: ' + response.status);
+    }
+    
+    const data = await response.json();
+    console.log('Dados recebidos:', data);
+    
+    if (data && typeof data.totalVendas !== 'undefined') {
+      document.getElementById('totalVendas').textContent = 'R$ ' + parseFloat(data.totalVendas || 0).toFixed(2).replace('.', ',');
+    }
+    
+    if (data && typeof data.totalClientes !== 'undefined') {
+      document.getElementById('totalClientes').textContent = parseInt(data.totalClientes || 0);
+    }
+    
+    if (data && typeof data.produtosBaixo !== 'undefined') {
+      document.getElementById('produtosBaixo').textContent = parseInt(data.produtosBaixo || 0);
+    }
   } catch (error) {
     console.error('Erro ao carregar resumo:', error);
+    document.getElementById('totalVendas').textContent = 'R$ 0,00';
+    document.getElementById('totalClientes').textContent = '0';
+    document.getElementById('produtosBaixo').textContent = '0';
   }
 }
 
