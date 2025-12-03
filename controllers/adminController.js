@@ -3,6 +3,8 @@ const categoriaModel = require('../models/categoriaModel');
 const produtoModel = require('../models/produtoModel');
 const equipAgricolaModel = require ('../models/equipAgricolaModel');
 const ServicoModel = require ('../models/servicoModel');
+const PedidoModel = require('../models/pedidoModel');
+const Database = require('../utils/database');
 
 const PFModel = require('../models/pfisicaModel');
 const PJModel = require('../models/pjuridicaModel');
@@ -204,6 +206,128 @@ class adminController {
             cliente = await cliente.buscarId();
         }
     res.render('admin/alterarCliente', {layout: 'layout_admin', cliente: cliente});
+    }
+
+    // MÉTODOS DO DASHBOARD
+    async dashboardResumo(req, res) {
+        try {
+            const banco = new Database();
+            
+            // Total de vendas do mês
+            const sqlVendas = `
+                SELECT COALESCE(SUM(ped_valorTotal), 0) as total 
+                FROM tb_Pedido 
+                WHERE MONTH(ped_data) = MONTH(CURRENT_DATE()) 
+                AND YEAR(ped_data) = YEAR(CURRENT_DATE())
+            `;
+            const vendas = await banco.ExecutaComando(sqlVendas);
+            
+            // Total de clientes ativos
+            const sqlClientes = `SELECT COUNT(*) as total FROM tb_Pessoa WHERE pessoa_tipo IN (1, 2)`;
+            const clientes = await banco.ExecutaComando(sqlClientes);
+            
+            // Produtos com estoque baixo (menos de 10 unidades)
+            const sqlEstoque = `SELECT COUNT(*) as total FROM tb_Produto WHERE prod_estoque < 10 AND prod_estoque > 0`;
+            const estoque = await banco.ExecutaComando(sqlEstoque);
+            
+            res.json({
+                totalVendas: vendas[0].total || 0,
+                totalClientes: clientes[0].total || 0,
+                produtosBaixo: estoque[0].total || 0
+            });
+        } catch (error) {
+            console.error('Erro ao buscar resumo:', error);
+            res.json({ totalVendas: 0, totalClientes: 0, produtosBaixo: 0 });
+        }
+    }
+
+    async dashboardVendas(req, res) {
+        try {
+            const periodo = req.query.periodo || 'dia';
+            const banco = new Database();
+            let sql = '';
+            let labels = [];
+            let valores = [];
+            
+            if (periodo === 'dia') {
+                // Vendas por hora do dia atual
+                sql = `
+                    SELECT HOUR(ped_data) as periodo, COALESCE(SUM(ped_valorTotal), 0) as total
+                    FROM tb_Pedido
+                    WHERE DATE(ped_data) = CURDATE()
+                    GROUP BY HOUR(ped_data)
+                    ORDER BY periodo
+                `;
+                const resultado = await banco.ExecutaComando(sql);
+                
+                // Preencher todas as horas do dia
+                for(let i = 0; i < 24; i++) {
+                    labels.push(i + 'h');
+                    const venda = resultado.find(r => r.periodo === i);
+                    valores.push(venda ? parseFloat(venda.total) : 0);
+                }
+            } else if (periodo === 'mes') {
+                // Vendas por dia do mês atual
+                sql = `
+                    SELECT DAY(ped_data) as periodo, COALESCE(SUM(ped_valorTotal), 0) as total
+                    FROM tb_Pedido
+                    WHERE MONTH(ped_data) = MONTH(CURDATE()) AND YEAR(ped_data) = YEAR(CURDATE())
+                    GROUP BY DAY(ped_data)
+                    ORDER BY periodo
+                `;
+                const resultado = await banco.ExecutaComando(sql);
+                const diasNoMes = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
+                
+                for(let i = 1; i <= diasNoMes; i++) {
+                    labels.push('Dia ' + i);
+                    const venda = resultado.find(r => r.periodo === i);
+                    valores.push(venda ? parseFloat(venda.total) : 0);
+                }
+            } else if (periodo === 'ano') {
+                // Vendas por mês do ano atual
+                sql = `
+                    SELECT MONTH(ped_data) as periodo, COALESCE(SUM(ped_valorTotal), 0) as total
+                    FROM tb_Pedido
+                    WHERE YEAR(ped_data) = YEAR(CURDATE())
+                    GROUP BY MONTH(ped_data)
+                    ORDER BY periodo
+                `;
+                const resultado = await banco.ExecutaComando(sql);
+                const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+                
+                for(let i = 1; i <= 12; i++) {
+                    labels.push(meses[i-1]);
+                    const venda = resultado.find(r => r.periodo === i);
+                    valores.push(venda ? parseFloat(venda.total) : 0);
+                }
+            }
+            
+            res.json({ labels, valores });
+        } catch (error) {
+            console.error('Erro ao buscar vendas:', error);
+            res.json({ labels: [], valores: [] });
+        }
+    }
+
+    async dashboardAlertasEstoque(req, res) {
+        try {
+            const banco = new Database();
+            
+            // Produtos com estoque baixo (menos de 10 unidades)
+            const sql = `
+                SELECT prod_id, prod_nome as nome, prod_estoque as estoque
+                FROM tb_Produto
+                WHERE prod_estoque < 10 AND prod_estoque > 0
+                ORDER BY prod_estoque ASC
+                LIMIT 10
+            `;
+            
+            const produtos = await banco.ExecutaComando(sql);
+            res.json(produtos);
+        } catch (error) {
+            console.error('Erro ao buscar alertas de estoque:', error);
+            res.json([]);
+        }
     }
 }
 
