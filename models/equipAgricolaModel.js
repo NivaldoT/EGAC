@@ -64,7 +64,7 @@ class equipAgricolaModel{
     }
 
     async buscarId(id){
-        const sql ='select * from tb_EquipamentoAgricola eq inner join tb_Marca m on eq.eq_marcaId = m.marca_id inner join tb_Categoria c on eq.eq_categoria = c.categoria_id inner join tb_Pessoa p on eq.eq_idPessoa = p.pessoa_id';
+        const sql ='select * from tb_EquipamentoAgricola eq inner join tb_Marca m on eq.eq_marcaId = m.marca_id inner join tb_Categoria c on eq.eq_categoria = c.categoria_id inner join tb_Pessoa p on eq.eq_idPessoa = p.pessoa_id where eq.eq_id = ?';
         const valores = [id];
         const banco = new Database();
         

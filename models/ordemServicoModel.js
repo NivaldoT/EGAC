@@ -11,8 +11,10 @@ class OrdemDeServicoModel{
     #nomeEqAgricola;
     #idFuncionario;
     #nomeFuncionario;
+    #nomeMarca;
     #status;
     #dataAbertura;
+    #dataAgendada;
     #dataConclusao;
     #comentario;
     #precoServico;
@@ -31,6 +33,8 @@ class OrdemDeServicoModel{
     set status(valor){this.#status = valor};
     get dataAbertura(){return this.#dataAbertura};
     set dataAbertura(valor){this.#dataAbertura = valor};
+    get dataAgendada(){return this.#dataAgendada};
+    set dataAgendada(valor){this.#dataAgendada = valor};
     get dataConclusao(){return this.#dataConclusao};
     set dataConclusao(valor){this.#dataConclusao = valor};
     get nomePessoa(){return this.#nomePessoa};
@@ -41,12 +45,14 @@ class OrdemDeServicoModel{
     set nomeEqAgricola(valor){this.#nomeEqAgricola = valor};
     get nomeFuncionario(){return this.#nomeFuncionario};
     set nomeFuncionario(valor){this.#nomeFuncionario = valor};
+    set nomeMarca(valor){this.#nomeMarca = valor};
+    set nomeMarca(valor){this.#nomeMarca = valor};
     get comentario(){return this.#comentario};
     set comentario(valor){this.#comentario = valor};
     get precoServico(){return this.#precoServico};
     set precoServico(valor){this.#precoServico = valor};
     
-    constructor(id,idPessoa,idServico,precoServico,idEqAgricola,idFuncionario,status,dataAbertura,dataConclusao,comentario){
+    constructor(id,idPessoa,idServico,precoServico,idEqAgricola,idFuncionario,status,dataAbertura,dataAgendada,dataConclusao,comentario){
         this.#id = id;
         this.#idPessoa = idPessoa;
         this.#idServico = idServico;
@@ -55,13 +61,14 @@ class OrdemDeServicoModel{
         this.#idFuncionario = idFuncionario;
         this.#status = status;
         this.#dataAbertura = dataAbertura;
+        this.#dataAgendada = dataAgendada;
         this.#dataConclusao = dataConclusao;
         this.#comentario = comentario;
     }
 
     async abrirOS(){
-        let sql = 'insert into tb_OrdemDeServico(os_idPessoa,os_idServico,os_precoServico,os_idEqAgricola,os_idFuncionario, os_status, os_dataAbertura,os_comentario) values (?,?,?,?,?,?,?,?);';
-        let valores = [this.#idPessoa, this.#idServico,this.#precoServico,this.#idEqAgricola,this.#idFuncionario,0,new Date(),this.#comentario];
+        let sql = 'insert into tb_OrdemDeServico(os_idPessoa,os_idServico,os_precoServico,os_idEqAgricola,os_idFuncionario, os_status, os_dataAbertura,os_dataAgendada,os_comentario) values (?,?,?,?,?,?,?,?,?);';
+        let valores = [this.#idPessoa, this.#idServico,this.#precoServico,this.#idEqAgricola,this.#idFuncionario,0,new Date(),this.#dataAgendada,this.#comentario];
         let banco = new Database();
 
         let result = await banco.ExecutaComandoNonQuery(sql,valores);
@@ -86,44 +93,78 @@ class OrdemDeServicoModel{
         return result; 
     }
 
-    async listar(termoFiltragem){
+    async listar(termoFiltragem,filtro,marca,dataInicial,dataFinal){
         let sqlWhere = "";
+        let sqlOrder = "";
         let valores = [];
         if(termoFiltragem) {
             if(isNaN(termoFiltragem)){
                 //sql para a filtrar pelo nome do proprietário
-                sqlWhere = " where nomeCliente like ? ";
-                valores.push(" '% "+ termoFiltragem +" %' ")
+                sqlWhere = " where p.pessoa_nome like ? ";
+                valores.push("%"+ termoFiltragem +"%")
             }
             else {
                 //sql para filtrar pelo nro da OS
                 sqlWhere = " where os.os_id = " + termoFiltragem;
             }
         }
+        
+        if (filtro) {
+            // checa se a var where já foi usada
+            let separador = sqlWhere ? " and " : " where "; 
+            
+            if (filtro > "1") { // 1 = DECRESCENTE 2 = CONCLUÍDA 3 = NÃO CONCLUÍDA
+                sqlWhere += `${separador}${filtro==2?'os_status>0':'os_status=0'}`;
+            }
+        }
+        
+        if (dataInicial) {
+            let separador = sqlWhere ? " and " : " where "; 
+            sqlWhere += `${separador}os.os_dataAbertura >= ?`;
+            valores.push(dataInicial);
+        }
 
-        let sql = `select os_id, os_idPessoa, os_idServico,os_idEqAgricola,os_idFuncionario,os_status,os_dataAbertura,os_dataConclusao,
-        os_comentario, p.pessoa_nome as nomeCliente, func.pessoa_nome as nomeFuncionario, s.serv_nome, os.os_precoServico, eq.eq_nome from tb_OrdemDeServico os 
+        if (dataFinal) {
+            let separador = sqlWhere ? " and " : " where "; 
+            sqlWhere += `${separador}os.os_dataAbertura <= ?`; 
+            valores.push(dataFinal);
+        }
+
+        if(marca){
+            let separador = sqlWhere ? " and " : " where ";
+            sqlWhere+= `${separador}eq.eq_marcaId = ?`;
+            valores.push(marca);
+        }
+
+        if(filtro == 1){
+            sqlOrder = `order by os_id desc`;
+        }
+        
+        let sql = `select os_id, os_idPessoa, os_idServico,os_idEqAgricola,os_idFuncionario,os_status,os_dataAbertura,os_dataAgendada,os_dataConclusao,
+        os_comentario, p.pessoa_nome as nomeCliente, func.pessoa_nome as nomeFuncionario, s.serv_nome, os.os_precoServico, eq.eq_nome, m.marca_nome from tb_OrdemDeServico os 
         inner join tb_Pessoa p on p.pessoa_id = os.os_idPessoa
         inner join tb_Pessoa func on func.pessoa_id = os.os_idFuncionario
         inner join tb_Servico s on s.serv_id = os.os_idServico
-        inner join tb_EquipamentoAgricola eq on eq.eq_id = os.os_idEqAgricola ${sqlWhere};`;
+        inner join tb_EquipamentoAgricola eq on eq.eq_id = os.os_idEqAgricola
+        inner join tb_Marca m on m.marca_id = eq.eq_marcaId ${sqlWhere} ${sqlOrder};`;
 
         let banco = new Database();
-        let rows = await banco.ExecutaComando(sql);
+        let rows = await banco.ExecutaComando(sql,valores);
 
         let lista = [];
         for(let i in rows){
-            lista.push(new OrdemDeServicoModel(rows[i]['os_id'],rows[i]['os_idPessoa'],rows[i]['os_idServico'],rows[i]['os_precoServico'],rows[i]['os_idEqAgricola'],rows[i]['os_idFuncionario'],rows[i]['os_status'],rows[i]['os_dataAbertura'],rows[i]['os_dataConclusao'],rows[i]['os_comentario']));
+            lista.push(new OrdemDeServicoModel(rows[i]['os_id'],rows[i]['os_idPessoa'],rows[i]['os_idServico'],rows[i]['os_precoServico'],rows[i]['os_idEqAgricola'],rows[i]['os_idFuncionario'],rows[i]['os_status'],rows[i]['os_dataAbertura'],rows[i]['os_dataAgendada'],rows[i]['os_dataConclusao'],rows[i]['os_comentario']));
             lista[i].#nomePessoa = rows[i]['nomeCliente'];
             lista[i].#nomeFuncionario = rows[i]['nomeFuncionario'];
             lista[i].#nomeEqAgricola = rows[i]['eq_nome'];
             lista[i].#nomeServico = rows[i]['serv_nome'];
             lista[i].#precoServico = rows[i]['os_precoServico'];
+            lista[i].#nomeMarca = rows[i]['marca_nome'];
         }
         return lista;
     }
     async buscarId(){
-        let sql = `select os_id, os_idPessoa, os_idServico,os_idEqAgricola,os_idFuncionario,os_status,os_dataAbertura,os_dataConclusao,
+        let sql = `select os_id, os_idPessoa, os_idServico,os_idEqAgricola,os_idFuncionario,os_status,os_dataAbertura,os_dataAgendada,os_dataConclusao,
         os_comentario, p.pessoa_nome as nomeCliente, func.pessoa_nome as nomeFuncionario, s.serv_nome, os.os_precoServico, eq.eq_nome from tb_OrdemDeServico os 
         inner join tb_Pessoa p on p.pessoa_id = os.os_idPessoa
         inner join tb_Pessoa func on func.pessoa_id = os.os_idFuncionario
@@ -134,7 +175,7 @@ class OrdemDeServicoModel{
         let rows = await banco.ExecutaComando(sql,valores);
 
         if(rows.length>0){
-            let os = new OrdemDeServicoModel(rows['0']['os_id'],rows['0']['os_idPessoa'],rows['0']['os_idServico'],rows['0']['os_precoServico'],rows['0']['os_idEqAgricola'],rows['0']['os_idFuncionario'],rows['0']['os_status'],rows['0']['os_dataAbertura'],rows['0']['os_dataConclusao'],rows['0']['os_comentario']);
+            let os = new OrdemDeServicoModel(rows['0']['os_id'],rows['0']['os_idPessoa'],rows['0']['os_idServico'],rows['0']['os_precoServico'],rows['0']['os_idEqAgricola'],rows['0']['os_idFuncionario'],rows['0']['os_status'],rows['0']['os_dataAbertura'],rows['0']['os_dataAgendada'],rows['0']['os_dataConclusao'],rows['0']['os_comentario']);
                 os.#nomePessoa = rows['0']['nomeCliente'];
                 os.#nomeFuncionario = rows['0']['nomeFuncionario'];
                 os.#nomeEqAgricola = rows['0']['eq_nome'];
@@ -156,11 +197,13 @@ class OrdemDeServicoModel{
             idFuncionario: this.#idFuncionario,
             status: this.#status,
             dataAbertura: this.#dataAbertura,
+            dataAgendada: this.#dataAgendada,
             dataConclusao: this.#dataConclusao,
             comentario: this.#comentario,
             nomePessoa: this.#nomePessoa,
             nomeFuncionario: this.#nomeFuncionario,
             nomeEqAgricola: this.#nomeEqAgricola,
+            nomeMarca: this.#nomeMarca,
             nomeServico: this.#nomeServico,
             precoServico: this.#precoServico
         }

@@ -1,5 +1,6 @@
 const ContaReceberModel = require("../models/contaReceberModel");
 const itensUsadosOSModel = require("../models/itensUsadosOSModel");
+const marcaModel = require("../models/marcaModel");
 const OrdemDeServicoModel = require("../models/ordemServicoModel");
 const produtoModel = require("../models/produtoModel");
 const ServicoModel = require("../models/servicoModel");
@@ -11,7 +12,11 @@ class OrdemDeServicoController{
         let listaOS = [];
         listaOS = await os.listar();
 
-        res.render('admin/ordemServico/home.ejs',{listaOS: listaOS,layout: 'layout_admin'});
+        let listaMarcas = [];
+        let marca = new marcaModel();
+        listaMarcas = await marca.listar();
+
+        res.render('admin/ordemServico/home.ejs',{listaOS: listaOS,listaMarcas: listaMarcas,layout: 'layout_admin'});
     }
 
     async abrirView(req,res){
@@ -40,13 +45,14 @@ class OrdemDeServicoController{
         let servico = req.body.servico;
         let func = req.body.func;
         let comentario = req.body.comentario;
+        let dataAgendada = req.body.dataAgendada;
 
         let ok;
         let msg;
 
         let servModel = new ServicoModel(servico);
         servModel = await servModel.buscarId(servico);
-        let OS = new OrdemDeServicoModel(null,pessoa,servico,servModel.preco,EqAg,func,null,null,null,comentario);
+        let OS = new OrdemDeServicoModel(null,pessoa,servico,servModel.preco,EqAg,func,null,null,dataAgendada,null,comentario);
         let result = await OS.abrirOS();
         if(result){
             ok = true;
@@ -127,12 +133,16 @@ class OrdemDeServicoController{
     }
 
     async listar(req,res){
-        let termo = null;
-        if(req.query.termo) {
-            termo = req.query.termo;
-        }
+        let termo = req.query.termo;
+        
+        let filtro = req.query.filtro;
+        let marca = req.query.marca;
+        let dataInicial = req.query.dataInicial;
+        let dataFinal = req.query.dataFinal;
+        if(dataFinal)
+            dataFinal = dataFinal + ' 23:59:59';        // Para encontrar até o final deste dia
         let OS = new OrdemDeServicoModel();
-        let lista = await OS.listar(termo);
+        let lista = await OS.listar(termo,filtro,marca,dataInicial,dataFinal);
         res.send({lista});
     }
 }

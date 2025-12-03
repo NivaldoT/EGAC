@@ -12,10 +12,21 @@
 
         <div class="card-body">
             <div class="row mb-3">
-                <div class="col-md-8">
+                <div class="col-md-4">
                     <div class="form-group">
-                        <label>Busca (Número da OS)</label>
-                        <input id="inputBusca" class="form-control" placeholder="Digite o número da OS..." />
+                        <label>Busca (Número da OS/Nome do Cliente)</label>
+                        <input id="inputBusca" class="form-control" placeholder="Digite o número da OS/Nome do Cliente..." />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="selectFiltro">Filtro</label>
+                        <select class="form-control" name="selectFiltro" id="selectFiltro">
+                            <option value="">ID - Crescente</option>
+                            <option value="1">ID - Decrescente</option>
+                            <option value="2">Concluídas</option>
+                            <option value="3">Não concluídas</option>
+                        </select>
                     </div>
                 </div>
                 <div class="col-md-4 d-flex align-items-end">
@@ -32,19 +43,46 @@
                     </div>
                 </div>
             </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="selectMarca">Marca</label>
+                        <select class="form-control" name="selectMarca" id="selectMarca">
+                            <option value="">Qualquer</option>
+                            <%for(let i=0;i<listaMarcas.length;i++){%>
+                                <option value="<%=listaMarcas[i].id%>"><%=listaMarcas[i].nome%></option>
+                            <%}%>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="inputDataInicial">Data Inicial:</label>
+                        <input class="form-control" type="date" name="inputDataInicial" id="inputDataInicial">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="inputDataFinal">Data Final:</label>
+                        <input class="form-control" type="date" name="inputDataFinal" id="inputDataFinal">
+                    </div>
+                </div>
+            </div>
             
             <div class="table-responsive">
-                <table id="tableOS" class="table table-hover table-striped">
+                <table id="tableOS" class="table table-hover table-striped table-bordered">
                     <thead class="table-light">
                         <tr>
                             <th>ID - OS</th>
                             <th>Proprietário</th>
                             <th>Serviço</th>
                             <th>Equipamento Agrícola</th>
+                            <th>Marca</th>
                             <th>Funcionário Responsável</th>
                             <th>Status</th>
                             <th>Comentário</th>
                             <th>Data Abertura</th>
+                            <th>Data Agendada</th>
                             <th>Data Conclusão</th>
                             <th>Ações</th>
                         </tr>
