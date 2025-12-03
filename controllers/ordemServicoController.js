@@ -125,5 +125,15 @@ class OrdemDeServicoController{
         }
         res.send({ok,msg});
     }
+
+    async listar(req,res){
+        let termo = null;
+        if(req.query.termo) {
+            termo = req.query.termo;
+        }
+        let OS = new OrdemDeServicoModel();
+        let lista = await OS.listar(termo);
+        res.send({lista});
+    }
 }
 module.exports = OrdemDeServicoController;

@@ -4,11 +4,11 @@
 <div class="container-fluid mt-4">
     <div class="card border-0 shadow-sm">
 
-        <div class="form-floating col-lg-2 p-2" id="selectConta">
+        <div class="form-floating col-lg-5 p-2" id="selectConta">
             <select name="selectConta" id="selectContaval" class="form-control">
-                <option value="0" selected>Selecione...</option>
-                <option value="1" >Conta a Pagar</option>
-                <option value="2" >Conta a Receber</option>
+                <option value="0" >Selecione...</option>
+                <option value="1" <%if(tipo==1){%>selected<%}%>>Conta a Pagar</option>
+                <option value="2" <%if(tipo==2){%>selected<%}%>>Conta a Receber</option>
             </select>
             <label for="selectContaval">Selecione as Contas a Exibir:</label>
         </div>
@@ -55,7 +55,7 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td colspan="6" class="text-center text-muted">
+                            <td colspan="7" class="text-center text-muted">
                                 <i class="bi bi-inbox fs-3 d-block mb-2"></i>
                                 Carregando pedidos...
                             </td>

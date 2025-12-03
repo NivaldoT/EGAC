@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function(){
     const nome = document.getElementById('nomeval');
     const telefone = document.getElementById('telefoneval');
     const cpf = document.getElementById('cpfval');
+    const endereco = document.getElementById('enderecoval');
     const email = document.getElementById('emailval');
     const senha = document.getElementById('senhaval');
     const senha2 = document.getElementById('senha2val');
@@ -17,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function(){
     // Mensagens de Erro
     const erroNome = document.getElementById('erro-nome');
     const erroCpf = document.getElementById('erro-cpf');
+    const erroEndereco = document.getElementById('erro-endereco');
     const erroTelefone = document.getElementById('erro-telefone');
     const erroEmail = document.getElementById('erro-email');
     const erroSenha = document.getElementById('erro-senha');
@@ -29,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function(){
         // Limpa mensagens anteriores
         erroNome.textContent = '';
         erroCpf.textContent = '';
+        erroEndereco.textContent = '';
         erroTelefone.textContent = '';
         erroEmail.textContent = '';
         erroSenha.textContent = '';
@@ -48,6 +51,13 @@ document.addEventListener('DOMContentLoaded', function(){
             valido = false;
         }else if(!validaCPF(cpf.value)){
             erroCpf.textContent = 'Por favor insira um CPF válido.';
+            valido = false;
+        }
+        if(!endereco.value){
+            erroEndereco.textContent = 'O campo de endereço é obrigatório.';
+            valido = false;
+        }else if(endereco.value.length < 10){
+            erroEndereco.textContent = 'Por favor insira o endereço completo.';
             valido = false;
         }
 
@@ -91,6 +101,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 nome: nome.value,
                 telefone: telefone.value,
                 cpf: cpf.value,
+                endereco: endereco.value,
                 email: email.value,
                 senha: senha.value,
                 isFunc: isFunc
@@ -115,12 +126,6 @@ document.addEventListener('DOMContentLoaded', function(){
                         msgfinal.textContent = corpo.msg;
                         msgfinal.classList = 'text-danger';
                     }
-
-                    // nome.value='';
-                    // telefone.value='';
-                    // cpf.value='';
-                    // email.value='';
-                    // senha.value='';
                 })
         }
         else{
@@ -135,6 +140,9 @@ document.addEventListener('DOMContentLoaded', function(){
     });
     cpf.addEventListener('keydown', function() {
         erroCpf.textContent = '';
+    });
+    endereco.addEventListener('keydown', function() {
+        erroEndereco.textContent = '';
     });
     telefone.addEventListener('keydown', function() {
         erroTelefone.textContent = '';

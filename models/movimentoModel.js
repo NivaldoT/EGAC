@@ -60,10 +60,29 @@ class MovimentoModel{
         }
         return lista;
     }
-    async listarPorCaixa(idCaixa) {
-        let sql = `SELECT * FROM tb_Movimento WHERE movi_idCaixa = ? ORDER BY movi_data`;
+    async listarPorCaixa() {
+        let sql = `SELECT * FROM tb_Movimento WHERE movi_idCaixa = ?`;
+        let valores = [this.idCaixa];
         let banco = new Database();
-        return await banco.ExecutaComando(sql, [idCaixa]);
+        let rows = await banco.ExecutaComando(sql, valores);
+
+        let lista = [];
+        for(let i=0;i<rows.length;i++){
+            lista.push(new MovimentoModel(rows[i]['movi_id'],rows[i]['movi_operacao'],rows[i]['movi_idContaPagar'],rows[i]['movi_idContaReceber'],rows[i]['movi_valor'],rows[i]['movi_idCaixa'],rows[i]['movi_data']));
+        }
+        return lista;
+    }
+
+    toJSON(){
+        return{
+            id : this.#id,
+            operacao : this.#operacao,
+            idContaPagar : this.#idContaPagar,
+            idContaReceber : this.#idContaReceber,
+            valor : this.#valor,
+            idCaixa : this.#idCaixa,
+            data : this.#data
+        }
     }
 }
 module.exports = MovimentoModel;

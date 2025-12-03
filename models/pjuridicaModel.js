@@ -6,8 +6,8 @@ class PJModel extends pessoaModel{
 
     set cnpj(value){this.#cnpj = value};
     get cnpj(){return this.#cnpj};
-    constructor(id, nome, telefone, email, senha, cnpj){
-        super(id, nome, telefone, 2, email, senha)
+    constructor(id, nome, telefone, email, senha, endereco, cnpj){
+        super(id, nome, telefone, 2, email, senha, endereco)
         this.#cnpj = cnpj;
     }
 
@@ -40,7 +40,7 @@ class PJModel extends pessoaModel{
 
         let lista = [];
         for(let i=0;i<rows.length;i++){
-            lista.push(new PJModel(rows[i]['PJ_id'],rows[i]['pessoa_nome'],rows[i]['pessoa_telefone'],rows[i]['pessoa_email'],rows[i]['pessoa_senha'],rows[i]['PJ_cnpj']));
+            lista.push(new PJModel(rows[i]['PJ_id'],rows[i]['pessoa_nome'],rows[i]['pessoa_telefone'],rows[i]['pessoa_email'],rows[i]['pessoa_senha'],rows[i]['pessoa_endereco'],rows[i]['PJ_cnpj']));
         }
         return lista;
     }
@@ -50,7 +50,6 @@ class PJModel extends pessoaModel{
         const banco = new Database();
         let result = await banco.ExecutaComando(sql,valores);
 
-        // let PJ = new PJisicaModel(result['0']['PJ_id']);
         if(result.length>0){
             let id = result['0']['PJ_id'];
             return id;
@@ -64,14 +63,14 @@ class PJModel extends pessoaModel{
         const banco = new Database();
         let result = await banco.ExecutaComando(sql,valores);
 
-        let pessoa = new PJModel(result['0']['PJ_id'],result['0']['pessoa_nome'],result['0']['pessoa_telefone'], result['0']['pessoa_email'],result['0']['pessoa_senha'], result['0']['PJ_cnpj']);
+        let pessoa = new PJModel(result['0']['PJ_id'],result['0']['pessoa_nome'],result['0']['pessoa_telefone'], result['0']['pessoa_email'],result['0']['pessoa_senha'], result['0']['pessoa_endereco'], result['0']['PJ_cnpj']);
 
         return pessoa;
     }
     async alterar(){
-        let sql = 'update tb_PJuridica pj, tb_Pessoa p set p.pessoa_nome = ?, p.pessoa_telefone = ?, p.pessoa_tipo = ?,  p.pessoa_email= ?, p.pessoa_senha = ?, pj.PJ_cnpj = ? where p.pessoa_id = ? and pj.PJ_id = ?;';
+        let sql = 'update tb_PJuridica pj, tb_Pessoa p set p.pessoa_nome = ?, p.pessoa_telefone = ?, p.pessoa_tipo = ?,  p.pessoa_email= ?, p.pessoa_senha = ?, p.pessoa_endereco = ?, pj.PJ_cnpj = ? where p.pessoa_id = ? and pj.PJ_id = ?;';
 
-        let valores = [this.nome,this.telefone,this.tipo,this.email,this.senha,this.cnpj,this.id,this.id];
+        let valores = [this.nome,this.telefone,this.tipo,this.email,this.senha,this.endereco,this.cnpj,this.id,this.id];
         const banco = new Database();
         let result = await banco.ExecutaComandoNonQuery(sql,valores);
 

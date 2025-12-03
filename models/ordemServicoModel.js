@@ -86,13 +86,27 @@ class OrdemDeServicoModel{
         return result; 
     }
 
-    async listar(){
+    async listar(termoFiltragem){
+        let sqlWhere = "";
+        let valores = [];
+        if(termoFiltragem) {
+            if(isNaN(termoFiltragem)){
+                //sql para a filtrar pelo nome do proprietário
+                sqlWhere = " where nomeCliente like ? ";
+                valores.push(" '% "+ termoFiltragem +" %' ")
+            }
+            else {
+                //sql para filtrar pelo nro da OS
+                sqlWhere = " where os.os_id = " + termoFiltragem;
+            }
+        }
+
         let sql = `select os_id, os_idPessoa, os_idServico,os_idEqAgricola,os_idFuncionario,os_status,os_dataAbertura,os_dataConclusao,
         os_comentario, p.pessoa_nome as nomeCliente, func.pessoa_nome as nomeFuncionario, s.serv_nome, os.os_precoServico, eq.eq_nome from tb_OrdemDeServico os 
         inner join tb_Pessoa p on p.pessoa_id = os.os_idPessoa
         inner join tb_Pessoa func on func.pessoa_id = os.os_idFuncionario
         inner join tb_Servico s on s.serv_id = os.os_idServico
-        inner join tb_EquipamentoAgricola eq on eq.eq_id = os.os_idEqAgricola;`;
+        inner join tb_EquipamentoAgricola eq on eq.eq_id = os.os_idEqAgricola ${sqlWhere};`;
 
         let banco = new Database();
         let rows = await banco.ExecutaComando(sql);
@@ -132,5 +146,24 @@ class OrdemDeServicoModel{
         else{return null};
     }
 
+    toJSON(){
+        return{
+            id: this.#id,
+            idPessoa: this.#idPessoa,
+            idServico: this.#idServico,
+            precoServico: this.#precoServico,
+            idEqAgricola: this.#idEqAgricola,
+            idFuncionario: this.#idFuncionario,
+            status: this.#status,
+            dataAbertura: this.#dataAbertura,
+            dataConclusao: this.#dataConclusao,
+            comentario: this.#comentario,
+            nomePessoa: this.#nomePessoa,
+            nomeFuncionario: this.#nomeFuncionario,
+            nomeEqAgricola: this.#nomeEqAgricola,
+            nomeServico: this.#nomeServico,
+            precoServico: this.#precoServico
+        }
+    }
 }
 module.exports = OrdemDeServicoModel;

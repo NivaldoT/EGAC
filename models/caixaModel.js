@@ -34,10 +34,10 @@ class CaixaModel{
         this.#nomeFunc = nomeFunc;
     }
 
-    async getCaixa(){
-        let sql = 'select * from tb_Caixa inner join tb_Pessoa on pessoa_id = caixa_idFunc where caixa_status = 1';
+    async buscarCaixaFunc(){ // RETORNA TRUE SE TIVER CAIXA ABERTO DO MESMO FUNCIONÁRIO, CASO NÃO TENHA, RETORNA FALSE
+        let sql = 'select * from tb_Caixa inner join tb_Pessoa on pessoa_id = caixa_idFunc where caixa_status = 1 and caixa_idFunc = ?';
         let banco = new Database();
-        let row = await banco.ExecutaComando(sql);
+        let row = await banco.ExecutaComando(sql,[this.idFunc]);
 
         if(row.length>0){
             this.#id = row['0']['caixa_id'];
@@ -45,6 +45,7 @@ class CaixaModel{
             this.#status = row['0']['caixa_status'];
             this.#idFunc = row['0']['caixa_idFunc'];
             this.#nomeFunc = row['0']['pessoa_nome'];
+            this.#dataAbertura = new Date(row['0']['caixa_dataAbertura']);
             return true;
         }
         else{
@@ -74,17 +75,29 @@ class CaixaModel{
         let result = await banco.ExecutaComandoNonQuery(sql,valores);
         return result;
     }
-    async buscarCaixaAberto(idFunc) {
-        let sql = `SELECT * FROM tb_Caixa WHERE caixa_status = 1 AND caixa_idFunc = ?`;
-        let banco = new Database();
-        let rows = await banco.ExecutaComando(sql, [idFunc]);
-        return rows.length > 0 ? rows[0] : null;
-    }
 
-    async listarMovimentos(idCaixa) {
-        let sql = `SELECT * FROM tb_Movimento WHERE movi_idCaixa = ? ORDER BY movi_data`;
-        let banco = new Database();
-        return await banco.ExecutaComando(sql, [idCaixa]);
+    // async buscarCaixaAberto(idFunc) {
+    //     let sql = `SELECT * FROM tb_Caixa WHERE caixa_status = 1 AND caixa_idFunc = ?`;
+    //     let banco = new Database();
+    //     let rows = await banco.ExecutaComando(sql, [idFunc]);
+    //     return rows.length > 0 ? rows[0] : null;
+    // }
+
+    // async listarMovimentos(idCaixa) {
+    //     let sql = `SELECT * FROM tb_Movimento WHERE movi_idCaixa = ? ORDER BY movi_data`;
+    //     let banco = new Database();
+    //     return await banco.ExecutaComando(sql, [idCaixa]);
+    // }
+    toJSON(){
+        return{
+            id : this.#id,
+            valor : this.#valor,
+            status : this.#status,
+            dataAbertura : this.#dataAbertura,
+            dataFechamento : this.#dataFechamento,
+            idFunc : this.#idFunc,
+            nomeFunc : this.#nomeFunc
+        }
     }
 }
 module.exports = CaixaModel;

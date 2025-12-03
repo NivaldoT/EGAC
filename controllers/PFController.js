@@ -9,11 +9,12 @@ class PFController{
         const cpf = req.body.cpf;
         const email = req.body.email;
         const senha = req.body.senha;
+        const endereco = req.body.endereco;
         const isFunc = req.body.isFunc;
 
         let ok = true;
         let msg;
-        let PF = new PFisicaModel(null,nome,telefone,email,senha,cpf,isFunc); //ANTES DE CADASTRAR DEVE VERIFICAR EMAIL E CPF 
+        let PF = new PFisicaModel(null,nome,telefone,email,senha,endereco,cpf,isFunc); //ANTES DE CADASTRAR DEVE VERIFICAR EMAIL E CPF 
         if(await PF.procurarCpf()){
             ok = false;
             msg = 'Já existe um Usuário com este CPF!';
@@ -46,9 +47,10 @@ class PFController{
         const cpf = req.body.cpf;
         const email = req.body.email;
         const senha = req.body.senha;
+        const endereco = req.body.endereco;
         const isFunc = req.body.isFunc;
 
-        let pessoa = new PFisicaModel(id,nome,telefone,email,senha,cpf,isFunc);
+        let pessoa = new PFisicaModel(id,nome,telefone,email,senha,endereco,cpf,isFunc);
         // varificação email cpf
         if(await pessoa.procurarCpf() && await pessoa.procurarCpf() != id){ // verifica se ja existe esse cpf cadastrado más deixa passar 
             ok = false;                                   // caso seja da pessoa alterando agora

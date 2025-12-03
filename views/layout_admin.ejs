@@ -105,8 +105,8 @@
                   <div class="row p-3">
                     <div class="col-md-4">
                       <h6 class="dropdown-header">Caixa</h6>
-                      <a class="dropdown-item" id="abrirCaixa">Abrir Caixa</a>
-                      <a class="dropdown-item" id="fecharCaixa">Fechar Caixa</a>
+                      <a class="dropdown-item" id="">Abrir Caixa</a>
+                      <a class="dropdown-item" id="">Fechar Caixa</a>
                       <a class="dropdown-item" href="/admin/controleCaixa">Controle de Caixa</a>
                     </div>
                     <div class="col-md-4">
@@ -120,8 +120,8 @@
               </ul>
             </li>
           </ul>
-          <button class="btn btn-outline-success" id="caixaStatus">Caixa: Fechado </button>
-          <button class="btn btn-outline-success" id="caixaValor">Valor: R$00,00</button>
+          <button class="btn btn-outline-success" id="caixaStatus" data-bs-toggle="modal" data-bs-target="#exampleModal">Caixa: Fechado </button>
+          <button class="btn btn-outline-success" id="caixaValor" data-bs-toggle="modal" data-bs-target="#exampleModal">Valor: R$00,00</button>
 
           <ul class="navbar-nav ms-auto">
             <li class="nav-item dropdown">
@@ -148,3 +148,62 @@
     <script src="/js/admin.js"></script>
   </body>
 </html>
+
+<!-- Modal Caixa -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" id="modalDialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Controle de Caixa</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="container">
+          <div class="mb-3">
+            <span id="nomeCaixaSpan"></span>
+            <a href="/admin/caixa/resumo" class="btn btn-secondary float-end">Histórico de Caixa</a><br>
+            <span id="dataCaixaSpan"></span>
+          </div>
+          <div id="statusCaixa"></div>
+        </div>
+        <div class="" id="caixaModal"> <!--BODY CAIXA MODAL-->
+        </div>
+          <!-- <label>Observações</label>
+          <textarea name="obs" class="form-control"></textarea> -->
+
+      </div>
+      <div class="modal-footer">
+        <div class="col-md-4 d-flex float-end">
+          <div class="btn-group w-100 float-end" id="exportarCaixa" role="group">
+              <button class="btn btn-success" id="excelCaixa">
+                  <i class="bi bi-file-earmark-excel"></i> Excel
+              </button>
+              <button onclick="window.print()" class="btn btn-info" id="printCaixaPDF">
+                  <i class="bi bi-file-earmark-pdf"></i> PDF
+              </button>
+          </div>
+        </div>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Voltar</button>
+        <button type="button" class="btn btn-success" id="acaoBtnCaixa"></button><!--Gera de acordo com o caixa-->
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+@media print {
+  body * { visibility: hidden !important; }
+
+  .modal.show, .modal.show * {
+    visibility: visible !important;
+  }
+
+  /* Posiciona o modal para ocupar a página de impressão */
+  /* .modal.show {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  } */
+}
+</style>

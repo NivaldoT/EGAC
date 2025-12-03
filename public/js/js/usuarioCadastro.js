@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function(){
     const nome = document.getElementById('cadastro-nome');
     const telefone = document.getElementById('cadastro-telefone');
     const cpf = document.getElementById('cadastro-cpf');
+    const endereco = document.getElementById('cadastro-endereco');
     const email = document.getElementById('cadastro-email');
     const senha = document.getElementById('cadastro-senha');
     const confirmar = document.getElementById('cadastro-confirmar');
@@ -10,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function(){
     const erroNome = document.getElementById('erro-nome');
     const erroTelefone = document.getElementById('erro-telefone');
     const erroCpf = document.getElementById('erro-cpf');
+    const erroEndereco = document.getElementById('erro-endereco');
     const erroEmail = document.getElementById('erro-email');
     const erroSenha = document.getElementById('erro-senha');
     const erroConfirmar = document.getElementById('erro-confirmar');
@@ -22,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function(){
         erroNome.textContent = '';
         erroTelefone.textContent = '';
         erroCpf.textContent = '';
+        erroEndereco.textContent = '';
         erroEmail.textContent = '';
         erroSenha.textContent = '';
         erroConfirmar.textContent = '';
@@ -49,6 +52,13 @@ document.addEventListener('DOMContentLoaded', function(){
             valido = false;
         }else if(!validaCPF(cpf.value)){
             erroCpf.textContent = 'Por favor insira um CPF válido.';
+            valido = false;
+        }
+        if(!endereco.value){
+            erroEndereco.textContent = 'O campo de endereço é obrigatório.';
+            valido = false;
+        }else if(endereco.value.length < 10){
+            erroEndereco.textContent = 'Por favor insira o endereço completo.';
             valido = false;
         }
 
@@ -80,6 +90,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 nome: nome.value,
                 telefone: telefone.value,
                 cpf: cpf.value,
+                endereco: endereco.value,
                 email: email.value,
                 senha: senha.value,
                 isFunc: 0
@@ -120,6 +131,9 @@ document.addEventListener('DOMContentLoaded', function(){
     });
     cpf.addEventListener('keydown', function() {
         erroCpf.textContent = '';
+    });
+    endereco.addEventListener('keydown', function() {
+        erroEndereco.textContent = '';
     });
     email.addEventListener('keydown', function() {
         erroEmail.textContent = '';
