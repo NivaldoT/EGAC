@@ -1,72 +1,85 @@
+<style>
+.dashboard-card {
+  border-radius: 15px;
+  transition: transform 0.2s;
+}
+.dashboard-card:hover {
+  transform: translateY(-5px);
+}
+.icon-box {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bg-egac-green {
+  background: linear-gradient(135deg, #7cb342 0%, #558b2f 100%);
+}
+.bg-egac-light-green {
+  background: linear-gradient(135deg, #aed581 0%, #9ccc65 100%);
+}
+.bg-egac-orange {
+  background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+}
+.bg-egac-red {
+  background: linear-gradient(135deg, #e53935 0%, #c62828 100%);
+}
+.alert-item {
+  border-left: 4px solid #e53935;
+  padding: 10px;
+  margin-bottom: 10px;
+  background: #fff3f3;
+  border-radius: 5px;
+}
+</style>
+
 <div class="container-fluid mt-4">
-  <!-- Resumo -->
+  <!-- Cards de Resumo -->
   <div class="row g-3 mb-4">
-    <div class="col-xl-3 col-md-6">
-      <div class="card border-0 shadow-sm h-100">
-        <div class="card-body">
+    <div class="col-xl-4 col-md-6">
+      <div class="card border-0 shadow-sm dashboard-card bg-egac-green text-white">
+        <div class="card-body p-4">
           <div class="d-flex align-items-center">
-            <div class="flex-shrink-0">
-              <div class="bg-primary bg-opacity-10 text-primary rounded-3 p-3">
-                <i class="bi bi-cart-check fs-3"></i>
-              </div>
+            <div class="icon-box bg-white bg-opacity-25">
+              <i class="bi bi-cart-check fs-2"></i>
             </div>
-            <div class="flex-grow-1 ms-3">
-              <h6 class="text-muted mb-1">Vendas do Mês</h6>
-              <h3 class="mb-0">R$ 0,00</h3>
+            <div class="ms-3 flex-grow-1">
+              <h6 class="mb-1 text-white-50">VENDAS TOTAIS</h6>
+              <h2 class="mb-0" id="totalVendas">R$ 0,00</h2>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="col-xl-3 col-md-6">
-      <div class="card border-0 shadow-sm h-100">
-        <div class="card-body">
+    <div class="col-xl-4 col-md-6">
+      <div class="card border-0 shadow-sm dashboard-card bg-egac-light-green text-white">
+        <div class="card-body p-4">
           <div class="d-flex align-items-center">
-            <div class="flex-shrink-0">
-              <div class="bg-success bg-opacity-10 text-success rounded-3 p-3">
-                <i class="bi bi-box-seam fs-3"></i>
-              </div>
+            <div class="icon-box bg-white bg-opacity-25">
+              <i class="bi bi-people fs-2"></i>
             </div>
-            <div class="flex-grow-1 ms-3">
-              <h6 class="text-muted mb-1">Produtos em Estoque</h6>
-              <h3 class="mb-0">0</h3>
+            <div class="ms-3 flex-grow-1">
+              <h6 class="mb-1 text-white-50">CLIENTES ATIVOS</h6>
+              <h2 class="mb-0" id="totalClientes">0</h2>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="col-xl-3 col-md-6">
-      <div class="card border-0 shadow-sm h-100">
-        <div class="card-body">
+    <div class="col-xl-4 col-md-6">
+      <div class="card border-0 shadow-sm dashboard-card bg-egac-orange text-white">
+        <div class="card-body p-4">
           <div class="d-flex align-items-center">
-            <div class="flex-shrink-0">
-              <div class="bg-warning bg-opacity-10 text-warning rounded-3 p-3">
-                <i class="bi bi-tools fs-3"></i>
-              </div>
+            <div class="icon-box bg-white bg-opacity-25">
+              <i class="bi bi-exclamation-triangle fs-2"></i>
             </div>
-            <div class="flex-grow-1 ms-3">
-              <h6 class="text-muted mb-1">Ordens de Serviço</h6>
-              <h3 class="mb-0">0</h3>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-xl-3 col-md-6">
-      <div class="card border-0 shadow-sm h-100">
-        <div class="card-body">
-          <div class="d-flex align-items-center">
-            <div class="flex-shrink-0">
-              <div class="bg-info bg-opacity-10 text-info rounded-3 p-3">
-                <i class="bi bi-people fs-3"></i>
-              </div>
-            </div>
-            <div class="flex-grow-1 ms-3">
-              <h6 class="text-muted mb-1">Clientes Ativos</h6>
-              <h3 class="mb-0">0</h3>
+            <div class="ms-3 flex-grow-1">
+              <h6 class="mb-1 text-white-50">ESTOQUE BAIXO</h6>
+              <h2 class="mb-0" id="produtosBaixo">0</h2>
             </div>
           </div>
         </div>
@@ -74,14 +87,23 @@
     </div>
   </div>
 
-  <!-- Ações Rápidas -->
+  <!-- Gráficos e Alertas -->
   <div class="row g-3">
     <div class="col-lg-8">
       <div class="card border-0 shadow-sm">
         <div class="card-header bg-white border-0 py-3">
-          <h5 class="mb-0"></i>Ações Rápidas</h5>
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-bar-chart-fill text-success me-2"></i>Vendas por Período</h5>
+            <div class="btn-group btn-group-sm" role="group">
+              <button type="button" class="btn btn-outline-success active" onclick="carregarVendas('dia')">Dia</button>
+              <button type="button" class="btn btn-outline-success" onclick="carregarVendas('mes')">Mês</button>
+              <button type="button" class="btn btn-outline-success" onclick="carregarVendas('ano')">Ano</button>
+            </div>
+          </div>
         </div>
         <div class="card-body">
+          <div id="graficoVendas" style="min-height: 300px;">
+            <canvas id="chartVendas"></canvas>
           </div>
         </div>
       </div>
@@ -90,11 +112,158 @@
     <div class="col-lg-4">
       <div class="card border-0 shadow-sm h-100">
         <div class="card-header bg-white border-0 py-3">
-          <h5 class="mb-0"></i>Alertas</h5>
+          <h5 class="mb-0"><i class="bi bi-exclamation-circle-fill text-danger me-2"></i>Alertas de Estoque</h5>
         </div>
-        <div class="card-body">
+        <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+          <div id="alertasEstoque">
+            <div class="text-center text-muted py-4">
+              <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+              <p>Carregando alertas...</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+let chartVendas;
+let periodoAtual = 'dia';
+
+// Carregar dados ao abrir a página
+document.addEventListener('DOMContentLoaded', function() {
+  carregarResumo();
+  carregarVendas('dia');
+  carregarAlertasEstoque();
+});
+
+// Carregar resumo do dashboard
+async function carregarResumo() {
+  try {
+    const response = await fetch('/admin/dashboard/resumo');
+    const data = await response.json();
+    
+    document.getElementById('totalVendas').textContent = 'R$ ' + (data.totalVendas || 0).toFixed(2).replace('.', ',');
+    document.getElementById('totalClientes').textContent = data.totalClientes || 0;
+    document.getElementById('produtosBaixo').textContent = data.produtosBaixo || 0;
+  } catch (error) {
+    console.error('Erro ao carregar resumo:', error);
+  }
+}
+
+// Carregar vendas por período
+async function carregarVendas(periodo) {
+  periodoAtual = periodo;
+  
+  // Atualizar botões ativos
+  document.querySelectorAll('.btn-group button').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  event.target.classList.add('active');
+  
+  try {
+    const response = await fetch('/admin/dashboard/vendas?periodo=' + periodo);
+    const data = await response.json();
+    
+    renderizarGrafico(data);
+  } catch (error) {
+    console.error('Erro ao carregar vendas:', error);
+  }
+}
+
+// Renderizar gráfico de vendas
+function renderizarGrafico(data) {
+  const ctx = document.getElementById('chartVendas').getContext('2d');
+  
+  if (chartVendas) {
+    chartVendas.destroy();
+  }
+  
+  chartVendas = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: data.labels || [],
+      datasets: [{
+        label: 'Vendas (R$)',
+        data: data.valores || [],
+        backgroundColor: 'rgba(124, 179, 66, 0.1)',
+        borderColor: '#7cb342',
+        borderWidth: 3,
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: '#7cb342',
+        pointBorderColor: '#fff',
+        pointBorderWidth: 2,
+        pointRadius: 5,
+        pointHoverRadius: 7
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: function(value) {
+              return 'R$ ' + value.toFixed(0);
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+// Carregar alertas de estoque
+async function carregarAlertasEstoque() {
+  try {
+    const response = await fetch('/admin/dashboard/alertas-estoque');
+    const produtos = await response.json();
+    
+    const container = document.getElementById('alertasEstoque');
+    
+    if (produtos.length === 0) {
+      container.innerHTML = `
+        <div class="text-center text-muted py-4">
+          <i class="bi bi-check-circle fs-1 d-block mb-2 text-success"></i>
+          <p>Nenhum produto com estoque baixo</p>
+        </div>
+      `;
+      return;
+    }
+    
+    let html = '';
+    produtos.forEach(produto => {
+      html += `
+        <div class="alert-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <strong>${produto.nome}</strong>
+              <div class="small text-muted">Estoque: ${produto.estoque} unidades</div>
+            </div>
+            <span class="badge bg-danger">${produto.estoque}</span>
+          </div>
+        </div>
+      `;
+    });
+    
+    container.innerHTML = html;
+  } catch (error) {
+    console.error('Erro ao carregar alertas de estoque:', error);
+    document.getElementById('alertasEstoque').innerHTML = `
+      <div class="text-center text-danger py-4">
+        <i class="bi bi-exclamation-circle fs-1 d-block mb-2"></i>
+        <p>Erro ao carregar alertas</p>
+      </div>
+    `;
+  }
+}
+</script>

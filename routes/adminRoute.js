@@ -166,6 +166,11 @@ router.get('/devolucoes/:id', devolucaoController.visualizarDevolucao);
 router.post('/devolucoes/:id/aprovar', devolucaoController.aprovarDevolucao);
 router.post('/devolucoes/:id/recusar', devolucaoController.recusarDevolucao);
 
+                // DASHBOARD
+router.get('/dashboard/resumo', adminController.dashboardResumo);
+router.get('/dashboard/vendas', adminController.dashboardVendas);
+router.get('/dashboard/alertas-estoque', adminController.dashboardAlertasEstoque);
+
 // router.get('/alterarItem/:tipo/:id', adminController.alterarItemView);
 // router.get('/alterarCliente/:tipo/:id', adminController.alterarClienteView);
 module.exports = router;

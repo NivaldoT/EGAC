@@ -18,7 +18,7 @@ class PJModel extends pessoaModel{
         await banco.ExecutaComandoNonQuery(sql);
 
         sql = 'insert into tb_Pessoa(pessoa_nome, pessoa_telefone, pessoa_tipo, pessoa_email, pessoa_senha, pessoa_endereco) values(?,?,?,?,?,?);'
-        let valores = [this.nome, this.telefone, this.tipo, this.email, this.senha, this.endereco];
+        let valores = [this.nome, this.telefone, this.tipo, this.email, this.senha, ''];
         await banco.ExecutaComandoNonQuery(sql,valores);
 
         sql = 'set @last_id = last_insert_id();'
