@@ -1,4 +1,12 @@
 document.addEventListener('DOMContentLoaded', function(){
+
+    corrigirDatasInputs();
+    function corrigirDatasInputs(){
+        let inputDataAgendar = document.getElementById('inputDataAgendar');
+        inputDataAgendar.min = new Date().toISOString().slice(0,10);
+        let seisMeses = new Date().setMonth(new Date().getMonth()+7)
+        inputDataAgendar.max = new Date(seisMeses).toISOString().slice(0,10);
+    }
     
     let inputProcurarPessoa = document.getElementById('procurarPessoaval');
     let selectPessoa = document.getElementById('pessoaval');
@@ -96,6 +104,7 @@ document.addEventListener('DOMContentLoaded', function(){
         const servico = document.getElementById('servicoval');
         const func = document.getElementById('funcval');
         const comentario = document.getElementById('comentarioval');
+        const inputDataAgendar = document.getElementById('inputDataAgendar');
 
         let vetorVal= [];
         if(pessoa.value == 0)
@@ -118,6 +127,11 @@ document.addEventListener('DOMContentLoaded', function(){
         else
             func.style.borderColor = '';
 
+        if(inputDataAgendar.value == '')
+            vetorVal.push(inputDataAgendar);
+        else
+            inputDataAgendar.style.borderColor = '';
+
         if(vetorVal.length == 0){
             //if(nome.value && pessoa.value != 0 && preco.value && marca.value != 0){
                 obj = {
@@ -125,7 +139,8 @@ document.addEventListener('DOMContentLoaded', function(){
                     EqAg: eqAg.value,
                     servico: servico.value,
                     func: func.value,
-                    comentario: comentario.value
+                    comentario: comentario.value,
+                    dataAgendada: inputDataAgendar.value
                 }
                 fetch('/admin/ordemServicos/abrir',{
                     method: 'POST',
@@ -144,6 +159,7 @@ document.addEventListener('DOMContentLoaded', function(){
                         servico.value='';
                         func.value ='';
                         comentario.value = '';
+                        inputDataAgendar.value =  '';
                 })
             //}
         }

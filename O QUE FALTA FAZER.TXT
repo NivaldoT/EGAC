@@ -5,6 +5,9 @@ Feito - Fechar caixa
 Feito - Relatório final do caixa mostrando os movimentos 
 
 Feito - Adicionar endereço a pessoaModel
+Mostrar endereço quando for fazer a venda (quando cliente estiver comprando)
+
+Histórico de caixas e Mostrar detalhe do movimento quando clicar, mostrando a origem
 
 Arrumar contas a pagar de devolução de venda
 
@@ -14,7 +17,7 @@ Devoluçaõ de venda
 
 Baixa de Estoque
 
-Adicionar Data a fazer o serviço na OS(Opcional, em casos onde o serviço seria no local do cliente)
+Feito - Adicionar Data a fazer o serviço na OS(Opcional, em casos onde o serviço seria no local do cliente)
 
 Venda: Gerar conta a receber, e incluir opção de parcelar para o cliente, assim gerando uma ou mais contas a receber.
 Liberar para funcionário fazer compras como cliente tmb.

@@ -22,14 +22,20 @@
             <label for="EqAgricolaval">Equipamento Agrícola:</label>
         </div>
 
-        <div class="form-floating mb-3" id="servico">
-            <select name="servico" id="servicoval" class="form-control">
-            <option value="0" selected disabled>Selecione...</option>
-            <%for(let i=0;i<listaServicos.length;i++){%>
-                <option value="<%=listaServicos[i].id%>"><%=listaServicos[i].nome%></option>
-                <%}%>
-            </select>
-            <label for="servicoval">Serviço:</label>
+        <div class="row">
+            <div class="form-floating mb-3 col-md-8" id="servico">
+                <select name="servico" id="servicoval" class="form-control">
+                <option value="0" selected disabled>Selecione...</option>
+                <%for(let i=0;i<listaServicos.length;i++){%>
+                    <option value="<%=listaServicos[i].id%>"><%=listaServicos[i].nome%></option>
+                    <%}%>
+                </select>
+                <label for="servicoval">Serviço:</label>
+            </div>
+            <div class="form-floating mb-3 col-md-4">
+                <input class="form-control" type="date" name="inputDataAgendar" id="inputDataAgendar" placeholder=" ">
+                <label for="inputDataAgendar" >Data À Agendar:</label>
+            </div>
         </div>
 
         <div class="row">
