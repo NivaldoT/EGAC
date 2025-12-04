@@ -215,29 +215,35 @@ class adminController {
             
             // Total de vendas do mês
             const sqlVendas = `
-                SELECT COALESCE(SUM(ped_valorTotal), 0) as total 
-                FROM tb_Pedido 
-                WHERE MONTH(ped_data) = MONTH(CURRENT_DATE()) 
-                AND YEAR(ped_data) = YEAR(CURRENT_DATE())
+                SELECT COALESCE(SUM(ven_valorTotal), 0) as total 
+                FROM tb_Venda 
+                WHERE MONTH(ven_data) = MONTH(CURDATE()) 
+                AND YEAR(ven_data) = YEAR(CURDATE())
             `;
             const vendas = await banco.ExecutaComando(sqlVendas);
+            console.log('Vendas:', vendas);
             
             // Total de clientes ativos
             const sqlClientes = `SELECT COUNT(*) as total FROM tb_Pessoa WHERE pessoa_tipo IN (1, 2)`;
             const clientes = await banco.ExecutaComando(sqlClientes);
+            console.log('Clientes:', clientes);
             
             // Produtos com estoque baixo (menos de 10 unidades)
             const sqlEstoque = `SELECT COUNT(*) as total FROM tb_Produto WHERE prod_estoque < 10 AND prod_estoque > 0`;
             const estoque = await banco.ExecutaComando(sqlEstoque);
+            console.log('Estoque:', estoque);
             
-            res.json({
-                totalVendas: vendas[0].total || 0,
-                totalClientes: clientes[0].total || 0,
-                produtosBaixo: estoque[0].total || 0
-            });
+            const resultado = {
+                totalVendas: parseFloat(vendas[0].total) || 0,
+                totalClientes: parseInt(clientes[0].total) || 0,
+                produtosBaixo: parseInt(estoque[0].total) || 0
+            };
+            
+            console.log('Resultado final:', resultado);
+            res.json(resultado);
         } catch (error) {
             console.error('Erro ao buscar resumo:', error);
-            res.json({ totalVendas: 0, totalClientes: 0, produtosBaixo: 0 });
+            res.status(500).json({ totalVendas: 0, totalClientes: 0, produtosBaixo: 0 });
         }
     }
 
@@ -252,10 +258,10 @@ class adminController {
             if (periodo === 'dia') {
                 // Vendas por hora do dia atual
                 sql = `
-                    SELECT HOUR(ped_data) as periodo, COALESCE(SUM(ped_valorTotal), 0) as total
-                    FROM tb_Pedido
-                    WHERE DATE(ped_data) = CURDATE()
-                    GROUP BY HOUR(ped_data)
+                    SELECT HOUR(ven_data) as periodo, COALESCE(SUM(ven_valorTotal), 0) as total
+                    FROM tb_Venda
+                    WHERE DATE(ven_data) = CURDATE()
+                    GROUP BY HOUR(ven_data)
                     ORDER BY periodo
                 `;
                 const resultado = await banco.ExecutaComando(sql);
@@ -269,10 +275,10 @@ class adminController {
             } else if (periodo === 'mes') {
                 // Vendas por dia do mês atual
                 sql = `
-                    SELECT DAY(ped_data) as periodo, COALESCE(SUM(ped_valorTotal), 0) as total
-                    FROM tb_Pedido
-                    WHERE MONTH(ped_data) = MONTH(CURDATE()) AND YEAR(ped_data) = YEAR(CURDATE())
-                    GROUP BY DAY(ped_data)
+                    SELECT DAY(ven_data) as periodo, COALESCE(SUM(ven_valorTotal), 0) as total
+                    FROM tb_Venda
+                    WHERE MONTH(ven_data) = MONTH(CURDATE()) AND YEAR(ven_data) = YEAR(CURDATE())
+                    GROUP BY DAY(ven_data)
                     ORDER BY periodo
                 `;
                 const resultado = await banco.ExecutaComando(sql);
@@ -286,10 +292,10 @@ class adminController {
             } else if (periodo === 'ano') {
                 // Vendas por mês do ano atual
                 sql = `
-                    SELECT MONTH(ped_data) as periodo, COALESCE(SUM(ped_valorTotal), 0) as total
-                    FROM tb_Pedido
-                    WHERE YEAR(ped_data) = YEAR(CURDATE())
-                    GROUP BY MONTH(ped_data)
+                    SELECT MONTH(ven_data) as periodo, COALESCE(SUM(ven_valorTotal), 0) as total
+                    FROM tb_Venda
+                    WHERE YEAR(ven_data) = YEAR(CURDATE())
+                    GROUP BY MONTH(ven_data)
                     ORDER BY periodo
                 `;
                 const resultado = await banco.ExecutaComando(sql);
