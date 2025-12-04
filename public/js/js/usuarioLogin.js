@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function(){
               msgfinal.textContent = corpo.msg;
               msgfinal.classList = 'text-success';
               setTimeout(function(){
-                window.location.href = corpo.redirecionarPara;
+                window.location.href = '/';
               }, 1000);
             }
             else{

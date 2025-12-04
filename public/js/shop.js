@@ -222,8 +222,7 @@ function finalizarCompra() {
         if (parts.length === 2) return parts.pop().split(';').shift();
         return null;
     }
-    
-    const userEmail = getCookie('UsuarioEmail');
+    let userEmail = getCookie('UsuarioEmail');
     
     if (!userEmail) {
         // Usuário não está logado - mostrar mensagem no carrinho

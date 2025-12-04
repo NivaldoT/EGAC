@@ -57,6 +57,11 @@
                         <span class="cart-summary-label">Frete</span>
                         <span class="cart-summary-value" style="color: #00a650;">Grátis</span>
                     </div>
+                    <div class="cart-summary-row input-group">
+                        <span class="cart-summary-label">Parcelas</span>
+                        <select class="form-control" name="selectParcelas" id="selectParcelas">
+                        </select>
+                    </div>
                     <div class="cart-summary-total">
                         <span>Total</span>
                         <span>R$ <span id="total-value">0</span>,<span class="price-cents" id="total-cents">00</span></span>
@@ -212,6 +217,13 @@ document.getElementById('select-all-products').addEventListener('change', functi
 // Carregar ao iniciar
 document.addEventListener('DOMContentLoaded', function() {
     loadCartItems();
+    let parcelasHtml = '';
+    let valorTotal = document.getElementById('subtotal-value');
+    let valor = valorTotal.textContent
+    for(let i=1;i<13;i++){
+        parcelasHtml+=`<option value="${i}">${i}x R$${(valor/i).toFixed(2)}</option>`;
+    }
+    document.getElementById('selectParcelas').innerHTML = parcelasHtml
     
     // Botão de finalizar compra
     document.getElementById('finalizarCompra').addEventListener('click', function() {
@@ -223,7 +235,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return null;
         }
         
-        const userEmail = getCookie('UsuarioEmail');
+        let userEmail = getCookie('UsuarioEmail');
         
         if (!userEmail) {
             // Usuário não está logado - mostrar mensagem
@@ -285,15 +297,20 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             return;
         }
+        let parcelas = document.getElementById('selectParcelas')
         
         // Enviar pedido para o servidor
+        let obj = {
+            selectedItems: selectedItems,
+            parcelas: parcelas.value
+        }
         fetch('/pedido/gravar', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             credentials: 'include', // IMPORTANTE: Envia cookies com a requisição
-            body: JSON.stringify(selectedItems)
+            body: JSON.stringify(obj)
         })
         .then(response => {
             if (!response.ok) {
@@ -313,7 +330,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 }
                 
-                // Limpar carrinho após 2 segundos
+                // Limpar carrinho após 5 segundos
                 setTimeout(function() {
                     const remainingItems = cart.filter((_, index) => {
                         const item = document.querySelectorAll('.cart-product-item')[index];
@@ -330,7 +347,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     setTimeout(function() {
                         window.location.reload();
                     }, 1000);
-                }, 2000);
+                }, 5000);
             } else {
                 // Encontrar produto com erro
                 let produtoComErro = null;

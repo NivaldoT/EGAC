@@ -16,4 +16,6 @@ router.get('/cadastro', usuarioController.cadastroView); // exibe tela de cadast
 router.post('/login', PessoaController.logar); // pessoa engloba PJ Tambem
 router.post('/cadastro', pfController.cadastrar); // processa cadastro de cliente
 
+router.get('/buscarPessoaLogin', PessoaController.buscarPessoaLogin);
+
 module.exports = router;
