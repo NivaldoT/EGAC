@@ -2,6 +2,7 @@ const ItemVendaModel = require("../models/pedidoItemModel");
 const VendaModel = require("../models/pedidoModel");
 const ProdutoModel = require("../models/produtoModel");
 const PessoaModel = require("../models/pessoaModel");
+const ContaReceberModel = require("../models/contaReceberModel");
 
 class PedidosController {
 
@@ -47,13 +48,13 @@ class PedidosController {
         let msg = "";
 
         //processo de gravação da venda
-        if(req.body.length > 0) {
-            let itensPedido = req.body;
+        if(req.body.selectedItems.length >= 0) {
+            let itensPedido = req.body.selectedItems;
             
             // Buscar ID do cliente logado pelos cookies
             let idPessoa = null;
             let nomeCliente = null;
-            
+
             if(req.cookies && req.cookies.UsuarioEmail && req.cookies.UsuarioSenha) {
                 let pessoa = new PessoaModel(null, null, null, null, req.cookies.UsuarioEmail, req.cookies.UsuarioSenha);
                 pessoa = await pessoa.logarEmailSenha();
@@ -100,6 +101,7 @@ class PedidosController {
             vendaModel.vendaIdPessoa = idPessoa; // Vincula ao cliente logado
             let vendaId = await vendaModel.gravar();
             
+            let parcelas = req.body.parcelas;
             if(vendaId > 0) {
                 for(let i = 0; i < itensPedido.length; i++) {
                     let produtoId = itensPedido[i].id;
@@ -118,6 +120,14 @@ class PedidosController {
                         // DIMINUIR ESTOQUE (quantidade negativa)
                         produtoModel.id = produtoId;
                         await produtoModel.atualizarEstoque(-quantidade);
+
+                        // GERAR CONTAS A RECEBER
+                        for(let i=0;i<parcelas;i++){
+                            let dataVencimento = new Date().setMonth((new Date().getMonth())+i+1);
+                            let contaRE = new ContaReceberModel(null,2,null,vendaId,null,valorTotal/req.body.parcelas,new Date(dataVencimento),0,i+1,parcelas);
+                            ok = await contaRE.gravar();
+                            if(!ok){msg = 'Erro ao gravar conta a Receber!'};
+                        }
                     }
                 }
 

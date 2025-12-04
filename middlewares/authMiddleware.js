@@ -3,8 +3,8 @@ class authMiddleware{
 
     async verificarUsuarioLogado(req, res, next) {
         
-        if(req.cookies != undefined && req.cookies.FuncionarioEmail != null && req.cookies.FuncionarioSenha != null){
-            let func = new PFisicaModel(null,null,null,req.cookies.FuncionarioEmail,req.cookies.FuncionarioSenha,null,null);
+        if(req.cookies != undefined && req.cookies.UsuarioEmail != null && req.cookies.UsuarioSenha != null){
+            let func = new PFisicaModel(null,null,null,req.cookies.UsuarioEmail,req.cookies.UsuarioSenha);
             func = await func.logarEmailSenha();
             if(func && func.isFunc)
                 next();

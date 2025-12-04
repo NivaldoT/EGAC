@@ -19,8 +19,8 @@ Baixa de Estoque
 
 Feito - Adicionar Data a fazer o serviço na OS(Opcional, em casos onde o serviço seria no local do cliente)
 
-Venda: Gerar conta a receber, e incluir opção de parcelar para o cliente, assim gerando uma ou mais contas a receber.
-Liberar para funcionário fazer compras como cliente tmb.
+Feito - Venda: Gerar conta a receber, e incluir opção de parcelar para o cliente, assim gerando uma ou mais contas a receber.
+Feito - Liberar para funcionário fazer compras como cliente tmb.
 
 Feito - ATUALIZAR DIAGRAMA CASO DE USO, INSERIR CONTA A RECEBER
 

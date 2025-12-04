@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             html += `<tr style="cursor: pointer;" onmouseover="this.style.backgroundColor='#f5f5f5'" onmouseout="this.style.backgroundColor=''">
                             <td><strong>#${conta.id}</strong></td>
                             <td>${conta.operacao == 1?'Recebimento de Ordem de Serviço': conta.operacao == 2?'Venda de Produtos':'Devolução de Compra'}</td>
-                            <td>${conta.operacao == 1? conta.idOS : conta.operação == 2 ? conta.idVenda : conta.idDevoCompra}</td>
+                            <td>${conta.operacao == 1? conta.idOS : conta.operacao == 2 ? conta.idVenda : conta.idDevoCompra}</td>
                             <td>R$${conta.valor}</td>
                             <td>${new Date(conta.dataVencimento).toLocaleDateString('pt-BR')}</td>
                             <td>${conta.isPago?'Paga':'Não Paga'}</td>

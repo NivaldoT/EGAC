@@ -8,10 +8,8 @@ class CaixaController{
     }
 
     async getStatus(req,res){
-        let status;
-        let valor;
-
-        let func = new PFisicaModel(null,null,null,req.cookies.FuncionarioEmail,req.cookies.FuncionarioSenha);
+        
+        let func = new PFisicaModel(null,null,null,req.cookies.UsuarioEmail,req.cookies.UsuarioSenha);
         func = await func.logarEmailSenha();
         let caixa = new CaixaModel(null,null,0,null,null,func.id)
         await caixa.buscarCaixaFunc() // VERIFICA SE O FUNCIONARIO TEM UM CAIXA ABERTO
@@ -23,7 +21,7 @@ class CaixaController{
         let ok;
         let msg;
         let valor = req.body.valor;
-        let func = new PFisicaModel(null,null,null,req.cookies.FuncionarioEmail,req.cookies.FuncionarioSenha);
+        let func = new PFisicaModel(null,null,null,req.cookies.UsuarioEmail,req.cookies.UsuarioSenha);
         func = await func.logarEmailSenha();
 
         let caixa = new CaixaModel(null,valor,null,null,null,func.id);
