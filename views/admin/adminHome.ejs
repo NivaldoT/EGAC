@@ -1,37 +1,42 @@
 <style>
 .dashboard-card {
   border-radius: 15px;
-  transition: transform 0.2s;
+  transition: all 0.3s;
+  overflow: hidden;
 }
 .dashboard-card:hover {
   transform: translateY(-5px);
-}
-.icon-box {
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.15) !important;
 }
 .bg-egac-green {
   background: linear-gradient(135deg, #7cb342 0%, #558b2f 100%);
 }
 .bg-egac-light-green {
-  background: linear-gradient(135deg, #aed581 0%, #9ccc65 100%);
+  background: linear-gradient(135deg, #689f38 0%, #558b2f 100%);
 }
 .bg-egac-orange {
   background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
 }
-.bg-egac-red {
-  background: linear-gradient(135deg, #e53935 0%, #c62828 100%);
+.card-icon {
+  font-size: 3rem;
+  opacity: 0.3;
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 .alert-item {
   border-left: 4px solid #e53935;
-  padding: 10px;
+  padding: 12px;
   margin-bottom: 10px;
-  background: #fff3f3;
-  border-radius: 5px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  transition: all 0.2s;
+}
+.alert-item:hover {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transform: translateX(5px);
 }
 </style>
 
@@ -39,49 +44,31 @@
   <!-- Cards de Resumo -->
   <div class="row g-3 mb-4">
     <div class="col-xl-4 col-md-6">
-      <div class="card border-0 shadow-sm dashboard-card bg-egac-green text-white">
+      <div class="card border-0 shadow-sm dashboard-card bg-egac-green text-white position-relative">
         <div class="card-body p-4">
-          <div class="d-flex align-items-center">
-            <div class="icon-box bg-white bg-opacity-25">
-              <i class="bi bi-cart-check fs-2"></i>
-            </div>
-            <div class="ms-3 flex-grow-1">
-              <h6 class="mb-1 text-white-50">VENDAS TOTAIS</h6>
-              <h2 class="mb-0" id="totalVendas">R$ 0,00</h2>
-            </div>
-          </div>
+          <h6 class="mb-1 text-white-50 text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">Vendas Totais</h6>
+          <h2 class="mb-0 fw-bold" id="totalVendas">R$ 0,00</h2>
+          <i class="bi bi-cart-check card-icon"></i>
         </div>
       </div>
     </div>
 
     <div class="col-xl-4 col-md-6">
-      <div class="card border-0 shadow-sm dashboard-card bg-egac-light-green text-white">
+      <div class="card border-0 shadow-sm dashboard-card bg-egac-light-green text-white position-relative">
         <div class="card-body p-4">
-          <div class="d-flex align-items-center">
-            <div class="icon-box bg-white bg-opacity-25">
-              <i class="bi bi-people fs-2"></i>
-            </div>
-            <div class="ms-3 flex-grow-1">
-              <h6 class="mb-1 text-white-50">CLIENTES ATIVOS</h6>
-              <h2 class="mb-0" id="totalClientes">0</h2>
-            </div>
-          </div>
+          <h6 class="mb-1 text-white-50 text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">Clientes</h6>
+          <h2 class="mb-0 fw-bold" id="totalClientes">0</h2>
+          <i class="bi bi-people card-icon"></i>
         </div>
       </div>
     </div>
 
     <div class="col-xl-4 col-md-6">
-      <div class="card border-0 shadow-sm dashboard-card bg-egac-orange text-white">
+      <div class="card border-0 shadow-sm dashboard-card bg-egac-orange text-white position-relative">
         <div class="card-body p-4">
-          <div class="d-flex align-items-center">
-            <div class="icon-box bg-white bg-opacity-25">
-              <i class="bi bi-exclamation-triangle fs-2"></i>
-            </div>
-            <div class="ms-3 flex-grow-1">
-              <h6 class="mb-1 text-white-50">ESTOQUE BAIXO</h6>
-              <h2 class="mb-0" id="produtosBaixo">0</h2>
-            </div>
-          </div>
+          <h6 class="mb-1 text-white-50 text-uppercase" style="font-size: 0.75rem; letter-spacing: 1px;">Estoque Baixo</h6>
+          <h2 class="mb-0 fw-bold" id="produtosBaixo">0</h2>
+          <i class="bi bi-exclamation-triangle card-icon"></i>
         </div>
       </div>
     </div>
@@ -178,7 +165,14 @@ async function carregarVendas(periodo) {
   document.querySelectorAll('.btn-group button').forEach(btn => {
     btn.classList.remove('active');
   });
-  event.target.classList.add('active');
+  
+  // Marcar o botão correto como ativo
+  const botoes = document.querySelectorAll('.btn-group button');
+  botoes.forEach(btn => {
+    if (btn.textContent.toLowerCase() === periodo.toLowerCase()) {
+      btn.classList.add('active');
+    }
+  });
   
   try {
     const response = await fetch('/admin/dashboard/vendas?periodo=' + periodo);
