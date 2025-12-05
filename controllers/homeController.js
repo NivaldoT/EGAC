@@ -3,6 +3,7 @@ const ProdutoModel = require('../models/produtoModel');
 const VendaModel = require('../models/pedidoModel');
 const ItemVendaModel = require('../models/pedidoItemModel');
 const DevolucaoVendaModel = require('../models/devolucaoVendaModel');
+const pessoaModel = require('../models/pessoaModel');
 
 class HomeController {
     homeView(req, res) {
@@ -24,8 +25,10 @@ class HomeController {
     blogView(req, res) {
         res.render('home/blog');
     }
-    cartView(req, res) {
-        res.render('shop/cart');
+    async cartView(req, res) {
+        let usuario = new pessoaModel(null,null,null,null,req.cookies.UsuarioEmail, req.cookies.UsuarioSenha);
+        usuario = await usuario.logarEmailSenha();
+        res.render('shop/cart', {usuario});
     }
     contactView(req, res) {
         res.render('home/contact');
