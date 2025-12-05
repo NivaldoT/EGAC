@@ -85,7 +85,7 @@ class pessoaController{
         let pessoa = new PFisicaModel(null,null,null,email,senha);
         pessoa = await pessoa.logarEmailSenha();
 
-        if(pessoa.isFunc)
+        if(pessoa && pessoa.isFunc)
             ok = true;
         else
             ok = false;
