@@ -35,10 +35,12 @@ document.addEventListener("DOMContentLoaded", function() {
                     if(tipoBusca==1) // CONTAS A PAGAR
                         for(let i = 0; i < corpo.lista.length; i++) {
                             let conta = corpo.lista[i];
+                            let descricaoOperacao = conta.operacao == 1 ? 'Compra Produtos' : 'Devolução de Venda';
+                            let infoCliente = conta.nomeCliente ? ` - Cliente: ${conta.nomeCliente}` : '';
                             //  onclick="window.location.href='/admin/vendas/detalhes/${conta.id}'"
                             html += `<tr style="cursor: pointer;" onmouseover="this.style.backgroundColor='#f5f5f5'" onmouseout="this.style.backgroundColor=''">
                             <td><strong>#${conta.id}</strong></td>
-                            <td>${conta.operacao == 1?'Compra Produtos':'Devolução de Venda'}</td>
+                            <td>${descricaoOperacao}${infoCliente}</td>
                             <td>${conta.operacao == 1? conta.idCompra : conta.idDevoVenda}</td>
                             <td>R$${conta.valor}</td>
                             <td>${new Date(conta.dataVencimento).toLocaleDateString('pt-BR')}</td>

@@ -96,6 +96,19 @@ class pessoaModel{
             return null;
     }
 
+    async buscarPorId(id){
+        let sql = 'select * from tb_Pessoa where pessoa_id = ?;'
+        let valores = [id || this.#id];
+        const banco = new Database();
+        let result = await banco.ExecutaComando(sql,valores);
+
+        if(result.length>0){
+            return result[0];
+        }
+        else
+            return null;
+    }
+
     async atualizar(){
         let sql = 'UPDATE tb_Pessoa SET pessoa_nome = ?, pessoa_telefone = ?, pessoa_endereco = ?, pessoa_senha = ? WHERE pessoa_id = ?';
         let valores = [this.#nome, this.#telefone, this.#endereco, this.#senha, this.#id];

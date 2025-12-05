@@ -21,6 +21,18 @@ class ContasController{
         if(tipoBusca == 1){
             let contaPG = new ContaPagarModel();
             lista = await contaPG.listar(termo);
+            
+            // Buscar nome do cliente para devoluções
+            const PessoaModel = require('../models/pessoaModel');
+            for(let conta of lista) {
+                if(conta.operacao == 2 && conta.idPessoa) {
+                    let pessoa = new PessoaModel(conta.idPessoa);
+                    let dadosPessoa = await pessoa.buscarPorId();
+                    if(dadosPessoa) {
+                        conta.nomeCliente = dadosPessoa.pessoa_nome;
+                    }
+                }
+            }
         }
         if(tipoBusca == 2){
             let contaRE = new ContaReceberModel();

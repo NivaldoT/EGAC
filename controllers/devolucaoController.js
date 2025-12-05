@@ -261,10 +261,12 @@ class DevolucaoController {
             console.log('=== GERANDO CONTA A PAGAR ===');
             console.log('Valor total:', valorTotal);
             console.log('ID Devolução:', id);
+            console.log('ID Cliente:', devolucao.idCliente);
             
             let contaPagarModel = new ContaPagarModel();
             contaPagarModel.operacao = 2; // 2 = Devolução de Venda
             contaPagarModel.idDevoVenda = id;
+            contaPagarModel.idPessoa = devolucao.idCliente; // ID do cliente que receberá o reembolso
             contaPagarModel.valor = valorTotal;
             const hoje = new Date();
             const vencimentoStr = hoje.toISOString().slice(0, 10);

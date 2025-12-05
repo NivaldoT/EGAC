@@ -38,14 +38,23 @@ class HomeController {
         try {
             // Pegar email do cookie
             const userEmail = req.cookies.UsuarioEmail;
+            const userSenha = req.cookies.UsuarioSenha;
+            
+            console.log('=== MINHAS COMPRAS DEBUG ===');
+            console.log('Todos os cookies:', req.cookies);
+            console.log('UsuarioEmail:', userEmail);
+            console.log('UsuarioSenha:', userSenha ? 'existe' : 'NÃO EXISTE');
             
             if (!userEmail) {
+                console.log('❌ Redirecionando - email não encontrado');
                 return res.redirect('/usuario/login');
             }
 
             // Buscar vendas do cliente
             let vendaModel = new VendaModel();
             let vendas = await vendaModel.listarPorCliente(userEmail);
+            
+            console.log('✅ Total de vendas:', vendas.length);
 
             // Para cada venda, buscar os itens e verificar se há devolução
             let itemVendaModel = new ItemVendaModel();

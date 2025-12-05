@@ -161,25 +161,22 @@
 			
 			if (userEmail) {
 				// Usuário está logado
-				navLogin.style.display = 'none';
-				navPerfil.style.display = 'block';
-				
-				// Exibir nome ou email
-				if (userName) {
-					document.getElementById('user-name').textContent = decodeURIComponent(userName);
-				} else {
-					document.getElementById('user-name').textContent = decodeURIComponent(userEmail).split('@')[0];
-				}
-				document.getElementById('user-email').textContent = decodeURIComponent(userEmail);
+			navLogin.style.display = 'none';
+			navPerfil.style.display = 'block';			// Exibir nome ou email
+			if (userName) {
+				document.getElementById('user-name').textContent = decodeURIComponent(userName);
 			} else {
-				// Usuário não está logado
-				navLogin.style.display = 'block';
-				navPerfil.style.display = 'none';
+				document.getElementById('user-name').textContent = decodeURIComponent(userEmail).split('@')[0];
 			}
+		} else {
+			// Usuário não está logado
+			navLogin.style.display = 'block';
+			navPerfil.style.display = 'none';
 		}
-		
-		// Função de logout
-		function logout() {
+	}
+	
+	// Função de logout
+	function logout() {
 			event.preventDefault();
 			// Limpar cookies
 			document.cookie = 'UsuarioEmail=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
