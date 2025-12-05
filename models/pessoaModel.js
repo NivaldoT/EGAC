@@ -96,6 +96,15 @@ class pessoaModel{
             return null;
     }
 
+    async atualizar(){
+        let sql = 'UPDATE tb_Pessoa SET pessoa_nome = ?, pessoa_telefone = ?, pessoa_endereco = ?, pessoa_senha = ? WHERE pessoa_id = ?';
+        let valores = [this.#nome, this.#telefone, this.#endereco, this.#senha, this.#id];
+        const banco = new Database();
+        let result = await banco.ExecutaComandoNonQuery(sql, valores);
+        
+        return result;
+    }
+
     toJSON(){
         return{
             id : this.#id,

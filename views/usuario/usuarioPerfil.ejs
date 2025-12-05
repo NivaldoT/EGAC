@@ -1,0 +1,314 @@
+<style>
+  .perfil-container {
+    max-width: 800px;
+    margin: 50px auto;
+  }
+  .perfil-card {
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    padding: 40px;
+  }
+  .perfil-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #7cb342;
+  }
+  .perfil-header h2 {
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .perfil-header p {
+    color: #666;
+    font-size: 14px;
+  }
+  .form-group {
+    margin-bottom: 25px;
+  }
+  .form-group label {
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .form-control {
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px 15px;
+    font-size: 14px;
+    transition: all 0.3s;
+  }
+  .form-control:focus {
+    border-color: #7cb342;
+    box-shadow: 0 0 0 0.2rem rgba(124, 179, 66, 0.15);
+  }
+  .form-control:disabled {
+    background-color: #f5f5f5;
+    color: #999;
+    cursor: not-allowed;
+  }
+  .info-badge {
+    background: #f0f7e8;
+    color: #558b2f;
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .btn-atualizar {
+    background: linear-gradient(135deg, #7cb342 0%, #558b2f 100%);
+    color: white;
+    border: none;
+    padding: 12px 40px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s;
+    width: 100%;
+    margin-top: 20px;
+  }
+  .btn-atualizar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(124, 179, 66, 0.3);
+  }
+  .btn-cancelar {
+    background: #e0e0e0;
+    color: #666;
+    border: none;
+    padding: 12px 40px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s;
+    width: 100%;
+    margin-top: 10px;
+  }
+  .btn-cancelar:hover {
+    background: #d0d0d0;
+  }
+  .alert {
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+</style>
+
+<div class="container perfil-container">
+  <div class="perfil-card">
+    <div class="perfil-header">
+      <h2><i class="icon-user"></i> Meu Perfil</h2>
+    </div>
+
+    <div id="mensagem-alert" style="display: none;"></div>
+
+    <form id="form-perfil">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="perfil-nome">Nome Completo</label>
+            <input type="text" id="perfil-nome" name="nome" class="form-control" value="<%= pessoa.nome %>" required>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="perfil-telefone">Telefone</label>
+            <input type="text" id="perfil-telefone" name="telefone" class="form-control" value="<%= pessoa.telefone %>" required>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="perfil-email">E-mail</label>
+            <input type="email" id="perfil-email" name="email" class="form-control" value="<%= pessoa.email %>" disabled>
+            <small class="text-muted">O e-mail não pode ser alterado</small>
+          </div>
+        </div>
+
+        <% if (dadosPF) { %>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="perfil-cpf">CPF</label>
+            <input type="text" id="perfil-cpf" name="cpf" class="form-control" value="<%= dadosPF.cpf %>" disabled>
+            <small class="text-muted">O CPF não pode ser alterado</small>
+          </div>
+        </div>
+        <% } %>
+      </div>
+
+      <div class="form-group">
+        <label for="perfil-endereco">Endereço</label>
+        <input type="text" id="perfil-endereco" name="endereco" class="form-control" value="<%= pessoa.endereco || '' %>" placeholder="Rua, número, bairro, cidade">
+      </div>
+
+      <hr class="my-4">
+
+      <h5 class="mb-3"><i class="icon-lock"></i> Alterar Senha</h5>
+      <p class="text-muted small">Deixe em branco se não deseja alterar a senha</p>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="perfil-nova-senha">Nova Senha</label>
+            <input type="password" id="perfil-nova-senha" name="novaSenha" class="form-control" placeholder="Digite a nova senha">
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="perfil-confirmar-senha">Confirmar Nova Senha</label>
+            <input type="password" id="perfil-confirmar-senha" name="confirmarSenha" class="form-control" placeholder="Confirme a nova senha">
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <button type="submit" class="btn btn-atualizar">
+            <i class="icon-check"></i> Salvar Alterações
+          </button>
+        </div>
+        <div class="col-md-6">
+          <button type="button" class="btn btn-cancelar" onclick="window.history.back()">
+            <i class="icon-x"></i> Cancelar
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+document.getElementById('form-perfil').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const formData = new FormData(this);
+  const nome = formData.get('nome').trim();
+  const telefone = formData.get('telefone').trim();
+  const endereco = formData.get('endereco').trim();
+  const novaSenha = formData.get('novaSenha');
+  const confirmarSenha = formData.get('confirmarSenha');
+
+  // Validar nome
+  if (!nome || nome.length < 3) {
+    mostrarMensagem('O nome deve ter no mínimo 3 caracteres', 'danger');
+    return;
+  }
+  if (nome.length > 100) {
+    mostrarMensagem('O nome deve ter no máximo 100 caracteres', 'danger');
+    return;
+  }
+  // Validar se nome tem pelo menos nome e sobrenome
+  if (nome.split(' ').filter(p => p.length > 0).length < 2) {
+    mostrarMensagem('Por favor, informe nome e sobrenome', 'danger');
+    return;
+  }
+
+  // Validar telefone
+  if (!telefone || telefone.length < 10) {
+    mostrarMensagem('O telefone deve ter no mínimo 10 dígitos', 'danger');
+    return;
+  }
+  if (telefone.length > 11) {
+    mostrarMensagem('O telefone deve ter no máximo 11 dígitos', 'danger');
+    return;
+  }
+  if (!/^\d+$/.test(telefone)) {
+    mostrarMensagem('O telefone deve conter apenas números', 'danger');
+    return;
+  }
+
+  // Validar endereço
+  if (!endereco || endereco.length < 10) {
+    mostrarMensagem('O endereço deve ter no mínimo 10 caracteres', 'danger');
+    return;
+  }
+  if (endereco.length > 200) {
+    mostrarMensagem('O endereço deve ter no máximo 200 caracteres', 'danger');
+    return;
+  }
+  // Validar se endereço tem pelo menos 3 palavras (rua, número, bairro)
+  if (endereco.split(' ').filter(p => p.length > 0).length < 3) {
+    mostrarMensagem('O endereço deve conter pelo menos rua, número e bairro', 'danger');
+    return;
+  }
+
+  // Validar senhas se estiver tentando alterar
+  if (novaSenha || confirmarSenha) {
+    if (novaSenha !== confirmarSenha) {
+      mostrarMensagem('As senhas não coincidem', 'danger');
+      return;
+    }
+    if (novaSenha.length < 6) {
+      mostrarMensagem('A senha deve ter no mínimo 6 caracteres', 'danger');
+      return;
+    }
+    if (novaSenha.length > 30) {
+      mostrarMensagem('A senha deve ter no máximo 30 caracteres', 'danger');
+      return;
+    }
+  }
+
+  const data = {
+    nome: nome,
+    telefone: telefone,
+    endereco: endereco,
+    novaSenha: novaSenha
+  };
+
+  try {
+    const response = await fetch('/usuario/perfil/atualizar', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+
+    if (result.ok) {
+      mostrarMensagem(result.msg, 'success');
+      // Limpar campos de senha
+      document.getElementById('perfil-nova-senha').value = '';
+      document.getElementById('perfil-confirmar-senha').value = '';
+      
+      // Recarregar após 2 segundos
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    } else {
+      mostrarMensagem(result.msg, 'danger');
+    }
+  } catch (error) {
+    console.error('Erro ao atualizar perfil:', error);
+    mostrarMensagem('Erro ao atualizar perfil. Tente novamente.', 'danger');
+  }
+});
+
+function mostrarMensagem(mensagem, tipo) {
+  const alertDiv = document.getElementById('mensagem-alert');
+  alertDiv.className = `alert alert-${tipo}`;
+  alertDiv.textContent = mensagem;
+  alertDiv.style.display = 'block';
+
+  // Rolar para o topo
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Esconder após 5 segundos
+  setTimeout(() => {
+    alertDiv.style.display = 'none';
+  }, 5000);
+}
+
+// Máscara para telefone
+document.getElementById('perfil-telefone').addEventListener('input', function(e) {
+  let value = e.target.value.replace(/\D/g, '');
+  if (value.length > 11) value = value.substring(0, 11);
+  e.target.value = value;
+});
+</script>
