@@ -1,3 +1,4 @@
+
 <style>
     .foto-evidencia {
         max-width: 100%;
@@ -118,7 +119,6 @@
                                     <div class="info-label">Tipo de Reembolso</div>
                                     <div class="info-value">
                                         <span class="badge bg-info"><%= devolucao.tipoReembolso.toUpperCase() %></span>
-                                        <span class="badge bg-secondary"><%= devolucao.motivo || (itens && itens.length > 0 ? itens[0].motivo : 'Não informado') %></span>
                                     </div>
                                 </div>
                             </div>
@@ -166,7 +166,7 @@
                                 <% }); %>
                                 
                                 <div class="text-right mt-3">
-                                    <h4>Total a Reembolsar: <strong class="text-success">R$ <%= totalDevolucao.toFixed(2).replace('.', ',') %></strong></h4>
+                                    <h4>Total: <strong class="text-success">R$ <%= totalDevolucao.toFixed(2).replace('.', ',') %></strong></h4>
                                 </div>
                             <% } else { %>
                                 <p class="text-muted text-center py-3">Nenhum item encontrado</p>

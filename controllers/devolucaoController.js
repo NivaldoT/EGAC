@@ -48,11 +48,11 @@ class DevolucaoController {
                     return res.status(401).json({ ok: false, msg: 'Usuário não autenticado' });
                 }
 
-                const { idVenda, motivo, itens } = req.body;
+                const { idVenda, motivo, itens, comentario, tipoReembolso } = req.body;
                 
                 console.log('Dados recebidos:', { idVenda, motivo, itens: itens ? 'presente' : 'ausente', file: req.file ? 'presente' : 'ausente' });
                 
-                if (!idVenda || !motivo) {
+                if (!idVenda || !motivo || !comentario || !tipoReembolso) {
                     return res.status(400).json({ ok: false, msg: 'Todos os campos são obrigatórios' });
                 }
 
@@ -95,7 +95,6 @@ class DevolucaoController {
                         : 'Este pedido já possui uma devolução';
                     return res.status(400).json({ ok: false, msg: statusMsg });
                 }
-
                 // Criar nova devolução
                 devolucaoModel.idVenda = idVenda;
                 devolucaoModel.motivo = motivo;
@@ -116,7 +115,9 @@ class DevolucaoController {
                     itemDevolModel.quantidade = item.quantidade;
                     itemDevolModel.preco = item.preco;
                     itemDevolModel.motivo = motivo;
+                    itemDevolModel.comentario = comentario;
                     itemDevolModel.foto = req.file ? 'images/produtos/' + req.file.filename : null;
+                    itemDevolModel.tipoReembolso = tipoReembolso;
                     await itemDevolModel.gravar();
                 }
 
@@ -175,7 +176,7 @@ class DevolucaoController {
             let itemDevolModel = new ItemDevolVendaModel();
             let itens = await itemDevolModel.listarPorDevolucao(id);
 
-            res.render('shop/visualizar-devolucao', { 
+            res.render('usuario/visualizar-devolucao', { 
                 devolucao: devolucao,
                 itens: itens
             });
@@ -232,6 +233,7 @@ class DevolucaoController {
             if (itens && itens.length > 0) {
                 devolucao.motivo = itens[0].motivo;
                 devolucao.foto = itens[0].foto;
+                devolucao.tipoReembolso = itens[0].tipoReembolso;
             }
 
             // Calcular valor total da devolução
@@ -251,6 +253,8 @@ class DevolucaoController {
     // Aprovar devolução e gerar conta a pagar (Admin)
     async aprovarDevolucao(req, res) {
         try {
+            let ok;
+            let msg = '';
             const { id } = req.params;
             // Verificação já feita pelo middleware authMiddleware
             // Não precisa verificar cookies aqui
@@ -270,56 +274,59 @@ class DevolucaoController {
 
             // Aprovar devolução
             devolucaoModel.id = id;
-            let resultAprovacao = await devolucaoModel.aprovar();
+            // let resultAprovacao = await devolucaoModel.aprovar();
 
-            if (!resultAprovacao) {
-                return res.status(500).json({ ok: false, msg: 'Erro ao aprovar devolução' });
+            // if (!resultAprovacao) {
+            //     return res.status(500).json({ ok: false, msg: 'Erro ao aprovar devolução' });
+            // }
+
+            if(itens[0].tipoReembolso === 'Reenvio') {
+                // Atualizar estoque dos produtos devolvidos
+                console.log('=== ATUALIZANDO ESTOQUE ===');
+                console.log('Total de itens:', itens.length);
+                for (let item of itens) {
+                    console.log(`Produto ID: ${item.idProduto}, Quantidade a adicionar: ${item.quantidade}`);
+                    let produtoModel = new ProdutoModel(item.idProduto);
+                    let resultEstoque = await produtoModel.atualizarEstoque(-item.quantidade);
+                    console.log(`Resultado atualização estoque:`, resultEstoque);
+                    if(resultEstoque) {
+                        ok = true;
+                        msg = 'Devolução aprovada, produtos enviados e estoque atualizado com sucesso!';
+                    } else {msg = 'Erro ao atualizar estoque do produto ID ' + item.idProduto;};
+                }
+                console.log('=== FIM ATUALIZAÇÃO ESTOQUE ===');
             }
 
-            // Atualizar estoque dos produtos devolvidos
-            console.log('=== ATUALIZANDO ESTOQUE ===');
-            console.log('Total de itens:', itens.length);
-            for (let item of itens) {
-                console.log(`Produto ID: ${item.idProduto}, Quantidade a adicionar: ${item.quantidade}`);
-                let produtoModel = new ProdutoModel(item.idProduto, null, null, null, null, null, null, null, null, null, null);
-                let resultEstoque = await produtoModel.atualizarEstoque(item.quantidade);
-                console.log(`Resultado atualização estoque:`, resultEstoque);
+            if(itens[0].tipoReembolso === 'Reembolso') {
+                // Gerar conta a pagar
+                console.log('=== GERANDO CONTA A PAGAR ===');
+                console.log('Valor total:', valorTotal);
+                console.log('ID Devolução:', id);
+                console.log('ID Cliente:', devolucao.idCliente);
+                
+                let contaPagarModel = new ContaPagarModel();
+                contaPagarModel.operacao = 2; // 2 = Devolução de Venda
+                contaPagarModel.idDevoVenda = id;
+                contaPagarModel.idPessoa = devolucao.idCliente; // ID do cliente que receberá o reembolso
+                contaPagarModel.valor = valorTotal;
+                const hoje = new Date();
+                const vencimentoStr = hoje.toISOString().slice(0, 10);
+                contaPagarModel.dataVencimento = vencimentoStr;
+                contaPagarModel.isPago = 0; // 0 = não pago
+                contaPagarModel.numParcela = 1;
+                contaPagarModel.totParcelas = 1;
+
+                let resultConta = await contaPagarModel.gravar();
+                if(resultConta) {
+                    ok = true;
+                    msg = 'Devolução aprovada e conta a pagar gerada com sucesso!';
+                } else {msg = 'Erro ao gerar conta a pagar para a devolução ID ' + id;}
+
+                console.log('Resultado gravar conta:', resultConta);
+                console.log('=== FIM GERAR CONTA A PAGAR ===');
             }
-            console.log('=== FIM ATUALIZAÇÃO ESTOQUE ===');
 
-            // Gerar conta a pagar
-            console.log('=== GERANDO CONTA A PAGAR ===');
-            console.log('Valor total:', valorTotal);
-            console.log('ID Devolução:', id);
-            console.log('ID Cliente:', devolucao.idCliente);
-            
-            let contaPagarModel = new ContaPagarModel();
-            contaPagarModel.operacao = 2; // 2 = Devolução de Venda
-            contaPagarModel.idDevoVenda = id;
-            contaPagarModel.idPessoa = devolucao.idCliente; // ID do cliente que receberá o reembolso
-            contaPagarModel.valor = valorTotal;
-            const hoje = new Date();
-            const vencimentoStr = hoje.toISOString().slice(0, 10);
-            contaPagarModel.dataVencimento = vencimentoStr;
-            contaPagarModel.isPago = 0; // 0 = não pago
-            contaPagarModel.numParcela = 1;
-            contaPagarModel.totParcelas = 1;
-
-            let resultConta = await contaPagarModel.gravar();
-            console.log('Resultado gravar conta:', resultConta);
-            console.log('=== FIM GERAR CONTA A PAGAR ===');
-
-            if (resultConta) {
-                return res.json({ 
-                    ok: true, 
-                    msg: 'Devolução aprovada e conta a pagar gerada com sucesso!' 
-                });
-            } else {
-                return res.json({ 
-                    ok: true, 
-                    msg: 'Devolução aprovada, mas houve erro ao gerar conta a pagar' 
-                });
-            }
+            return res.json({ ok: ok, msg: msg });
 
         } catch (error) {
             console.error('Erro ao aprovar devolução:', error);
