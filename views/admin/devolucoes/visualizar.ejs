@@ -240,58 +240,67 @@
     </section>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 async function aprovarDevolucao(id) {
-    if (!confirm('Deseja realmente aprovar esta devolução?\n\nUma conta a pagar será gerada automaticamente para o reembolso.')) {
-        return;
-    }
+    const result = await Swal.fire({
+        title: 'Aprovar Devolução?',
+        text: 'Uma conta a pagar será gerada automaticamente para o reembolso.',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Aprovar',
+        cancelButtonText: 'Cancelar'
+    });
+
+    if (!result.isConfirmed) return;
     
     try {
         const response = await fetch(`/admin/devolucoes/${id}/aprovar`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
+            headers: { 'Content-Type': 'application/json' }
         });
         
         const data = await response.json();
         
         if (data.ok) {
-            alert(data.msg);
+            await Swal.fire('Aprovado!', data.msg, 'success');
             location.reload();
         } else {
-            alert(data.msg || 'Erro ao aprovar devolução');
+            Swal.fire('Erro!', data.msg || 'Erro ao aprovar devolução', 'error');
         }
     } catch (error) {
-        console.error('Erro:', error);
-        alert('Erro ao processar solicitação');
+        Swal.fire('Erro!', 'Erro ao processar solicitação', 'error');
     }
 }
 
 async function recusarDevolucao(id) {
-    if (!confirm('Deseja realmente recusar esta devolução?\n\nO cliente será notificado sobre a recusa.')) {
-        return;
-    }
+    const result = await Swal.fire({
+        title: 'Recusar Devolução?',
+        text: 'O cliente será notificado sobre a recusa.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Recusar',
+        cancelButtonText: 'Cancelar'
+    });
+
+    if (!result.isConfirmed) return;
     
     try {
         const response = await fetch(`/admin/devolucoes/${id}/recusar`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
+            headers: { 'Content-Type': 'application/json' }
         });
         
         const data = await response.json();
         
         if (data.ok) {
-            alert(data.msg);
+            await Swal.fire('Recusado!', data.msg, 'success');
             location.reload();
         } else {
-            alert(data.msg || 'Erro ao recusar devolução');
+            Swal.fire('Erro!', data.msg || 'Erro ao recusar devolução', 'error');
         }
     } catch (error) {
-        console.error('Erro:', error);
-        alert('Erro ao processar solicitação');
+        Swal.fire('Erro!', 'Erro ao processar solicitação', 'error');
     }
 }
 </script>

@@ -90,6 +90,11 @@ class UsuarioController {
             res.send({ ok: false, msg: 'Erro ao atualizar perfil' });
         }
     }
+
+    logout(req, res) {
+        // Redirecionar para a home da loja
+        res.redirect('/');
+    }
 }
 
 module.exports = UsuarioController;
