@@ -26,6 +26,7 @@ router.get('/buscarPessoaLogin', PessoaController.buscarPessoaLogin);
 
 router.get('/minhas-compras', homeController.minhasComprasView);
 router.get('/minhas-devolucoes', devolucaoController.minhasDevolucoes);
+router.get('/devolucao/:id', devolucaoController.visualizarDevolucao);
 router.post('/solicitar-devolucao', devolucaoController.solicitarDevolucao);
 
 module.exports = router;

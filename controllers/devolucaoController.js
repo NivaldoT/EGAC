@@ -48,11 +48,11 @@ class DevolucaoController {
                     return res.status(401).json({ ok: false, msg: 'Usuário não autenticado' });
                 }
 
-                const { idVenda, motivo, tipoReembolso, itens } = req.body;
+                const { idVenda, motivo, itens } = req.body;
                 
-                console.log('Dados recebidos:', { idVenda, motivo, tipoReembolso, itens: itens ? 'presente' : 'ausente', file: req.file ? 'presente' : 'ausente' });
+                console.log('Dados recebidos:', { idVenda, motivo, itens: itens ? 'presente' : 'ausente', file: req.file ? 'presente' : 'ausente' });
                 
-                if (!idVenda || !motivo || !tipoReembolso) {
+                if (!idVenda || !motivo) {
                     return res.status(400).json({ ok: false, msg: 'Todos os campos são obrigatórios' });
                 }
 
@@ -99,7 +99,6 @@ class DevolucaoController {
                 // Criar nova devolução
                 devolucaoModel.idVenda = idVenda;
                 devolucaoModel.motivo = motivo;
-                devolucaoModel.tipoReembolso = tipoReembolso;
                 devolucaoModel.foto = req.file ? 'images/produtos/' + req.file.filename : null;
 
                 let idDevolucao = await devolucaoModel.gravar();
@@ -152,6 +151,37 @@ class DevolucaoController {
         } catch (error) {
             console.error('Erro ao buscar devoluções:', error);
             res.status(500).send('Erro ao carregar devoluções');
+        }
+    }
+
+    // Visualizar devolução individual (Cliente)
+    async visualizarDevolucao(req, res) {
+        try {
+            const { id } = req.params;
+            const userEmail = req.cookies.UsuarioEmail;
+            
+            if (!userEmail) {
+                return res.redirect('/usuario/login');
+            }
+
+            let devolucaoModel = new DevolucaoVendaModel();
+            let devolucao = await devolucaoModel.buscarPorId(id);
+
+            if (!devolucao) {
+                return res.status(404).send('Devolução não encontrada');
+            }
+
+            // Buscar itens da devolução
+            let itemDevolModel = new ItemDevolVendaModel();
+            let itens = await itemDevolModel.listarPorDevolucao(id);
+
+            res.render('shop/visualizar-devolucao', { 
+                devolucao: devolucao,
+                itens: itens
+            });
+        } catch (error) {
+            console.error('Erro ao visualizar devolução:', error);
+            res.status(500).send('Erro ao carregar devolução');
         }
     }
 

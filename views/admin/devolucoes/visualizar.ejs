@@ -108,16 +108,10 @@
                                     <div class="info-label">Data da Compra</div>
                                     <div class="info-value"><%= new Date(devolucao.venda.data).toLocaleDateString('pt-BR') %></div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="info-label">Motivo da Devolução</div>
                                     <div class="info-value">
-                                        <span class="badge badge-secondary"><%= devolucao.motivo %></span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="info-label">Tipo de Reembolso</div>
-                                    <div class="info-value">
-                                        <span class="badge badge-info"><%= devolucao.tipoReembolso.toUpperCase() %></span>
+                                        <span class="badge badge-secondary"><%= devolucao.motivo || (itens && itens.length > 0 ? itens[0].motivo : 'Não informado') %></span>
                                     </div>
                                 </div>
                             </div>

@@ -5,7 +5,6 @@ class ContaPagarModel{
     #operacao;
     #idCompra;
     #idDevoVenda;
-    #idPessoa;
     #valor;
     #dataVencimento;
     #isPago;
@@ -20,8 +19,6 @@ class ContaPagarModel{
     set idCompra(valor){this.#idCompra = valor};
     get idDevoVenda(){return this.#idDevoVenda};
     set idDevoVenda(valor){this.#idDevoVenda = valor};
-    get idPessoa(){return this.#idPessoa};
-    set idPessoa(valor){this.#idPessoa = valor};
     get valor(){return this.#valor};
     set valor(valor){this.#valor = valor};
     get dataVencimento(){return this.#dataVencimento};
@@ -33,12 +30,11 @@ class ContaPagarModel{
     get totParcelas(){return this.#totParcelas};
     set totParcelas(valor){this.#totParcelas = valor};
 
-    constructor(id,operacao,idCompra,idDevoVenda,idPessoa,valor,dataVencimento,isPago,numParcela,totParcelas){
+    constructor(id,operacao,idCompra,idDevoVenda,valor,dataVencimento,isPago,numParcela,totParcelas){
         this.#id = id;
         this.#operacao = operacao ;
         this.#idCompra = idCompra;
         this.#idDevoVenda = idDevoVenda;
-        this.#idPessoa = idPessoa;
         this.#valor = valor;
         this.#dataVencimento = dataVencimento ;
         this.#isPago = isPago;
@@ -55,8 +51,8 @@ class ContaPagarModel{
 
         }
         if(this.#operacao == 2){        //Devolução de Venda
-            sql = 'insert into tb_ContaPagar(contaPG_operacao,contaPG_idDevoVenda,contaPG_idPessoa,contaPG_valor,contaPG_dataVencimento,contaPG_isPago,contaPG_numParcela,contaPG_totParcelas) values(?,?,?,?,?,?,?,?);';
-            valores = [this.#operacao, this.#idDevoVenda, this.#idPessoa, this.#valor, this.#dataVencimento, this.#isPago, this.#numParcela, this.#totParcelas];
+            sql = 'insert into tb_ContaPagar(contaPG_operacao,contaPG_idDevoVenda,contaPG_valor,contaPG_dataVencimento,contaPG_isPago,contaPG_numParcela,contaPG_totParcelas) values(?,?,?,?,?,?,?);';
+            valores = [this.#operacao, this.#idDevoVenda, this.#valor, this.#dataVencimento, this.#isPago, this.#numParcela, this.#totParcelas];
 
         }
         let banco = new Database();
@@ -75,7 +71,7 @@ class ContaPagarModel{
 
         let lista = [];
         for(let i=0;i<rows.length;i++){
-            lista.push(new ContaPagarModel(rows[i]['contaPG_id'],rows[i]['contaPG_operacao'],rows[i]['contaPG_idCompra'],rows[i]['contaPG_idDevoVenda'],rows[i]['contaPG_idPessoa'],rows[i]['contaPG_valor'],new Date(rows[i]['contaPG_dataVencimento']),rows[i]['contaPG_isPago'],rows[i]['contaPG_numParcela'],rows[i]['contaPG_totParcelas']));
+            lista.push(new ContaPagarModel(rows[i]['contaPG_id'],rows[i]['contaPG_operacao'],rows[i]['contaPG_idCompra'],rows[i]['contaPG_idDevoVenda'],rows[i]['contaPG_valor'],new Date(rows[i]['contaPG_dataVencimento']),rows[i]['contaPG_isPago'],rows[i]['contaPG_numParcela'],rows[i]['contaPG_totParcelas']));
         }
         return lista;
     }
@@ -86,7 +82,7 @@ class ContaPagarModel{
         let banco = new Database();
         let row = await banco.ExecutaComando(sql,valores);
 
-        let contaPG = new ContaPagarModel(row['0']['contaPG_id'],row['0']['contaPG_operacao'],row['0']['contaPG_idCompra'],row['0']['contaPG_idDevoVenda'],row['0']['contaPG_idPessoa'],row['0']['contaPG_valor'],row['0']['contaPG_dataVencimento'],row['0']['contaPG_isPago'],row['0']['contaPG_numParcela'],row['0']['contaPG_totParcelas']);
+        let contaPG = new ContaPagarModel(row['0']['contaPG_id'],row['0']['contaPG_operacao'],row['0']['contaPG_idCompra'],row['0']['contaPG_idDevoVenda'],row['0']['contaPG_valor'],row['0']['contaPG_dataVencimento'],row['0']['contaPG_isPago'],row['0']['contaPG_numParcela'],row['0']['contaPG_totParcelas']);
         return contaPG;
     }
 
@@ -105,7 +101,6 @@ class ContaPagarModel{
             operacao: this.#operacao,
             idCompra: this.#idCompra,
             idDevoVenda: this.#idDevoVenda,
-            idPessoa: this.#idPessoa,
             valor: this.#valor,
             dataVencimento: this.#dataVencimento,
             isPago: this.#isPago,

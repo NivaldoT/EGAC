@@ -22,14 +22,19 @@ class ContasController{
             let contaPG = new ContaPagarModel();
             lista = await contaPG.listar(termo);
             
-            // Buscar nome do cliente para devoluções
+            // Buscar nome do cliente para devoluções através da tb_DevoVenda
             const PessoaModel = require('../models/pessoaModel');
+            const DevolucaoVendaModel = require('../models/devolucaoVendaModel');
             for(let conta of lista) {
-                if(conta.operacao == 2 && conta.idPessoa) {
-                    let pessoa = new PessoaModel(conta.idPessoa);
-                    let dadosPessoa = await pessoa.buscarPorId();
-                    if(dadosPessoa) {
-                        conta.nomeCliente = dadosPessoa.pessoa_nome;
+                if(conta.operacao == 2 && conta.idDevoVenda) {
+                    let devolucaoModel = new DevolucaoVendaModel();
+                    let devolucao = await devolucaoModel.buscarPorId(conta.idDevoVenda);
+                    if(devolucao && devolucao.idCliente) {
+                        let pessoa = new PessoaModel(devolucao.idCliente);
+                        let dadosPessoa = await pessoa.buscarPorId();
+                        if(dadosPessoa) {
+                            conta.nomeCliente = dadosPessoa.pessoa_nome;
+                        }
                     }
                 }
             }
