@@ -9,7 +9,6 @@ class HomeController {
     homeView(req, res) {
         res.render('home/home');
     }
-
     async shopView(req, res) {
         let categoriaModel = new CategoriaModel();              
         let listaCategorias = await categoriaModel.listar();
@@ -34,6 +33,7 @@ class HomeController {
         res.render('home/contact');
     }
 
+    
     async minhasComprasView(req, res) {
         try {
             // Pegar email do cookie

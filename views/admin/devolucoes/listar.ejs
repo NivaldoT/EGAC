@@ -96,27 +96,27 @@
                                             <small class="text-muted"><%= dev.cliente.email %></small>
                                         </td>
                                         <td style="color: #212529;">#<%= dev.idVenda %></td>
-                                        <td><span class="badge badge-dark" style="background-color: #343a40; color: white;"><%= dev.motivo %></span></td>
-                                        <td><span class="badge badge-primary" style="background-color: #007bff; color: white;"><%= dev.tipoReembolso.toUpperCase() %></span></td>
+                                        <td><span class="badge bg-dark"><%= dev.motivo %></span></td>
+                                        <td><span class="badge bg-primary" ><%= dev.tipoReembolso.toUpperCase() %></span></td>
                                         <td>
                                             <% if (dev.status === 'pendente') { %>
-                                                <span class="badge badge-warning" style="background-color: #ffc107; color: #212529;">Pendente</span>
+                                                <span class="badge bg-warning">Pendente</span>
                                             <% } else if (dev.status === 'aprovada') { %>
-                                                <span class="badge badge-success" style="background-color: #28a745; color: white;">Aprovada</span>
+                                                <span class="badge bg-success">Aprovada</span>
                                             <% } else { %>
-                                                <span class="badge badge-danger" style="background-color: #dc3545; color: white;">Recusada</span>
+                                                <span class="badge bg-danger">Recusada</span>
                                             <% } %>
                                         </td>
                                         <td>
                                             <a href="/admin/devolucoes/<%= dev.id %>" class="btn btn-sm btn-info" title="Visualizar">
-                                                <i class="fas fa-eye"></i>
+                                                <i class="fas fa-eye">Visualizar</i>
                                             </a>
                                             <% if (dev.status === 'pendente') { %>
-                                                <button class="btn btn-sm btn-success" onclick="aprovarDevolucao(<%= dev.id %>)" title="Aprovar">
-                                                    <i class="fas fa-check"></i>
+                                                <button class="btn btn-sm btn-success" onclick="aprovarDevolucao('<%= dev.id %>')" title="Aprovar">
+                                                    <i class="fas fa-check">Aprovar</i>
                                                 </button>
-                                                <button class="btn btn-sm btn-danger" onclick="recusarDevolucao(<%= dev.id %>)" title="Recusar">
-                                                    <i class="fas fa-times"></i>
+                                                <button class="btn btn-sm btn-danger" onclick="recusarDevolucao('<%= dev.id %>')" title="Recusar">
+                                                    <i class="fas fa-times">Recusar</i>
                                                 </button>
                                             <% } %>
                                         </td>

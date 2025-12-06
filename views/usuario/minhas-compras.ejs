@@ -164,14 +164,19 @@
                             <option value="Outro motivo">Outro motivo</option>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label for="devolucaoComentario">Explique seu problema *</label>
+                        <textarea class="form-control" id="devolucaoComentario" name="comentario" rows="3" maxlength="600" required></textarea>
+                    </div>
                     
                     <div class="form-group">
                         <label for="devolucaoTipoReembolso">Tipo de Reembolso *</label>
                         <select class="form-control" id="devolucaoTipoReembolso" name="tipoReembolso" required>
                             <option value="">Selecione o tipo de reembolso</option>
-                            <option value="pix">PIX</option>
-                            <option value="cartao">Cartão de Crédito</option>
-                            <option value="boleto">Boleto Bancário</option>
+                            <option value="Reenvio">Receber novo produto</option>
+                            <option value="dinheiro">Dinheiro</option>
+                            <!-- <option value="cartao">Cartão de Crédito</option>
+                            <option value="boleto">Boleto Bancário</option> -->
                         </select>
                     </div>
                     

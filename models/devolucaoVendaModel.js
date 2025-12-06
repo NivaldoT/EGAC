@@ -145,9 +145,9 @@ class DevolucaoVendaModel {
             return {
                 id: row.devo_id,
                 idVenda: row.devo_idVenda,
-                motivo: 'Ver itens',
+                motivo: 'Veja Itens',
                 status: row.devo_status,
-                tipoReembolso: 'Ver itens',
+                tipoReembolso: 'Veja Itens',
                 foto: null,
                 venda: {
                     data: row.ven_data,
