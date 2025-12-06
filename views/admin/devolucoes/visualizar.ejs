@@ -72,19 +72,19 @@
                                 <div class="col-md-6">
                                     <p class="mb-2"><strong>Status Atual:</strong></p>
                                     <% if (devolucao.status === 'pendente') { %>
-                                        <span class="badge badge-warning badge-lg">PENDENTE</span>
+                                        <span class="badge bg-warning badge-lg">PENDENTE</span>
                                     <% } else if (devolucao.status === 'aprovada') { %>
-                                        <span class="badge badge-success badge-lg">APROVADA</span>
+                                        <span class="badge bg-success badge-lg">APROVADA</span>
                                     <% } else { %>
-                                        <span class="badge badge-danger badge-lg">RECUSADA</span>
+                                        <span class="badge bg-danger badge-lg">RECUSADA</span>
                                     <% } %>
                                 </div>
                                 <div class="col-md-6 text-right">
                                     <% if (devolucao.status === 'pendente') { %>
-                                        <button class="btn btn-success" onclick="aprovarDevolucao(<%= devolucao.id %>)">
+                                        <button class="btn btn-success" onclick="aprovarDevolucao('<%= devolucao.id %>')">
                                             <i class="fas fa-check"></i> Aprovar
                                         </button>
-                                        <button class="btn btn-danger" onclick="recusarDevolucao(<%= devolucao.id %>)">
+                                        <button class="btn btn-danger" onclick="recusarDevolucao('<%= devolucao.id %>')">
                                             <i class="fas fa-times"></i> Recusar
                                         </button>
                                     <% } %>
@@ -111,13 +111,13 @@
                                 <div class="col-md-6">
                                     <div class="info-label">Motivo da Devolução</div>
                                     <div class="info-value">
-                                        <span class="badge badge-secondary"><%= devolucao.motivo %></span>
+                                        <span class="badge bg-danger"><%= devolucao.motivo %></span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="info-label">Tipo de Reembolso</div>
                                     <div class="info-value">
-                                        <span class="badge badge-info"><%= devolucao.tipoReembolso.toUpperCase() %></span>
+                                        <span class="badge bg-info"><%= devolucao.tipoReembolso.toUpperCase() %></span>
                                     </div>
                                 </div>
                             </div>

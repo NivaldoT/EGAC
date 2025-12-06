@@ -24,7 +24,7 @@ router.post('/perfil/atualizar', usuarioController.atualizarPerfil); // atualiza
 
 router.get('/buscarPessoaLogin', PessoaController.buscarPessoaLogin);
 
-router.get('/minhas-compras', homeController.minhasComprasView);
+router.get('/minhas-compras', usuarioController.minhasComprasView);
 router.get('/minhas-devolucoes', devolucaoController.minhasDevolucoes);
 router.post('/solicitar-devolucao', devolucaoController.solicitarDevolucao);
 

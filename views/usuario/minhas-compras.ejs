@@ -15,7 +15,7 @@
                 <p class="subtitulo-pagina">Acompanhe o histórico de todos os seus pedidos</p>
             </div>
             <div class="col-md-4 text-right">
-                <a href="/minhas-devolucoes" class="btn btn-outline-danger">
+                <a href="/usuario/minhas-devolucoes" class="btn btn-outline-danger">
                     <i class="icon-refresh"></i> Minhas Devoluções
                 </a>
             </div>
@@ -91,7 +91,7 @@
                                                 <% } else if (venda.devolucao.devo_status === 'recusada') { %>
                                                     <strong>Devolução recusada</strong> - Entre em contato para mais informações
                                                 <% } %>
-                                                <a href="/minhas-devolucoes" class="btn btn-sm btn-outline-primary ml-3" style="color: #0d6efd; font-weight: 600; text-decoration: none;">Ver Detalhes</a>
+                                                <a href="/usuario/minhas-devolucoes" class="btn btn-sm btn-outline-primary ml-3" style="color: #0d6efd; font-weight: 600; text-decoration: none;">Ver Detalhes</a>
                                             </div>
                                         <% } else { %>
                                             <button class="btn btn-outline-danger btn-sm" 
@@ -169,9 +169,10 @@
                         <label for="devolucaoTipoReembolso">Tipo de Reembolso *</label>
                         <select class="form-control" id="devolucaoTipoReembolso" name="tipoReembolso" required>
                             <option value="">Selecione o tipo de reembolso</option>
-                            <option value="pix">PIX</option>
-                            <option value="cartao">Cartão de Crédito</option>
-                            <option value="boleto">Boleto Bancário</option>
+                            <option value="Reenvio">Receber novo produto</option>
+                            <option value="dinheiro">Dinheiro</option>
+                            <!-- <option value="cartao">Cartão de Crédito</option>
+                            <option value="boleto">Boleto Bancário</option> -->
                         </select>
                     </div>
                     
@@ -553,7 +554,7 @@ document.getElementById('formDevolucao').addEventListener('submit', async functi
             preco: i.preco
         }))));
         
-        const response = await fetch('/solicitar-devolucao', {
+        const response = await fetch('/usuario/solicitar-devolucao', {
             method: 'POST',
             body: formData
         });

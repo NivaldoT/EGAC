@@ -148,7 +148,7 @@ class DevolucaoController {
                 dev.itens = await itemDevolModel.listarPorDevolucao(dev.id);
             }
 
-            res.render('shop/minhas-devolucoes', { devolucoes: devolucoes });
+            res.render('usuario/minhas-devolucoes', { devolucoes: devolucoes });
         } catch (error) {
             console.error('Erro ao buscar devoluções:', error);
             res.status(500).send('Erro ao carregar devoluções');
