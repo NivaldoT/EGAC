@@ -464,7 +464,6 @@ function abrirModalDevolucao(button) {
     itens.forEach((item, index) => {
         const itemDiv = document.createElement('div');
         itemDiv.className = 'item-devolucao';
-        itemDiv.onclick = function() { toggleItem(index); };
         
         itemDiv.innerHTML = `
             <div class="row align-items-center">
@@ -484,6 +483,27 @@ function abrirModalDevolucao(button) {
                 </div>
             </div>
         `;
+        
+        // Adicionar evento de clique ao div inteiro
+        itemDiv.addEventListener('click', function(e) {
+            // Se clicou diretamente no checkbox, deixar o comportamento padrão
+            if (e.target.type === 'checkbox') {
+                return;
+            }
+            // Caso contrário, simular clique no checkbox
+            toggleItem(index);
+        });
+        
+        // Adicionar evento direto no checkbox também
+        const checkbox = itemDiv.querySelector(`#item-${index}`);
+        checkbox.addEventListener('change', function() {
+            itensSelecionados[index].selecionado = this.checked;
+            if (this.checked) {
+                itemDiv.classList.add('selecionado');
+            } else {
+                itemDiv.classList.remove('selecionado');
+            }
+        });
         
         container.appendChild(itemDiv);
         
@@ -553,7 +573,7 @@ document.getElementById('formDevolucao').addEventListener('submit', async functi
             preco: i.preco
         }))));
         
-        const response = await fetch('/solicitar-devolucao', {
+        const response = await fetch('/usuario/solicitar-devolucao', {
             method: 'POST',
             body: formData
         });
