@@ -11,9 +11,22 @@ class CompraController{
         res.render('admin/compras/home.ejs', {layout:'layout_admin'});
     }
     async comprarView(req,res){
-        let func = new PFisicaModel(null,null,null,req.cookies.FuncionarioEmail,req.cookies.FuncionarioSenha,null,null);
+        let func = new PFisicaModel(null,null,null,req.cookies.UsuarioEmail,req.cookies.UsuarioSenha,null,null);
         func = await func.logarEmailSenha();
         res.render('admin/compras/comprar.ejs',{layout: 'layout_admin', func});
+    }
+
+    async listar(req, res) {
+        let termo = null;
+        if(req.query.termo) {
+            termo = req.query.termo;
+        }
+        let itemCompra = new ItensCompraModel();
+        let listaItens = await itemCompra.listar(termo);
+
+        let compra = new CompraModel();
+        let listaCompra = await compra.listar();
+        res.send({listaItens, listaCompra});
     }
 
     async comprar(req,res){
@@ -53,5 +66,6 @@ class CompraController{
         }
         res.send({ok,msg});
     }
+
 }
 module.exports = CompraController;

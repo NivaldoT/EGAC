@@ -132,6 +132,7 @@ router.get('/vendas/detalhes/:id', pedidosController.detalhesView);
                 //COMPRAS   
 router.get('/compras', compraController.homeView);
 router.get('/comprar', compraController.comprarView);
+router.get('/compras/listar', compraController.listar);
 router.post('/comprar', compraController.comprar);
 
                 //CONTAS A RECEBER

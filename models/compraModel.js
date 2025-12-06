@@ -46,14 +46,27 @@ class CompraModel{
     }
 
     async listar(){
-        let sql = 'select * from tb_Compra c inner join tb_Pessoa pf on pf.pessoa_id = c.comp_idFuncionario inner join tb_Pessoa pj on pj.pessoa_id = c.comp_idFornecedor;';
+        let sql = 'select *, pf.pessoa_nome as nomeCliente, pj.pessoa_nome as nomeFornecedor from tb_Compra c inner join tb_Pessoa pf on pf.pessoa_id = c.comp_idFuncionario inner join tb_Pessoa pj on pj.pessoa_id = c.comp_idFornecedor;'
         let banco = new Database();
         let rows = await banco.ExecutaComando(sql);
         let lista = [];
         for(let i=0;i<rows.length;i++){
-            lista.push(new CompraModel(rows[i]['comp_id'],rows[i]['comp_data'],rows[i]['comp_idFuncionario'],rows[i]['pf.pessoa_nome'],rows[i]['comp_idFornecedor'],rows[i]['pj.pessoa_nome'],rows[i]['comp_valorTotal'],rows[i]['comp_qtdParcelas']));
+            lista.push(new CompraModel(rows[i]['comp_id'],rows[i]['comp_data'],rows[i]['comp_idFuncionario'],rows[i]['nomeCliente'],rows[i]['comp_idFornecedor'],rows[i]['nomeFornecedor'],rows[i]['comp_valorTotal'],rows[i]['comp_qtdParcelas']));
         }
         return lista;
+    }
+
+    toJSON(){
+        return{
+            id: this.#id,
+            data: this.#data,
+            idFuncionario: this.#idFuncionario,
+            nomeFuncionario: this.#nomeFuncionario,
+            idFornecedor: this.#idFornecedor,
+            nomeFornecedor: this.#nomeFornecedor,
+            valorTotal: this.#valorTotal,
+            qtdParcelas: this.#qtdParcelas
+        }
     }
 }
 module.exports = CompraModel;

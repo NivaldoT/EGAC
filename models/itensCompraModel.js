@@ -40,15 +40,26 @@ class ItensCompraModel{
     }
 
     async listar(){
-        let sql = 'select * from tb_ItemCompra it inner join tb_Produtos p on p.prod_id = it.itcomp_idProduto;';
+        let sql = 'select * from tb_ItemCompra it inner join tb_Produto p on p.prod_id = it.itcomp_idProduto;';
         let banco = new Database();
-        let rows = await banco.ExecutaComando(sql,valores);
+        let rows = await banco.ExecutaComando(sql);
         let lista = [];
 
         for(let i=0;i<rows.length;i++){
             lista.push(new ItensCompraModel(rows[i]['itcomp_id'],rows[i]['itcomp_idCompra'],rows[i]['itcomp_idProduto'],rows[i]['prod_nome'],rows[i]['itcomp_qtd'],rows[i]['itcomp_precoUnitario']));
         }
         return lista;
+    }
+
+    toJSON(){
+        return{
+            id: this.#id,
+            idCompra: this.#idCompra,
+            idProduto: this.#idProduto,
+            nomeProduto: this.#nomeProduto,
+            qtd: this.#qtd,
+            precoUnitario: this.#precoUnitario
+        }
     }
 }
 module.exports = ItensCompraModel;
