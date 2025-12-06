@@ -1,0 +1,129 @@
+<section class="ftco-section bg-light">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <h2 class="mb-2">Devolução #<%= devolucao.id %></h2>
+                <a href="/usuario/minhas-devolucoes" class="text-muted">
+                    <i class="icon-arrow-left"></i> Voltar para Minhas Devoluções
+                </a>
+            </div>
+        </div>
+
+        <!-- Status da Devolução -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Status da Devolução</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="mb-2"><strong>Status Atual:</strong></p>
+                        <% if (devolucao.status === 'pendente') { %>
+                            <span class="badge badge-warning" style="font-size: 16px; padding: 10px 20px;">AGUARDANDO ANÁLISE</span>
+                        <% } else if (devolucao.status === 'aprovada') { %>
+                            <span class="badge badge-success" style="font-size: 16px; padding: 10px 20px;">APROVADA</span>
+                        <% } else { %>
+                            <span class="badge badge-danger" style="font-size: 16px; padding: 10px 20px;">RECUSADA</span>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Informações do Pedido -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Informações do Pedido</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <p class="text-muted mb-1">Número do Pedido</p>
+                        <p class="mb-0"><strong>#<%= devolucao.idVenda %></strong></p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <p class="text-muted mb-1">Data da Compra</p>
+                        <p class="mb-0"><strong><%= new Date(devolucao.venda.data).toLocaleDateString('pt-BR') %></strong></p>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <p class="text-muted mb-1">Motivo da Devolução</p>
+                        <p class="mb-0">
+                            <span class="badge badge-secondary" style="font-size: 14px; padding: 8px 12px;">
+                                <%= (itens && itens.length > 0 && itens[0].motivo) ? itens[0].motivo : 'Não informado' %>
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Produtos da Devolução -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Produtos da Devolução</h5>
+            </div>
+            <div class="card-body">
+                <% if (itens && itens.length > 0) { %>
+                    <% itens.forEach(function(item) { %>
+                        <div class="d-flex align-items-center p-3 mb-3 border rounded">
+                            <% if (item.produto && item.produto.imagem1) { %>
+                                <img src="/images/produtos/<%= item.produto.imagem1 %>" 
+                                     alt="<%= item.produto.nome %>" 
+                                     style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;" 
+                                     class="mr-3">
+                            <% } else { %>
+                                <div class="bg-secondary d-flex align-items-center justify-content-center mr-3" 
+                                     style="width: 80px; height: 80px; border-radius: 8px;">
+                                    <i class="icon-image text-white"></i>
+                                </div>
+                            <% } %>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1"><%= item.produto ? item.produto.nome : 'Produto não encontrado' %></h6>
+                                <p class="text-muted mb-0">
+                                    Quantidade: <%= item.quantidade %> | 
+                                    Preço unitário: R$ <%= parseFloat(item.preco || 0).toFixed(2).replace('.', ',') %>
+                                </p>
+                            </div>
+                            <div class="text-right">
+                                <strong style="font-size: 18px;">R$ <%= (parseFloat(item.preco || 0) * parseInt(item.quantidade || 0)).toFixed(2).replace('.', ',') %></strong>
+                            </div>
+                        </div>
+                    <% }); %>
+                    
+                    <div class="text-right mt-3 pt-3 border-top">
+                        <h5>Total do Reembolso: <strong class="text-success">R$ <%= parseFloat(devolucao.venda.valorTotal || 0).toFixed(2).replace('.', ',') %></strong></h5>
+                    </div>
+                <% } else { %>
+                    <p class="text-muted">Nenhum item encontrado.</p>
+                <% } %>
+            </div>
+        </div>
+
+        <!-- Foto/Evidência -->
+        <% if (itens && itens.length > 0 && itens[0].foto) { %>
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Foto/Evidência</h5>
+                </div>
+                <div class="card-body text-center">
+                    <img src="/images/produtos/<%= itens[0].foto %>" 
+                         alt="Evidência da devolução" 
+                         class="img-fluid rounded"
+                         style="max-width: 600px; cursor: pointer;"
+                         onclick="window.open(this.src, '_blank')">
+                    <p class="text-muted mt-2 mb-0"><small>Clique na imagem para ampliar</small></p>
+                </div>
+            </div>
+        <% } %>
+
+    </div>
+</section>
+
+<style>
+    .card {
+        border: none;
+    }
+    .badge {
+        font-weight: 600;
+    }
+</style>
