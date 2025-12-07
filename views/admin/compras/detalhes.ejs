@@ -1,0 +1,138 @@
+<script src="/js/compras/detalhes.js" defer></script>
+<div class="container-fluid mt-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <a href="/admin/Compras" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Voltar para Compras
+            </a>
+        </div>
+    </div>
+
+    <input type="hidden" id="compraId" value="<%=compraModel.id%>">
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Card de Informações da Compra -->
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        Pedido de Compra #<%= compraModel.id %>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p class="mb-2"><strong>Data da Compra:</strong></p>
+                            <p class="text-muted"><%= new Date(compraModel.data).toLocaleString('pt-BR') %></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-2"><strong>Valor Total:</strong></p>
+                            <p class="text-success fs-4"><strong>R$ <%= parseFloat(compraModel.valorTotal).toFixed(2).replace('.', ',') %></strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card de Itens do Pedido -->
+            <div class="card ">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        Itens do Pedido
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Produto</th>
+                                    <th class="text-center">Quantidade</th>
+                                    <th class="text-end">Valor Unit.</th>
+                                    <th class="text-end">Valor Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for(let i=0; i<listaItens.length; i++) {
+                                    var itemDevolvido = false; 
+                                    if(listaItensDevolucao){ 
+                                        for(let j=0; j < listaItensDevolucao.length; j++){ 
+                                            if(listaItens[i].id == listaItensDevolucao[j].idProduto){ 
+                                                itemDevolvido = true;
+                                            } 
+                                        } 
+                                    }%>
+                                    <tr>
+                                        <td>
+                                            <input name="nomeProduto" class="form-check-input checkItens " type="checkbox" value="<%= listaItens[i].id %>" <%if(itemDevolvido){%> disabled <%}%> data-nome="<%=listaItens[i].nomeProduto%>">
+                                            <label class="form-check-label" for="nomeProduto" >
+                                                <%= listaItens[i].nomeProduto %><%if(itemDevolvido){%>(Item já devolvido! Não será possivel nova devolução)<%}%>
+                                            </label>
+                                        </td>
+                                        <td class="text-center"><%= listaItens[i].qtd %></td>
+                                        <td class="text-end">R$ <%= parseFloat(listaItens[i].precoUnitario).toFixed(2).replace('.', ',') %></td>
+                                        <td class="text-end"><strong>R$ <%= parseFloat(listaItens[i].qtd * listaItens[i].precoUnitario).toFixed(2).replace('.', ',') %></strong></td>
+                                    </tr>
+                                <%}%>
+                            </tbody>
+                            <tfoot class="table-light">
+                                <tr>
+                                    <td colspan="3" class="text-end"><strong>Total da Compra:</strong></td>
+                                    <td class="text-end"><strong class="text-success fs-5">R$ <%= parseFloat(compraModel.valorTotal).toFixed(2).replace('.', ',') %></strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-success mb-4" id="btnAdicionarItens">Adicionar Itens à Devolução</button>
+            <div class="card d-none" id="cardDevolucao">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        Itens À Devolver
+                    </h5>
+                </div>
+                <div class="table-responsive">
+                    <table id="itensDevolucao" class="table table-hover">
+                        <thead>
+                            <th>Produto</th>
+                            <th>Quantidade</th>
+                            <th>Motivo</th>
+                            <th>Remover</th>
+                        </thead>
+                    </table>
+                </div>
+                <button class="btn btn-success" id="btnDevolucao">Efetuar Devolução de itens Selecionados</button>
+            </div>
+        </div>
+
+        <!-- Sidebar com Dados do Fornecedor -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">
+                        Dados do Fornecedor
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <% if(compraModel.nomeFornecedor) { %>
+                        <div class="mb-3">
+                            <p class="mb-1"><strong>Nome:</strong></p>
+                            <p class="text-muted"><%= compraModel.nomeFornecedor %></p>
+                        </div>
+                        <% if(compraModel.cnpjFornecedor) { %>
+                        <div class="mb-3">
+                            <p class="mb-1"><strong>CNPJ:</strong></p>
+                            <p class="text-muted"><%= compraModel.cnpjFornecedor.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5') %></p>
+                        </div>
+                        <% } %>
+                        <% if(compraModel.telefoneFornecedor) { %>
+                        <div class="mb-3">
+                            <p class="mb-1"><strong>Telefone:</strong></p>
+                            <p class="text-muted"><%= compraModel.telefoneFornecedor.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3')%></p>
+                        </div>
+                        <% } %>
+                    <%}%>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

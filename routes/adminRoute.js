@@ -137,7 +137,8 @@ router.get('/compras', compraController.homeView);
 router.get('/comprar', compraController.comprarView);
 router.get('/compras/listar', compraController.listar);
 router.post('/comprar', compraController.comprar);
-
+router.get('/compras/detalhes/:idCompra', compraController.detalhesView);
+router.get('/buscarItensCompraPorId/:idCompra', compraController.buscarItensCompraPorId);
                 //CONTAS A RECEBER
                 
 router.get('/contas/listar',contasController.listar);
@@ -168,6 +169,7 @@ router.post('/caixa/movimento', caixaController.registrarMovimento);
 
                 // DEVOLUÇÕES
 router.get('/devolucoes', devolucaoController.listarDevolucoes);
+router.post('/devolverCompra', devolucaoController.devolverCompra);
 router.get('/devolucoes/:id', devolucaoController.visualizarDevolucao);
 router.post('/devolucoes/:id/aprovar', devolucaoController.aprovarDevolucao);
 router.post('/devolucoes/:id/recusar', devolucaoController.recusarDevolucao);

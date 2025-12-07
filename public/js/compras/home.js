@@ -34,9 +34,10 @@ document.addEventListener("DOMContentLoaded", function() {
                         if(corpo.listaCompra[i].id == item.idCompra){
                             nomeFornecedor = corpo.listaCompra[i].nomeFornecedor;
                             data = corpo.listaCompra[i].data;
+                            idCompra = corpo.listaCompra[i].id;
                         }
                     }
-                    html += `<tr style="cursor: pointer;" onclick="window.location.href='/admin/compras/detalhes/${item.id}'" onmouseover="this.style.backgroundColor='#f5f5f5'" onmouseout="this.style.backgroundColor=''">
+                    html += `<tr style="cursor: pointer;" onclick="window.location.href='/admin/compras/detalhes/${idCompra}'" onmouseover="this.style.backgroundColor='#f5f5f5'" onmouseout="this.style.backgroundColor=''">
                                 <td><strong>#${item.id}</strong></td>
                                 <td>${new Date(data).toLocaleString('pt-BR')}</td>
                                 <td>${nomeFornecedor}</td>
@@ -44,6 +45,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 <td>${item.qtd}</td>
                                 <td>R$ ${parseFloat(item.precoUnitario).toFixed(2).replace('.', ',')}</td>
                                 <td><strong>R$ ${parseFloat(item.precoUnitario*item.qtd ? item.precoUnitario*item.qtd : 0).toFixed(2).replace('.', ',')}</strong></td>
+                                <td><button class="btn btn-sm btn-primary">Efetuar Devolução</button></td>
                             </tr>`;
                 }
 
