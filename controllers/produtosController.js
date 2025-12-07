@@ -41,8 +41,13 @@ class produtosController{
         const nome = req.body.nome;
         const preco = req.body.preco;
         const descricao = req.body.descricao;
-        const categoria = req.body.categoria;
-        const marca = req.body.marca;
+        const categoria = parseInt(req.body.categoria) || null;
+        let marca = parseInt(req.body.marca) || null;
+        
+        // Se marca for 0, transformar em null
+        if(marca === 0) marca = null;
+        
+        console.log('Dados recebidos:', { id, tipoItem, nome, preco, descricao, categoria, marca });
         
         // Buscar produto atual com busca id para pegar imagem antiga
         let produtoAtual = new produtoModel();

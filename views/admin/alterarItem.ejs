@@ -1,89 +1,479 @@
 <script src="/js/js/alterarItem.js" defer></script>
-<div class="container">
-    <h1>Alterar Item</h1>
-    <div id="form">
-        <div class="form-floating mb-3">
-            <select name="tipoItem" id="tipoItem" class="form-control">
-                <option value="0" disabled >Selecione...</option>
-                <option value="1" <% if(tipo == 1){%>selected<%}%> disabled>Produto</option>
-                <option value="2" <% if(tipo == 2){%>selected<%}%> disabled>Insumo</option>
-                <option value="3" <% if(tipo == 3){%>selected<%}%> disabled>Serviços</option>
-                <option value="4" <% if(tipo == 4){%>selected<%}%> disabled>Equipamento Agricola</option>
-                <option value="5" <% if(tipo == 5){%>selected<%}%> disabled>Marca</option>
-                <option value="6" <% if(tipo == 6){%>selected<%}%> disabled>Categoria</option>
-            </select>
-            <label for="tipoItem">Tipo de Item</label>
-        </div>
-        <input type="hidden" value="<%=prod.id%>" id="prodId">
-        <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="nomeval" placeholder="name" value="<%=prod.nome%>" maxlength="50">
-            <label for="nome">Nome:</label>
-        </div>
-        <div class="form-floating mb-3" id="preco">
-            <input type="number" class="form-control" id="precoval" placeholder="name" value="<%=prod.preco%>">
-            <label for="preco">Preço:</label>
-        </div>
 
-        <div class="form-floating mb-3" id="procurarPessoa">
-            <input type="text" class="form-control" id="procurarPessoaval" placeholder=" " maxlength="100">
-            <label for="procurarPessoa">Insira o Nome do prorietário | Empresa:</label>
-        </div>
-        <div class="form-floating mb-3" id="pessoa">
-            <select name="pessoa" id="pessoaval" class="form-control">
-            <option selected value="<%=prod.idPessoa%>"><%=prod.pessoa_nome%></option>
-            </select>
-            <label for="tipoItem">Proprietário:</label>
-        </div>
+<style>
+.toast-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: white;
+    padding: 16px 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 9999;
+    animation: slideIn 0.3s ease-out;
+    min-width: 300px;
+}
+.toast-notification.success {
+    border-left: 4px solid #28a745;
+}
+.toast-notification.error {
+    border-left: 4px solid #dc3545;
+}
+.toast-notification .toast-icon {
+    font-size: 24px;
+}
+.toast-notification.success .toast-icon {
+    color: #28a745;
+}
+.toast-notification.error .toast-icon {
+    color: #dc3545;
+}
+.toast-notification .toast-content {
+    flex: 1;
+}
+.toast-notification .toast-title {
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #333;
+}
+.toast-notification .toast-message {
+    font-size: 14px;
+    color: #666;
+}
+.toast-notification .toast-close {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+}
+@keyframes slideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+}
+.toast-notification.hiding {
+    animation: slideOut 0.3s ease-in forwards;
+}
+.page-header {
+    background: white;
+    padding: 20px 0;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 24px;
+}
+.page-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+.page-subtitle {
+    font-size: 13px;
+    color: #666;
+    margin-top: 4px;
+}
+.nav-tabs-custom {
+    border-bottom: 2px solid #e0e0e0;
+    margin-bottom: 24px;
+}
+.nav-tabs-custom .nav-link {
+    border: none;
+    color: #666;
+    padding: 12px 20px;
+    font-weight: 500;
+    position: relative;
+}
+.nav-tabs-custom .nav-link.active {
+    color: #28a745;
+    background: transparent;
+}
+.nav-tabs-custom .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #28a745;
+}
+.card-section {
+    background: white;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.section-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.form-row-custom {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+}
+.form-group-custom label {
+    display: block;
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+.form-group-custom input,
+.form-group-custom select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d0d0d0;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+.form-group-custom input:focus,
+.form-group-custom select:focus {
+    outline: none;
+    border-color: #28a745;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+}
+.image-upload-area {
+    border: 2px dashed #d0d0d0;
+    border-radius: 8px;
+    padding: 24px;
+    text-align: center;
+    background: #fafafa;
+    transition: all 0.2s;
+}
+.image-upload-area:hover {
+    border-color: #28a745;
+    background: #f0f9f0;
+}
+.image-preview {
+    max-width: 200px;
+    border-radius: 8px;
+    background: white;
+    padding: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    padding: 20px 0;
+    border-top: 1px solid #e0e0e0;
+    margin-top: 24px;
+}
+.btn-save {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.btn-save:hover {
+    background: #218838;
+}
+.btn-cancel {
+    background: white;
+    color: #666;
+    border: 1px solid #d0d0d0;
+    padding: 12px 32px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s;
+}
+.btn-cancel:hover {
+    background: #f5f5f5;
+    color: #333;
+    text-decoration: none;
+}
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+.status-badge.active {
+    background: #d4edda;
+    color: #155724;
+}
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
+}
+</style>
 
-        <div class="form-floating mb-3" id="descricao">
-            <input type="text" class="form-control" id="descricaoval" placeholder="name" value="<%=prod.descricao%>" maxlength="100">
-            <label for="descricao">Descrição:</label>
-        </div>
-        
-        <div class="form-floating mb-3" id="categoria">
-            <select name="categoria" id="categoriaval" class="form-control">
-                <option value="0" disabled>...</option>
-                <% for(let i=0; i<listaCategorias.length ; i++) {%>
-                    <option value="<%=listaCategorias[i].id%>" <% if(listaCategorias[i].id == prod.categoria){%>selected<%}%>> <%=listaCategorias[i].nome%></option>
-                    <%}%>
-            </select>
-            <label for="tipoItem">Categoria:</label>
-        </div>
-        <div class="form-floating mb-3" id="marca">
-            <select name="marca" id="marcaval" class="form-control">
-                <option value="0" disabled>...</option>
-                <% for(let i=0; i<listaMarcas.length ; i++) {%>
-                    <option value="<%=listaMarcas[i].id%>" <% if(listaMarcas[i].id == prod.marca){%>selected<%}%>> <%=listaMarcas[i].nome%></option>
-                    <%}%>
-            </select>
-            <label for="tipoItem">Marca:</label>
-        </div>
-        
-        <% if(tipo == 1 || tipo == 2) { %>
-        <div class="form-group mb-3" id="divImagemAtual">
-            <label>Imagem Atual:</label>
-            <div>
-                <% if(prod.imagem) { %>
-                    <img src="/images/produtos/<%=prod.imagem%>" width="200" class="img-thumbnail">
-                <% } else { %>
-                    <p class="text-muted">Nenhuma imagem cadastrada</p>
-                <% } %>
+<div class="container-fluid" style="background: #f5f5f5; min-height: 100vh; padding: 0;">
+    <!-- Header -->
+    <div class="page-header">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h1 class="page-title">
+                        <%=prod.nome%>
+                    </h1>
+                    <p class="page-subtitle mb-0">
+                        Alterado em <%= new Date().toLocaleDateString('pt-BR') %> • ID: <%=prod.id%>
+                    </p>
+                </div>
             </div>
         </div>
-        <div class="form-group mb-3" id="divNovaImagem">
-            <label>Nova Imagem do Produto (opcional):</label>
-            <input class="form-control" type="file" id="inputImagem" accept="image/jpeg,image/jpg,image/png,image/webp">
-            <small class="form-text text-muted">Formatos aceitos: JPG, JPEG, PNG, WebP (máx. 2MB) - Deixe em branco para manter a imagem atual</small>
-        </div>
-        <div class="form-group mb-3" id="divPrevia" style="display:none;">
-            <label>Prévia da Nova Imagem</label>
-            <div>
-                <img width="250" id="previaImagem" class="img-thumbnail">
+    </div>
+
+    <div class="container">
+        <!-- Tabs -->
+        <ul class="nav nav-tabs-custom">
+            <li class="nav-item">
+                <a class="nav-link active" href="#" data-tab="caracteristicas"><i class="bi bi-card-list me-2"></i>Características</a>
+            </li>
+            <li class="nav-item" id="tabImagens">
+                <a class="nav-link" href="#" data-tab="imagens"><i class="bi bi-image me-2"></i>Imagens</a>
+            </li>
+        </ul>
+
+        <div id="form">
+            <input type="hidden" value="<%=prod.id%>" id="prodId">
+            <input type="hidden" value="<%=tipo%>" id="tipoItem">
+
+            <!-- Conteúdo da Aba Características -->
+            <div class="tab-content active" id="tab-caracteristicas">
+                <!-- Informações Básicas -->
+                <div class="card-section">
+                    <div class="section-title">
+                        <i class="bi bi-info-circle"></i>
+                        Informações Básicas
+                    </div>
+                    
+                    <div class="form-row-custom">
+                        <div class="form-group-custom">
+                            <label for="nomeval">Nome *</label>
+                            <input type="text" class="form-control" id="nomeval" value="<%=prod.nome%>" maxlength="50">
+                        </div>
+
+                        <div class="form-group-custom" id="codigoDiv">
+                            <label for="codigoval">Código (SKU)</label>
+                            <input type="text" class="form-control" id="codigoval" value="<%=prod.id%>" disabled>
+                        </div>
+
+                        <div class="form-group-custom">
+                            <label>Tipo</label>
+                            <input type="text" class="form-control" value="<% if(tipo == 1){%>Produto<%} else if(tipo == 2){%>Insumo<%} else if(tipo == 3){%>Serviço<%} else if(tipo == 4){%>Equipamento Agrícola<%} else if(tipo == 5){%>Marca<%} else if(tipo == 6){%>Categoria<%}%>" disabled>
+                        </div>
+                    </div>
+
+                    <div class="form-row-custom" id="precoRow">
+                        <div class="form-group-custom">
+                            <label for="precoval">Preço de Venda</label>
+                            <input type="number" step="0.01" class="form-control" id="precoval" value="<%=prod.preco%>">
+                        </div>
+                    </div>
+
+                    <div class="form-group-custom" id="descricaoDiv">
+                        <label for="descricaoval">Descrição</label>
+                        <input type="text" class="form-control" id="descricaoval" value="<%=prod.descricao%>" maxlength="100">
+                    </div>
+                </div>
+
+                <!-- Classificação -->
+                <div class="card-section" id="classificacaoSection">
+                    <div class="section-title">
+                        <i class="bi bi-tags"></i>
+                        Classificação
+                    </div>
+                    
+                    <div class="form-row-custom">
+                        <div class="form-group-custom" id="marcaDiv">
+                            <label for="marcaval">Marca</label>
+                            <select id="marcaval" class="form-control">
+                                <option value="0">Selecione uma marca...</option>
+                                <% for(let i=0; i<listaMarcas.length ; i++) {%>
+                                    <option value="<%=listaMarcas[i].id%>" <% if(listaMarcas[i].id == prod.marca){%>selected<%}%>><%=listaMarcas[i].nome%></option>
+                                <%}%>
+                            </select>
+                        </div>
+
+                        <div class="form-group-custom" id="categoriaDiv">
+                            <label for="categoriaval">Categoria</label>
+                            <select id="categoriaval" class="form-control">
+                                <option value="0">Selecione uma categoria...</option>
+                                <% for(let i=0; i<listaCategorias.length ; i++) {%>
+                                    <option value="<%=listaCategorias[i].id%>" <% if(listaCategorias[i].id == prod.categoria){%>selected<%}%>><%=listaCategorias[i].nome%></option>
+                                <%}%>
+                            </select>
+                        </div>
+                </div>
+            </div>
+
+            <!-- Proprietário (apenas para Equipamento Agrícola) -->
+            <div class="card-section" id="proprietarioSection" style="display: none;">
+                <div class="section-title">
+                    <i class="bi bi-person"></i>
+                    Proprietário
+                </div>
+                
+                <div class="form-row-custom">
+                    <div class="form-group-custom" id="procurarPessoaDiv">
+                        <label for="procurarPessoaval">Buscar Proprietário</label>
+                        <input type="text" class="form-control" id="procurarPessoaval" placeholder="Digite o nome do proprietário ou empresa" maxlength="100">
+                    </div>
+
+                    <div class="form-group-custom" id="pessoaDiv">
+                        <label for="pessoaval">Proprietário Selecionado</label>
+                        <select id="pessoaval" class="form-control">
+                            <option selected value="<%=prod.idPessoa%>"><%=prod.pessoa_nome%></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>            <!-- Conteúdo da Aba Imagens -->
+            <div class="tab-content" id="tab-imagens">
+                <!-- Imagens -->
+                <div class="card-section">
+                    <div class="section-title">
+                        <i class="bi bi-image"></i>
+                        Imagens do Produto
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6" id="divImagemAtual">
+                            <label class="mb-2">Imagem Atual</label>
+                            <div>
+                                <% if(prod.imagem) { %>
+                                    <img src="/images/produtos/<%=prod.imagem%>" class="image-preview img-fluid" style="max-height: 300px; object-fit: contain; border: 1px solid #dee2e6; border-radius: 8px; padding: 10px;">
+                                <% } else { %>
+                                    <div class="image-upload-area">
+                                        <i class="bi bi-image" style="font-size: 48px; color: #ccc;"></i>
+                                        <p class="text-muted mt-2 mb-0">Nenhuma imagem cadastrada</p>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="mb-2">Atualizar Imagem</label>
+                            <div class="image-upload-area">
+                                <i class="bi bi-cloud-upload" style="font-size: 48px; color: #28a745;"></i>
+                                <p class="mt-2 mb-2"><strong>Escolha uma imagem</strong></p>
+                                <input class="form-control" type="file" id="inputImagem" accept="image/jpeg,image/jpg,image/png,image/webp">
+                                <small class="text-muted d-block mt-2">JPG, JPEG, PNG, WebP (máx. 2MB)</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Prévia da nova imagem em linha separada -->
+                    <div class="row mt-3" id="divPrevia" style="display:none;">
+                        <div class="col-md-12">
+                            <label class="mb-2">Prévia da Nova Imagem</label>
+                            <div class="text-center">
+                                <img id="previaImagem" class="image-preview img-fluid" style="max-height: 400px; object-fit: contain; border: 2px solid #28a745; border-radius: 8px; padding: 10px; background: #f8f9fa;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botões de Ação -->
+            <div class="action-buttons">
+                <button class="btn-save" id="cadastrar">
+                    <i class="bi bi-check-lg me-2"></i>Salvar produto
+                </button>
+                <a id="voltar" href="/admin/listagem/1" class="btn-cancel">
+                    Cancelar
+                </a>
             </div>
         </div>
-        <% } %>
-            
-        <button class="btn btn-primary" id="cadastrar">Confirmar Alteração</button>
-        <a id="voltar" href="/admin/listagem/1" class="btn btn-secondary">Voltar</a>
     </div>
 </div>
+
+<script>
+// Controlar visibilidade de campos e troca de abas
+document.addEventListener('DOMContentLoaded', function() {
+    const tipoItem = <%=tipo%>;
+    
+    // Sistema de abas
+    const tabLinks = document.querySelectorAll('.nav-tabs-custom .nav-link');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    tabLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetTab = this.getAttribute('data-tab');
+            
+            // Remover active de todos os links e conteúdos
+            tabLinks.forEach(l => l.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+            
+            // Adicionar active ao link clicado
+            this.classList.add('active');
+            
+            // Mostrar o conteúdo correspondente
+            document.getElementById('tab-' + targetTab).classList.add('active');
+        });
+    });
+    
+    // Mostrar/esconder seções baseado no tipo
+    const proprietarioSection = document.getElementById('proprietarioSection');
+    
+    if(tipoItem === 1 || tipoItem === 2) { // Produto/Insumo
+        // Não mostrar proprietário
+        proprietarioSection?.remove();
+    } else if(tipoItem === 3) { // Serviço
+        document.getElementById('tab-imagens')?.remove();
+        document.getElementById('classificacaoSection')?.remove();
+        proprietarioSection?.remove();
+        document.getElementById('tabImagens')?.remove();
+    } else if(tipoItem === 4) { // Equipamento Agrícola
+        // Mostrar proprietário
+        if(proprietarioSection) proprietarioSection.style.display = 'block';
+        document.getElementById('tab-imagens')?.remove();
+        document.getElementById('tabImagens')?.remove();
+    } else if(tipoItem === 5 || tipoItem === 6) { // Marca ou Categoria
+        document.getElementById('tab-imagens')?.remove();
+        document.getElementById('classificacaoSection')?.remove();
+        proprietarioSection?.remove();
+        document.getElementById('precoRow')?.remove();
+        document.getElementById('descricaoDiv')?.remove();
+        document.getElementById('tabImagens')?.remove();
+    }
+
+    if(tipoItem !== 1 && tipoItem !== 2) { // Não é produto/insumo
+        document.getElementById('tab-imagens')?.remove();
+        document.getElementById('tabImagens')?.remove();
+    }
+});
+</script>

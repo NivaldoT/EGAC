@@ -1,5 +1,36 @@
 document.addEventListener('DOMContentLoaded', function(){
 
+    // Função para mostrar toast notification
+    function showToast(title, message, type) {
+        // Remover toasts existentes
+        const existingToasts = document.querySelectorAll('.toast-notification');
+        existingToasts.forEach(toast => toast.remove());
+
+        const toast = document.createElement('div');
+        toast.className = `toast-notification ${type}`;
+        
+        const icon = type === 'success' ? '✓' : '×';
+        
+        toast.innerHTML = `
+            <div class="toast-icon">${icon}</div>
+            <div class="toast-content">
+                <div class="toast-title">${title}</div>
+                <div class="toast-message">${message}</div>
+            </div>
+            <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+        `;
+        
+        document.body.appendChild(toast);
+        
+        // Auto remover após 3 segundos
+        setTimeout(function() {
+            toast.classList.add('hiding');
+            setTimeout(function() {
+                toast.remove();
+            }, 300);
+        }, 3000);
+    }
+
     let voltar = document.getElementById('voltar');
     let tipo = document.getElementById('tipoItem');
     MudarEnderecoVoltar();
@@ -14,45 +45,54 @@ document.addEventListener('DOMContentLoaded', function(){
     }
 
     let precomax = document.getElementById('precoval');
-    precomax.addEventListener('keydown', function(){
-        if(precomax.value>9999999.00)
-            precomax.value = 9999999.00;
-    })
+    if(precomax) {
+        precomax.addEventListener('keydown', function(){
+            if(precomax.value>9999999.00)
+                precomax.value = 9999999.00;
+        })
+    }
 
     let inputBuscar = document.getElementById('procurarPessoaval');  //Buscar Pessoas Equipamento Agricola
-    inputBuscar.addEventListener('blur', function(){
+    if(inputBuscar) {
+        inputBuscar.addEventListener('blur', function(){
 
-        let nome = {nome : inputBuscar.value};
-        fetch("/admin/buscarCliente",{
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: JSON.stringify(nome)
+            let nome = {nome : inputBuscar.value};
+            fetch("/admin/buscarCliente",{
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(nome)
+                })
+            .then(function(resposta){
+                return resposta.json();
             })
-        .then(function(resposta){
-            return resposta.json();
-        })
-        .then(function(corpo){
-            let selectPessoa = document.getElementById('pessoaval');
-            selectPessoa.innerHTML = '';
-            if(corpo.lista.length == 0 ){
-                selectPessoa.innerHTML = '<option value="0">Pessoa não existente no banco de dados!</option>'
-            }
-            for(let i=0; i < corpo.lista.length;i++){
-                pessoa = corpo.lista[i];
-                selectPessoa.innerHTML += '<option value="'+pessoa.id+'">'+pessoa.nome+'</option>' 
-            }
-        })
-    });
+            .then(function(corpo){
+                let selectPessoa = document.getElementById('pessoaval');
+                selectPessoa.innerHTML = '';
+                if(corpo.lista.length == 0 ){
+                    selectPessoa.innerHTML = '<option value="0">Pessoa não existente no banco de dados!</option>'
+                }
+                for(let i=0; i < corpo.lista.length;i++){
+                    pessoa = corpo.lista[i];
+                    selectPessoa.innerHTML += '<option value="'+pessoa.id+'">'+pessoa.nome+'</option>' 
+                }
+            })
+        });
+    }
 
     let btn = document.getElementById('cadastrar');
-    btn.addEventListener('click', gravar);
+    if(btn) {
+        btn.addEventListener('click', gravar);
+    }
 
     let tipoItem = document.getElementById('tipoItem');
     
-    tipoItem.addEventListener('change', change)
-    change();
+    if(tipoItem) {
+        tipoItem.addEventListener('change', change)
+        change();
+    }
+    
     function change(){
         const preco = document.getElementById('preco');
         const inputPessoa = document.getElementById('procurarPessoaval');
@@ -60,58 +100,78 @@ document.addEventListener('DOMContentLoaded', function(){
         const descricao = document.getElementById('descricao');
         const marca = document.getElementById('marca');
         const categoria = document.getElementById('categoria');
+        
+        if(!tipoItem) return;
+        
         if(tipoItem.value == 1 || tipoItem.value == 2){ //PRODUTO INSUMO
-            preco.style.display = 'block';            
-            inputPessoa.style.display = 'none';
-            pessoa.style.display = 'none';
-            descricao.style.display = 'block';
-            marca.style.display = 'block';
-            categoria.style.display = 'block';
+            if(preco) preco.style.display = 'block';            
+            if(inputPessoa) inputPessoa.style.display = 'none';
+            if(pessoa) pessoa.style.display = 'none';
+            if(descricao) descricao.style.display = 'block';
+            if(marca) marca.style.display = 'block';
+            if(categoria) categoria.style.display = 'block';
         }
         if(tipoItem.value == 3){ //serviço
-            preco.style.display = 'block';  
-            inputPessoa.style.display = 'none';
-            pessoa.style.display = 'none';
-            descricao.style.display = 'block';
-            marca.style.display = 'none';
-            categoria.style.display = 'none';
+            if(preco) preco.style.display = 'block';  
+            if(inputPessoa) inputPessoa.style.display = 'none';
+            if(pessoa) pessoa.style.display = 'none';
+            if(descricao) descricao.style.display = 'block';
+            if(marca) marca.style.display = 'none';
+            if(categoria) categoria.style.display = 'none';
         }
         if(tipoItem.value == 4){ // equip Agricola
-            preco.style.display = 'none';
-            inputPessoa.style.display = 'block';
-            pessoa.style.display = 'block';
-            descricao.style.display = 'block';
-            marca.style.display = 'block';
-            categoria.style.display = 'block';
+            if(preco) preco.style.display = 'none';
+            if(inputPessoa) inputPessoa.style.display = 'block';
+            if(pessoa) pessoa.style.display = 'block';
+            if(descricao) descricao.style.display = 'block';
+            if(marca) marca.style.display = 'block';
+            if(categoria) categoria.style.display = 'block';
         }
         if(tipoItem.value == 5){ // marca 
-            preco.style.display = 'none';
-            inputPessoa.style.display = 'none';
-            pessoa.style.display = 'none';
-            descricao.style.display = 'none';
-            marca.style.display = 'none';
-            categoria.style.display = 'none';
+            if(preco) preco.style.display = 'none';
+            if(inputPessoa) inputPessoa.style.display = 'none';
+            if(pessoa) pessoa.style.display = 'none';
+            if(descricao) descricao.style.display = 'none';
+            if(marca) marca.style.display = 'none';
+            if(categoria) categoria.style.display = 'none';
         }
         if(tipoItem.value == 6){ // categoria
-            preco.style.display = 'none';
-            inputPessoa.style.display = 'none';
-            pessoa.style.display = 'none';
-            descricao.style.display = 'none';
-            marca.style.display = 'none';
-            categoria.style.display = 'none';
+            if(preco) preco.style.display = 'none';
+            if(inputPessoa) inputPessoa.style.display = 'none';
+            if(pessoa) pessoa.style.display = 'none';
+            if(descricao) descricao.style.display = 'none';
+            if(marca) marca.style.display = 'none';
+            if(categoria) categoria.style.display = 'none';
         }
     }
 
     function gravar(){
+        console.log('Função gravar chamada');
+        
         const id = document.getElementById('prodId');
-
         const nome = document.getElementById('nomeval');
         const preco = document.getElementById('precoval');
-        const pessoa = document.getElementById('pessoaval');
+        const pessoaEl = document.getElementById('pessoaval');
         const descricao = document.getElementById('descricaoval');
         const marca = document.getElementById('marcaval');
         const tipoItem = document.getElementById('tipoItem');
         const categoria = document.getElementById('categoriaval');
+
+        console.log('Elementos encontrados:', {
+            id: !!id,
+            nome: !!nome,
+            preco: !!preco,
+            descricao: !!descricao,
+            marca: !!marca,
+            tipoItem: !!tipoItem,
+            categoria: !!categoria
+        });
+
+        if(!nome || !preco || !descricao || !tipoItem) {
+            console.error('Elementos obrigatórios não encontrados');
+            alert('Erro: Elementos do formulário não encontrados!');
+            return;
+        }
 
         let vetorVal= [];
         if(!nome.value)
@@ -124,18 +184,19 @@ document.addEventListener('DOMContentLoaded', function(){
         else
             preco.style.borderColor = '';
 
-        if(pessoa.value == 0)
-            vetorVal.push(pessoa);
-        else
-            pessoa.style.borderColor = '';
+        if(pessoaEl && pessoaEl.value == 0)
+            vetorVal.push(pessoaEl);
+        else if(pessoaEl)
+            pessoaEl.style.borderColor = '';
+            
         if(!descricao.value)
             vetorVal.push(descricao);
         else
             descricao.style.borderColor = '';
 
-        if(marca.value == 0)
+        if(marca && marca.value == 0)
             vetorVal.push(marca);
-        else
+        else if(marca)
             marca.style.borderColor = '';
 
         if(tipoItem.value == 0)
@@ -143,13 +204,25 @@ document.addEventListener('DOMContentLoaded', function(){
         else
             tipoItem.style.borderColor = '';
         
-        if(categoria.value == 0)
+        if(categoria && categoria.value == 0)
             vetorVal.push(categoria);
-        else
+        else if(categoria)
             categoria.style.borderColor = '';
-        console.log(vetorVal)
+            
+        console.log('Valores:', {
+            tipoItem: tipoItem.value,
+            nome: nome.value, 
+            preco: preco.value, 
+            descricao: descricao.value, 
+            categoria: categoria?.value, 
+            marca: marca?.value
+        });
+        console.log('Erros de validação:', vetorVal.length);
+        
         if(tipoItem.value == 1 || tipoItem.value == 2){ // PRODUTO INSUMO
-            if(nome.value && isFinite(Number(preco.value)) && preco.value && descricao.value && categoria.value > 0 && preco.value >= 0 && marca.value > 0){
+            console.log('Processando produto/insumo');
+            if(nome.value && isFinite(Number(preco.value)) && preco.value && descricao.value && preco.value >= 0){
+                console.log('Validação passou, enviando dados...');
                 // Usar FormData para enviar arquivo
                 let formData = new FormData();
                 formData.append('id', id.value);
@@ -157,8 +230,8 @@ document.addEventListener('DOMContentLoaded', function(){
                 formData.append('nome', nome.value);
                 formData.append('preco', preco.value);
                 formData.append('descricao', descricao.value);
-                formData.append('categoria', categoria.value);
-                formData.append('marca', marca.value);
+                formData.append('categoria', categoria ? parseInt(categoria.value) : 0);
+                formData.append('marca', marca ? parseInt(marca.value) : 0);
                 
                 // Adicionar imagem se foi selecionada
                 let inputImagem = document.getElementById('inputImagem');
@@ -168,15 +241,31 @@ document.addEventListener('DOMContentLoaded', function(){
 
                 fetch('/admin/alterarProduto',{
                     method: 'POST',
-                    body: formData // Não enviar header Content-Type com FormData
+                    body: formData
                     })
                     .then(function(resposta) {
                         return resposta.json();
                     })
                     .then(function(corpo) {
-                        alert(corpo.msg);
-                })
+                        if(corpo.ok) {
+                            showToast('Sucesso!', corpo.msg, 'success');
+                            setTimeout(function() {
+                                window.location.href = '/admin/listagem/' + tipoItem.value;
+                            }, 1500);
+                        } else {
+                            showToast('Erro!', corpo.msg, 'error');
+                        }
+                    })
+                    .catch(function(erro) {
+                        console.error('Erro:', erro);
+                        showToast('Erro!', 'Erro ao salvar produto!', 'error');
+                    });
                 return
+            } else {
+                showToast('Atenção!', 'Preencha todos os campos obrigatórios!', 'error');
+                vetorVal.forEach(campo => {
+                    if(campo) campo.style.borderColor = 'red';
+                });
             }
         }
         if(tipoItem.value == 3){ // SERVICO

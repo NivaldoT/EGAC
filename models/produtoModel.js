@@ -27,6 +27,8 @@ class produtoModel{
     get categoria(){return this.#categoria};
     set categoria_nome(valor){this.#categoria_nome = valor};
     get categoria_nome(){return this.#categoria_nome};
+    set marca(valor){this.#marca = valor};
+    get marca(){return this.#marca};
     set marca_nome(valor){this.#marca_nome = valor};
     get marca_nome(){return this.#marca_nome};
     set estoque(valor){this.#estoque = valor};
