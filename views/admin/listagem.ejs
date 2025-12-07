@@ -24,6 +24,13 @@
     
 
     <div class="row" id="1"> <!--LISTA PRODUTOS-->
+        <%if(listaProdutos.length == 0) { %>
+            <div class="col-12">
+                <div class="alert alert-info text-center" role="alert">
+                    Nenhum produto cadastrado.
+                </div>
+            </div>
+        <%}%>
         <%for(let i=0;i<listaProdutos.length;i++) {%>
             <div class="col-12 mb-3">
                 <div class="card">
@@ -78,6 +85,13 @@
     </div>
 
     <div class="row" id="2"> <!--LISTA INSUMOS-->
+        <%if(listaInsumos.length == 0) { %>
+            <div class="col-12">
+                <div class="alert alert-info text-center" role="alert">
+                    Nenhum insumo cadastrado.
+                </div>
+            </div>
+        <%}%>
         <%for(let i=0;i<listaInsumos.length;i++) {%>
             <div class="col-12 mb-3">
                 <div class="card">
@@ -140,6 +154,11 @@
             <th>Alterar/Excluir</th>
         </thead>
         <tbody>
+            <%if(listaServicos.length == 0) { %>
+                <tr>
+                    <td colspan="5" class="text-center">Nenhum serviço cadastrado.</td>
+                </tr>
+            <%}%>
             <%for(let i=0;i<listaServicos.length;i++) {%>
                 <tr>
                     <td><%=listaServicos[i].id%></td>
@@ -166,6 +185,11 @@
             <th>Alterar/Excluir</th>
         </thead>
         <tbody>
+            <%if(listaEqAg.length == 0) { %>
+                <tr>
+                    <td colspan="7" class="text-center">Nenhum equipamento agrícola cadastrado.</td>
+                </tr>
+            <%}%>
             <%for(let i=0;i<listaEqAg.length;i++) {%>
                 <tr>
                     <td><%=listaEqAg[i].id%></td>
@@ -190,6 +214,11 @@
             <th>Alterar/Excluir</th>
         </thead>
         <tbody>
+            <%if(listaMarcas.length == 0) { %>
+                <tr>
+                    <td colspan="3" class="text-center">Nenhuma marca cadastrada.</td>
+                </tr>
+            <%}%>
             <%for(let i=0;i<listaMarcas.length;i++) {%>
                 <tr>
                     <td><%=listaMarcas[i].id%></td>
@@ -210,6 +239,11 @@
             <th>Alterar/Excluir</th>
         </thead>
         <tbody>
+            <%if(listaCategorias.length == 0) { %>
+                <tr>
+                    <td colspan="3" class="text-center">Nenhuma categoria cadastrada.</td>
+                </tr>
+            <%}%>
             <%for(let i=0;i<listaCategorias.length;i++) {%>
                 <tr>
                     <td><%=listaCategorias[i].id%></td>

@@ -217,6 +217,16 @@ class DevolucaoController {
             res.status(500).send('Erro ao carregar devoluções');
         }
     }
+    async listarDevolucoesCompra(req, res) {
+        let devolucaoCompraModel = new DevolucaoCompraModel();
+        let listaDevoCompra = await devolucaoCompraModel.listar();
+        let listaGeral = listaDevoCompra;
+        for(let i=0; i<listaDevoCompra.length;i++){
+            let itemDevoCompraModel = new ItemDevoCompraModel(null,listaDevoCompra[i].id);
+            listaGeral[i].listaItensDevoCompra = await itemDevoCompraModel.listarPorDevolucaoId();
+        }
+        res.render('admin/devolucoes/listarCompra',{layout: 'layout_admin', listaGeral: listaGeral});
+    }
 
     // Visualizar detalhes da devolução (Admin)
     async visualizarDevolucao(req, res) {
