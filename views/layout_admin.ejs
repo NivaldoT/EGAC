@@ -121,8 +121,16 @@
               </ul>
             </li>
           </ul>
-          <button class="btn btn-outline-success" id="caixaStatus" data-bs-toggle="modal" data-bs-target="#exampleModal">Caixa: Fechado </button>
-          <button class="btn btn-outline-success" id="caixaValor" onclick="window.location.href='/admin/caixa/historico'">Valor: R$00,00</button>
+          <div class="d-flex align-items-center gap-2 me-3">
+            <button class="btn btn-outline-dark d-flex align-items-center gap-2" id="caixaStatus" data-bs-toggle="modal" data-bs-target="#exampleModal" style="border-radius: 20px;">
+              <i class="bi bi-cash-stack"></i>
+              <span id="statusText">Fechado</span>
+            </button>
+            <button class="btn btn-success d-flex align-items-center gap-2" id="caixaValor" onclick="window.location.href='/admin/caixa/historico'" style="border-radius: 20px; font-weight: 500;">
+              <i class="bi bi-wallet2"></i>
+              <span id="valorText">R$ 0,00</span>
+            </button>
+          </div>
 
           <ul class="navbar-nav ms-auto">
             <li class="nav-item dropdown">
