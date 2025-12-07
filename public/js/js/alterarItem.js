@@ -1,35 +1,35 @@
-document.addEventListener('DOMContentLoaded', function(){
+// Função para mostrar toast notification (global)
+function showToast(title, message, type) {
+    // Remover toasts existentes
+    const existingToasts = document.querySelectorAll('.toast-notification');
+    existingToasts.forEach(toast => toast.remove());
 
-    // Função para mostrar toast notification
-    function showToast(title, message, type) {
-        // Remover toasts existentes
-        const existingToasts = document.querySelectorAll('.toast-notification');
-        existingToasts.forEach(toast => toast.remove());
-
-        const toast = document.createElement('div');
-        toast.className = `toast-notification ${type}`;
-        
-        const icon = type === 'success' ? '✓' : '×';
-        
-        toast.innerHTML = `
-            <div class="toast-icon">${icon}</div>
-            <div class="toast-content">
-                <div class="toast-title">${title}</div>
-                <div class="toast-message">${message}</div>
-            </div>
-            <button class="toast-close" onclick="this.parentElement.remove()">×</button>
-        `;
-        
-        document.body.appendChild(toast);
-        
-        // Auto remover após 3 segundos
+    const toast = document.createElement('div');
+    toast.className = `toast-notification ${type}`;
+    
+    const icon = type === 'success' ? '✓' : '×';
+    
+    toast.innerHTML = `
+        <div class="toast-icon">${icon}</div>
+        <div class="toast-content">
+            <div class="toast-title">${title}</div>
+            <div class="toast-message">${message}</div>
+        </div>
+        <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Auto remover após 3 segundos
+    setTimeout(function() {
+        toast.classList.add('hiding');
         setTimeout(function() {
-            toast.classList.add('hiding');
-            setTimeout(function() {
-                toast.remove();
-            }, 300);
-        }, 3000);
-    }
+            toast.remove();
+        }, 300);
+    }, 3000);
+}
+
+document.addEventListener('DOMContentLoaded', function(){
 
     let voltar = document.getElementById('voltar');
     let tipo = document.getElementById('tipoItem');
@@ -232,6 +232,12 @@ document.addEventListener('DOMContentLoaded', function(){
                 formData.append('descricao', descricao.value);
                 formData.append('categoria', categoria ? parseInt(categoria.value) : 0);
                 formData.append('marca', marca ? parseInt(marca.value) : 0);
+                
+                // Adicionar estoque
+                const estoque = document.getElementById('estoqueval');
+                if(estoque) {
+                    formData.append('estoque', parseInt(estoque.value) || 0);
+                }
                 
                 // Adicionar imagem se foi selecionada
                 let inputImagem = document.getElementById('inputImagem');

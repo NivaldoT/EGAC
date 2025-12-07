@@ -82,6 +82,32 @@
     border-bottom: 1px solid #e0e0e0;
     margin-bottom: 24px;
 }
+.page-header-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+.product-image-header {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    flex-shrink: 0;
+}
+.product-image-placeholder {
+    width: 60px;
+    height: 60px;
+    background: #f0f0f0;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 24px;
+    flex-shrink: 0;
+}
 .page-title {
     font-size: 20px;
     font-weight: 600;
@@ -236,6 +262,198 @@
 .tab-content.active {
     display: block;
 }
+.stock-control {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+}
+.stock-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+}
+.stock-btn.entrada {
+    background: #28a745;
+    color: white;
+}
+.stock-btn.entrada:hover {
+    background: #218838;
+}
+.stock-btn.saida {
+    background: #dc3545;
+    color: white;
+}
+.stock-btn.saida:hover {
+    background: #c82333;
+}
+.stock-input {
+    width: 120px;
+    padding: 8px 12px;
+    border: 1px solid #d0d0d0;
+    border-radius: 6px;
+    font-size: 14px;
+}
+.confirm-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    animation: fadeIn 0.2s ease-out;
+}
+.confirm-modal.show {
+    display: flex;
+}
+.confirm-box {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    animation: slideUp 0.3s ease-out;
+}
+.confirm-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 32px;
+}
+.confirm-icon.entrada {
+    background: #d4edda;
+    color: #28a745;
+}
+.confirm-icon.saida {
+    background: #f8d7da;
+    color: #dc3545;
+}
+.confirm-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 12px;
+    text-align: center;
+}
+.confirm-message {
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    margin-bottom: 8px;
+}
+.confirm-details {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 12px;
+    margin: 16px 0;
+}
+.confirm-detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 14px;
+}
+.confirm-detail-label {
+    color: #666;
+}
+.confirm-detail-value {
+    font-weight: 600;
+    color: #333;
+}
+.confirm-detail-value.highlight {
+    color: #007bff;
+    font-size: 16px;
+}
+.confirm-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+.confirm-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+}
+.confirm-btn.yes {
+    background: #28a745;
+    color: white;
+}
+.confirm-btn.yes:hover {
+    background: #218838;
+}
+.confirm-btn.no {
+    background: #f5f5f5;
+    color: #666;
+}
+.confirm-btn.no:hover {
+    background: #e0e0e0;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes slideUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+.stock-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+.stock-card {
+    background: white;
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+.stock-card-label {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 8px;
+}
+.stock-card-value {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+}
+.stock-card.atual .stock-card-value {
+    color: #007bff;
+}
+.stock-card.entradas .stock-card-value {
+    color: #28a745;
+}
+.stock-card.saidas .stock-card-value {
+    color: #dc3545;
+}
 </style>
 
 <div class="container-fluid" style="background: #f5f5f5; min-height: 100vh; padding: 0;">
@@ -243,13 +461,22 @@
     <div class="page-header">
         <div class="container">
             <div class="d-flex justify-content-between align-items-start">
-                <div>
-                    <h1 class="page-title">
-                        <%=prod.nome%>
-                    </h1>
-                    <p class="page-subtitle mb-0">
-                        Alterado em <%= new Date().toLocaleDateString('pt-BR') %> • ID: <%=prod.id%>
-                    </p>
+                <div class="page-header-content">
+                    <% if(prod.imagem) { %>
+                        <img src="/images/produtos/<%=prod.imagem%>" class="product-image-header" alt="<%=prod.nome%>">
+                    <% } else { %>
+                        <div class="product-image-placeholder">
+                            <i class="bi bi-image"></i>
+                        </div>
+                    <% } %>
+                    <div>
+                        <h1 class="page-title">
+                            <%=prod.nome%>
+                        </h1>
+                        <p class="page-subtitle mb-0">
+                            Alterado em <%= new Date().toLocaleDateString('pt-BR') %> • ID: <%=prod.id%>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -260,6 +487,9 @@
         <ul class="nav nav-tabs-custom">
             <li class="nav-item">
                 <a class="nav-link active" href="#" data-tab="caracteristicas"><i class="bi bi-card-list me-2"></i>Características</a>
+            </li>
+            <li class="nav-item" id="tabEstoque">
+                <a class="nav-link" href="#" data-tab="estoque"><i class="bi bi-box-seam me-2"></i>Estoque</a>
             </li>
             <li class="nav-item" id="tabImagens">
                 <a class="nav-link" href="#" data-tab="imagens"><i class="bi bi-image me-2"></i>Imagens</a>
@@ -407,6 +637,84 @@
                 </div>
             </div>
 
+            <!-- Conteúdo da Aba Estoque -->
+            <div class="tab-content" id="tab-estoque">
+                <div class="card-section">
+                    <div class="section-title">
+                        <i class="bi bi-box-seam"></i>
+                        Controle de Estoque
+                    </div>
+                    
+                    <div class="form-row-custom">
+                        <div class="form-group-custom" style="max-width: 600px;">
+                            <label>Estoque Atual: <strong id="displayEstoqueAtual"><%=prod.estoque || 0%> un</strong></label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row-custom">
+                        <div class="form-group-custom" style="max-width: 600px;">
+                            <label for="qtdMovimentoTab">Quantidade</label>
+                            <div class="stock-control">
+                                <input type="number" class="stock-input" id="qtdMovimentoTab" placeholder="Quantidade" min="1" style="width: 200px;" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                <button type="button" class="stock-btn entrada" id="btnEntradaEstoque">
+                                    <i class="bi bi-plus-circle"></i> Entrada
+                                </button>
+                                <button type="button" class="stock-btn saida" id="btnSaidaEstoque">
+                                    <i class="bi bi-dash-circle"></i> Saída
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conteúdo da Aba Imagens -->
+            <div class="tab-content" id="tab-imagens">
+                <!-- Imagens -->
+                <div class="card-section">
+                    <div class="section-title">
+                        <i class="bi bi-image"></i>
+                        Imagens do Produto
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6" id="divImagemAtual">
+                            <label class="mb-2">Imagem Atual</label>
+                            <div>
+                                <% if(prod.imagem) { %>
+                                    <img src="/images/produtos/<%=prod.imagem%>" class="image-preview img-fluid" style="max-height: 300px; object-fit: contain; border: 1px solid #dee2e6; border-radius: 8px; padding: 10px;">
+                                <% } else { %>
+                                    <div class="image-upload-area">
+                                        <i class="bi bi-image" style="font-size: 48px; color: #ccc;"></i>
+                                        <p class="text-muted mt-2 mb-0">Nenhuma imagem cadastrada</p>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label class="mb-2">Atualizar Imagem</label>
+                            <div class="image-upload-area">
+                                <i class="bi bi-cloud-upload" style="font-size: 48px; color: #28a745;"></i>
+                                <p class="mt-2 mb-2"><strong>Escolha uma imagem</strong></p>
+                                <input class="form-control" type="file" id="inputImagem" accept="image/jpeg,image/jpg,image/png,image/webp">
+                                <small class="text-muted d-block mt-2">JPG, JPEG, PNG, WebP (máx. 2MB)</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Prévia da nova imagem em linha separada -->
+                    <div class="row mt-3" id="divPrevia" style="display:none;">
+                        <div class="col-md-12">
+                            <label class="mb-2">Prévia da Nova Imagem</label>
+                            <div class="text-center">
+                                <img id="previaImagem" class="image-preview img-fluid" style="max-height: 400px; object-fit: contain; border: 2px solid #28a745; border-radius: 8px; padding: 10px; background: #f8f9fa;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Botões de Ação -->
             <div class="action-buttons">
                 <button class="btn-save" id="cadastrar">
@@ -416,6 +724,35 @@
                     Cancelar
                 </a>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Confirmação -->
+<div class="confirm-modal" id="confirmModal">
+    <div class="confirm-box">
+        <div class="confirm-icon" id="confirmIcon">
+            <i class="bi bi-question-circle"></i>
+        </div>
+        <div class="confirm-title" id="confirmTitle">Confirmar Movimentação</div>
+        <div class="confirm-message" id="confirmMessage">Deseja confirmar esta movimentação de estoque?</div>
+        <div class="confirm-details">
+            <div class="confirm-detail-row">
+                <span class="confirm-detail-label">Estoque Atual:</span>
+                <span class="confirm-detail-value" id="confirmEstoqueAtual">0</span>
+            </div>
+            <div class="confirm-detail-row">
+                <span class="confirm-detail-label">Quantidade:</span>
+                <span class="confirm-detail-value" id="confirmQuantidade">0</span>
+            </div>
+            <div class="confirm-detail-row">
+                <span class="confirm-detail-label">Novo Estoque:</span>
+                <span class="confirm-detail-value highlight" id="confirmNovoEstoque">0</span>
+            </div>
+        </div>
+        <div class="confirm-buttons">
+            <button class="confirm-btn no" onclick="closeConfirmModal()">Cancelar</button>
+            <button class="confirm-btn yes" id="confirmYesBtn">Confirmar</button>
         </div>
     </div>
 </div>
@@ -446,34 +783,191 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
+    // Verificar se deve abrir a aba de estoque via URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const tabParam = urlParams.get('tab');
+    
+    if(tabParam === 'estoque') {
+        // Remover active da aba atual
+        tabLinks.forEach(l => l.classList.remove('active'));
+        tabContents.forEach(c => c.classList.remove('active'));
+        
+        // Ativar aba de estoque
+        const estoqueTab = document.querySelector('[data-tab="estoque"]');
+        const estoqueContent = document.getElementById('tab-estoque');
+        
+        if(estoqueTab && estoqueContent) {
+            estoqueTab.classList.add('active');
+            estoqueContent.classList.add('active');
+        }
+    }
+    
     // Mostrar/esconder seções baseado no tipo
     const proprietarioSection = document.getElementById('proprietarioSection');
+    const estoqueSection = document.getElementById('estoqueSection');
     
     if(tipoItem === 1 || tipoItem === 2) { // Produto/Insumo
         // Não mostrar proprietário
         proprietarioSection?.remove();
+        // Mostrar estoque
+        if(estoqueSection) estoqueSection.style.display = 'block';
+        // Mostrar aba de estoque
+        document.getElementById('tabEstoque').style.display = 'block';
     } else if(tipoItem === 3) { // Serviço
         document.getElementById('tab-imagens')?.remove();
+        document.getElementById('tab-estoque')?.remove();
         document.getElementById('classificacaoSection')?.remove();
         proprietarioSection?.remove();
+        estoqueSection?.remove();
         document.getElementById('tabImagens')?.remove();
+        document.getElementById('tabEstoque')?.remove();
     } else if(tipoItem === 4) { // Equipamento Agrícola
         // Mostrar proprietário
         if(proprietarioSection) proprietarioSection.style.display = 'block';
+        estoqueSection?.remove();
         document.getElementById('tab-imagens')?.remove();
+        document.getElementById('tab-estoque')?.remove();
         document.getElementById('tabImagens')?.remove();
+        document.getElementById('tabEstoque')?.remove();
     } else if(tipoItem === 5 || tipoItem === 6) { // Marca ou Categoria
         document.getElementById('tab-imagens')?.remove();
+        document.getElementById('tab-estoque')?.remove();
         document.getElementById('classificacaoSection')?.remove();
         proprietarioSection?.remove();
+        estoqueSection?.remove();
         document.getElementById('precoRow')?.remove();
         document.getElementById('descricaoDiv')?.remove();
         document.getElementById('tabImagens')?.remove();
+        document.getElementById('tabEstoque')?.remove();
     }
 
     if(tipoItem !== 1 && tipoItem !== 2) { // Não é produto/insumo
         document.getElementById('tab-imagens')?.remove();
+        document.getElementById('tab-estoque')?.remove();
         document.getElementById('tabImagens')?.remove();
+        document.getElementById('tabEstoque')?.remove();
+    }
+    
+    // Controle de estoque na aba Estoque
+    const btnEntrada = document.getElementById('btnEntradaEstoque');
+    const btnSaida = document.getElementById('btnSaidaEstoque');
+    
+    if(btnEntrada) {
+        btnEntrada.addEventListener('click', function() {
+            const qtdInput = document.getElementById('qtdMovimentoTab');
+            const quantidade = parseInt(qtdInput.value);
+            
+            if(!quantidade || quantidade <= 0) {
+                showToast('Atenção', 'Informe uma quantidade válida', 'error');
+                return;
+            }
+            
+            const displayEstoque = document.getElementById('displayEstoqueAtual');
+            const estoqueAtual = parseInt(displayEstoque.textContent);
+            const novoEstoque = estoqueAtual + quantidade;
+            
+            showConfirmModal('entrada', estoqueAtual, quantidade, novoEstoque, function() {
+                atualizarEstoque(quantidade);
+            });
+        });
+    }
+    
+    if(btnSaida) {
+        btnSaida.addEventListener('click', function() {
+            const qtdInput = document.getElementById('qtdMovimentoTab');
+            const quantidade = parseInt(qtdInput.value);
+            
+            if(!quantidade || quantidade <= 0) {
+                showToast('Atenção', 'Informe uma quantidade válida', 'error');
+                return;
+            }
+            
+            const displayEstoque = document.getElementById('displayEstoqueAtual');
+            const estoqueAtual = parseInt(displayEstoque.textContent);
+            
+            if(quantidade > estoqueAtual) {
+                showToast('Erro', `Quantidade insuficiente em estoque. Disponível: ${estoqueAtual}`, 'error');
+                return;
+            }
+            
+            const novoEstoque = estoqueAtual - quantidade;
+            
+            showConfirmModal('saida', estoqueAtual, quantidade, novoEstoque, function() {
+                atualizarEstoque(-quantidade);
+            });
+        });
+    }
+    
+    function closeConfirmModal() {
+        document.getElementById('confirmModal').classList.remove('show');
+    }
+    
+    function showConfirmModal(tipo, estoqueAtual, quantidade, novoEstoque, callback) {
+        const modal = document.getElementById('confirmModal');
+        const icon = document.getElementById('confirmIcon');
+        const title = document.getElementById('confirmTitle');
+        const message = document.getElementById('confirmMessage');
+        
+        // Configurar ícone e título
+        icon.className = 'confirm-icon ' + tipo;
+        if(tipo === 'entrada') {
+            icon.innerHTML = '<i class="bi bi-arrow-up-circle"></i>';
+            title.textContent = 'Confirmar Entrada de Estoque';
+            message.textContent = 'Você está adicionando itens ao estoque';
+        } else {
+            icon.innerHTML = '<i class="bi bi-arrow-down-circle"></i>';
+            title.textContent = 'Confirmar Saída de Estoque';
+            message.textContent = 'Você está retirando itens do estoque';
+        }
+        
+        // Preencher detalhes
+        document.getElementById('confirmEstoqueAtual').textContent = estoqueAtual + ' un';
+        document.getElementById('confirmQuantidade').textContent = (tipo === 'entrada' ? '+' : '-') + quantidade + ' un';
+        document.getElementById('confirmNovoEstoque').textContent = novoEstoque + ' un';
+        
+        // Configurar botão de confirmação
+        const yesBtn = document.getElementById('confirmYesBtn');
+        yesBtn.onclick = function() {
+            callback();
+            closeConfirmModal();
+        };
+        
+        // Mostrar modal
+        modal.classList.add('show');
+    }
+    
+    function atualizarEstoque(quantidade) {
+        const prodId = document.getElementById('prodId').value;
+        
+        fetch('/admin/atualizarEstoque', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({id: prodId, quantidade: quantidade})
+        })
+        .then(function(resposta){
+            return resposta.json();
+        })
+        .then(function(corpo){
+            if(corpo.ok){
+                const displayEstoque = document.getElementById('displayEstoqueAtual');
+                if(displayEstoque) {
+                    displayEstoque.textContent = corpo.estoque + ' un';
+                }
+                
+                const qtdInput = document.getElementById('qtdMovimentoTab');
+                qtdInput.value = '';
+                
+                const tipoTexto = quantidade > 0 ? 'Entrada' : 'Saída';
+                showToast('Sucesso', `${tipoTexto} de ${Math.abs(quantidade)} unidade(s) registrada!`, 'success');
+            } else {
+                showToast('Erro', corpo.msg || 'Erro ao atualizar estoque', 'error');
+            }
+        })
+        .catch(function(erro){
+            showToast('Erro', 'Erro ao atualizar estoque', 'error');
+        });
     }
 });
 </script>
