@@ -17,6 +17,7 @@ const devolucaoController = new DevolucaoController()
 router.get('/login', usuarioController.loginView); // exibe a tela de login
 router.get('/cadastro', usuarioController.cadastroView); // exibe tela de cadastro
 router.get('/perfil', usuarioController.perfilView); // exibe tela de perfil
+router.get('/logout', usuarioController.logout); // logout
 //router.post('/login', pfController.logar); // processa login( func ou cliente)
 router.post('/login', PessoaController.logar); // pessoa engloba PJ Tambem
 router.post('/cadastro', pfController.cadastrar); // processa cadastro de cliente

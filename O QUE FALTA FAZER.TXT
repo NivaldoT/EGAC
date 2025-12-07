@@ -9,7 +9,7 @@ Mostrar endereço quando for fazer a venda (quando cliente estiver comprando)
 
 Histórico de caixas e Mostrar detalhe do movimento quando clicar, mostrando a origem
 
-Arrumar contas a pagar de devolução de venda
+Feito - Arrumar contas a pagar de devolução de venda
 Filtro Pedidos de Compras
 
 Devoluçaõ de compra
