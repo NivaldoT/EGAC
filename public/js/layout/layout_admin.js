@@ -61,13 +61,34 @@ document.addEventListener('DOMContentLoaded',  function(){
                     let tbody = '';
                     if(listaMovimentos.length>0){
                         for(let i=0; i<listaMovimentos.length;i++){
+                            let mov = listaMovimentos[i];
+                            let tipoOperacao = '';
+                            let idOperacao = '-';
+                            
+                            if(mov.operacao == 0) {
+                                tipoOperacao = 'Abertura de Caixa';
+                                idOperacao = '-';
+                            } else if(mov.operacao == 1) {
+                                tipoOperacao = 'Conta a Pagar';
+                                idOperacao = mov.idContaPagar || '-';
+                            } else if(mov.operacao == 2) {
+                                tipoOperacao = 'Conta a Receber';
+                                idOperacao = mov.idContaReceber || '-';
+                            } else if(mov.operacao == 3) {
+                                tipoOperacao = 'Entrada Manual';
+                                idOperacao = '-';
+                            } else if(mov.operacao == 4) {
+                                tipoOperacao = 'Saída Manual';
+                                idOperacao = '-';
+                            }
+                            
                             tbody += `
                                 <tr>
-                                    <td>${listaMovimentos[i].id}</td>
-                                    <td>${listaMovimentos[i].operacao == 1 ? 'Conta a Pagar':'Conta a Receber'}</td>
-                                    <td>${listaMovimentos[i].operacao == 1? listaMovimentos[i].idContaPagar: listaMovimentos[i].idContaReceber}</td>
-                                    <td>R$${(listaMovimentos[i].valor).toFixed(2)}</td>
-                                    <td>${new Date(listaMovimentos[i].data).toLocaleDateString('pt-br')+' / '+new Date(listaMovimentos[i].data).toLocaleTimeString('pt-br')}</td>
+                                    <td>${mov.id}</td>
+                                    <td>${tipoOperacao}</td>
+                                    <td>${idOperacao}</td>
+                                    <td>R$${(mov.valor).toFixed(2)}</td>
+                                    <td>${new Date(mov.data).toLocaleDateString('pt-br')+' / '+new Date(mov.data).toLocaleTimeString('pt-br')}</td>
                                 </tr>` 
                         }
                     }

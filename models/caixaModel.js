@@ -76,18 +76,33 @@ class CaixaModel{
         return result;
     }
 
-    // async buscarCaixaAberto(idFunc) {
-    //     let sql = `SELECT * FROM tb_Caixa WHERE caixa_status = 1 AND caixa_idFunc = ?`;
-    //     let banco = new Database();
-    //     let rows = await banco.ExecutaComando(sql, [idFunc]);
-    //     return rows.length > 0 ? rows[0] : null;
-    // }
+    async buscarCaixaAberto(idFunc = null) {
+        let sql = idFunc 
+            ? `SELECT * FROM tb_Caixa WHERE caixa_status = 1 AND caixa_idFunc = ? ORDER BY caixa_id DESC LIMIT 1`
+            : `SELECT * FROM tb_Caixa WHERE caixa_status = 1 ORDER BY caixa_id DESC LIMIT 1`;
+        let banco = new Database();
+        let rows = idFunc 
+            ? await banco.ExecutaComando(sql, [idFunc])
+            : await banco.ExecutaComando(sql, []);
+        
+        if (rows.length > 0) {
+            return {
+                id: rows[0].caixa_id,
+                idFuncionario: rows[0].caixa_idFunc,
+                valor: rows[0].caixa_valor,
+                dataAbertura: rows[0].caixa_dataAbertura,
+                dataFechamento: rows[0].caixa_dataFechamento,
+                status: rows[0].caixa_status
+            };
+        }
+        return null;
+    }
 
-    // async listarMovimentos(idCaixa) {
-    //     let sql = `SELECT * FROM tb_Movimento WHERE movi_idCaixa = ? ORDER BY movi_data`;
-    //     let banco = new Database();
-    //     return await banco.ExecutaComando(sql, [idCaixa]);
-    // }
+    async listarMovimentos(idCaixa) {
+        let sql = `SELECT * FROM tb_Movimento WHERE movi_idCaixa = ? ORDER BY movi_data`;
+        let banco = new Database();
+        return await banco.ExecutaComando(sql, [idCaixa]);
+    }
     toJSON(){
         return{
             id : this.#id,
