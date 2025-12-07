@@ -4,6 +4,9 @@ const CompraModel = require("../models/compraModel");
 const ItensCompraModel = require("../models/itensCompraModel");
 const produtoModel = require("../models/produtoModel");
 const ContaPagarModel = require("../models/contaPagarModel");
+const ItemDevoCompraModel = require("../models/itemDevoCompraModel");
+const DevolucaoCompraModel = require("../models/devolucaoCompraModel");
+const ContaReceberModel = require("../models/contaReceberModel");
 
 class CompraController{
 
@@ -67,5 +70,30 @@ class CompraController{
         res.send({ok,msg});
     }
 
+    async detalhesView(req,res){
+        let idCompra = req.params.idCompra;
+        let compraModel = new CompraModel(idCompra);
+        compraModel = await compraModel.buscarPorId();
+
+        let itensCompraModel = new ItensCompraModel(null,idCompra);
+        let listaItens = await itensCompraModel.listarPorCompraId();
+
+        let devolucaoCompraModel = new DevolucaoCompraModel(null, idCompra);
+        devolucaoCompraModel = await devolucaoCompraModel.buscarPorIdCompra();
+
+        if(devolucaoCompraModel){     //verifica se existe devolução para a compra
+            var listaItensDevolucao = [];
+            listaItensDevolucao = new ItemDevoCompraModel(null,devolucaoCompraModel.id);
+            listaItensDevolucao = await listaItensDevolucao.listarPorDevolucaoId();
+        }
+
+        res.render('admin/compras/detalhes.ejs',{layout: 'layout_admin', compraModel, listaItens, listaItensDevolucao});
+    }
+    async buscarItensCompraPorId(req,res){
+        let idCompra = req.params.idCompra;
+        let itensCompraModel = new ItensCompraModel(null,idCompra);
+        let listaItens = await itensCompraModel.listarPorCompraId();
+        res.send(listaItens);
+    }
 }
 module.exports = CompraController;
