@@ -22,26 +22,37 @@
                 <label for="tipoItem">Proprietário:</label>
             </div>
         </div>
-        <div class="form-floating mb-3" id="marca">
-            <select name="marca" id="marcaval" class="form-control">
-            <option value="0" selected>...</option>
-            <% for(let i=0; i<listaMarcas.length ; i++) {%>
-                <option value="<%=listaMarcas[i].id%>"><%=listaMarcas[i].nome%></option>
-                <%}%>
-            </select>
-            <label for="tipoItem">Marca:</label>
-        </div>
-        <div class="form-floating mb-3" id="categoria">
-            <select name="categoria" id="categoriaval" class="form-control">
+        <div class="row align-items-center">
+            <div class="form-floating mb-3 col-md-11" id="marca">
+                <select name="marca" id="marcaval" class="form-control">
                 <option value="0" selected>...</option>
-                <% for(let i=0; i<listaCategorias.length ; i++) {%>
-                    <option value="<%=listaCategorias[i].id%>"><%=listaCategorias[i].nome%></option>
+                <% for(let i=0; i<listaMarcas.length ; i++) {%>
+                    <option value="<%=listaMarcas[i].id%>"><%=listaMarcas[i].nome%></option>
+                    <%}%>
+                </select>
+                <label for="tipoItem">Marca:</label>
+            </div>
+            <div class="col-md-1 align-self-center mb-3">
+                <a class="btn btn-success btn-lg" href="/admin/cadastrarMarca"><i class="bi bi-plus-lg"></i></a>
+            </div>
+        </div>
+        
+        <div class="row align-items-center">
+            <div class="form-floating mb-3 col-md-11" id="categoria">
+                <select name="categoria" id="categoriaval" class="form-control">
+                    <option value="0" selected>...</option>
+                    <% for(let i=0; i<listaCategorias.length ; i++) {%>
+                        <option value="<%=listaCategorias[i].id%>"><%=listaCategorias[i].nome%></option>
                     <%}%>
                 </select>
                 <label for="categoria">Categoria:</label>
+            </div>
+            <div class="col-md-1 align-self-center mb-3">
+                <a class="btn btn-success btn-lg" href="/admin/cadastrarCategoria"><i class="bi bi-plus-lg"></i></a>
+            </div>
         </div>
         
-        <button class="btn btn-primary" id="cadastrar">Cadastrar Equipamento Agricola</button>
+        <button class="btn btn-success" id="cadastrar">Cadastrar Equipamento Agricola</button>
         <a href="/admin/listagem/4" class="btn btn-secondary">Voltar</a>
     </div>
 </div>

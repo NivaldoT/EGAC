@@ -25,27 +25,39 @@ class adminController {
     async listarItemView(req,res){
         let tipoListar = req.params.tipo;
 
-        let listaMarcas = [];
-        let marca = new marcaModel();
-        listaMarcas = await marca.listar();
-        
-        let listaCategorias = [];
-        let categoria = new categoriaModel();
-        listaCategorias = await categoria.listar();
-
-        let listaProdutos = [];
+        let listaProdutos = []; //1 = produto, 2 = insumo
         let listaInsumos = [];
-        let produto = new produtoModel();
-        listaProdutos = await produto.listarProd();
-        listaInsumos = await produto.listarInsumo();
+        if(tipoListar == 1 || tipoListar == 2){
+            let produto = new produtoModel();
+            listaProdutos = await produto.listarProd();
+            listaInsumos = await produto.listarInsumo();
+        }
 
-        let listaEqAg = [];
-        let eqag = new equipAgricolaModel();
-        listaEqAg = await eqag.listar();
+        let listaServicos = []; //3 = serviço
+        if(tipoListar == 3){
+            let Servicos = new ServicoModel();
+            listaServicos = await Servicos.listar();
+        }
+
+        let listaEqAg = []; //4 = equipamento agrícola
+        if(tipoListar == 4){
+            let eqag = new equipAgricolaModel();
+            listaEqAg = await eqag.listar();
+        }
+
+        let listaMarcas = [];   //5 = marca
+        if(tipoListar == 5){
+            let marca = new marcaModel();
+            listaMarcas = await marca.listar();
+        }
+
+        let listaCategorias = []; //6 = categoria
+        if(tipoListar == 6){
+            let categoria = new categoriaModel();
+            listaCategorias = await categoria.listar();
+        }
+
         
-        let listaServicos = [];
-        let Servicos = new ServicoModel();
-        listaServicos = await Servicos.listar();
 
     res.render('admin/listagem',{listaMarcas: listaMarcas, listaProdutos: listaProdutos,listaInsumos: listaInsumos, listaEqAg: listaEqAg, listaCategorias: listaCategorias, listaServicos: listaServicos,tipoListar: tipoListar, layout: 'layout_admin'});
     }
