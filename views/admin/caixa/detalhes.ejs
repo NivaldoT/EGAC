@@ -84,6 +84,7 @@
                                     <th>#</th>
                                     <th>Data/Hora</th>
                                     <th>Tipo</th>
+                                    <th>Descrição</th>
                                     <th>Valor</th>
                                 </tr>
                             </thead>
@@ -102,6 +103,7 @@
                                                     <span class="badge bg-success">Entrada</span>
                                                 <% } %>
                                             </td>
+                                            <td><%= mov.origem || '-' %></td>
                                             <td>
                                                 <% if (mov.operacao == 1 || mov.operacao == 4) { %>
                                                     <span class="text-danger">- R$ <%= parseFloat(mov.valor).toFixed(2).replace('.', ',') %></span>
@@ -113,7 +115,7 @@
                                     <% }); %>
                                 <% } else { %>
                                     <tr>
-                                        <td colspan="4" class="text-center text-muted py-4">
+                                        <td colspan="5" class="text-center text-muted py-4">
                                             <i class="fas fa-inbox fa-3x d-block mb-2"></i>
                                             Nenhum movimento registrado
                                         </td>
@@ -147,8 +149,13 @@
                 <form id="formMovimento">
                     <input type="hidden" id="tipoMovimento" name="tipo">
                     <div class="mb-3">
+                        <label class="form-label">Descrição</label>
+                        <input type="text" class="form-control" id="descricao" name="descricao" placeholder="Ex: Venda de produto, Pagamento de fornecedor...">
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label">Valor</label>
-                        <input type="number" step="0.01" class="form-control" id="valor" name="valor" required>
+                        <input type="number" step="0.01" min="0.01" class="form-control" id="valor" name="valor" required onkeydown="return event.keyCode !== 189 && event.keyCode !== 109">
+                        <small class="text-muted">Informe um valor positivo maior que zero</small>
                     </div>
                 </form>
             </div>
@@ -178,11 +185,21 @@ function abrirModalMovimento(tipo) {
 
 async function salvarMovimento() {
     const tipo = document.getElementById('tipoMovimento').value;
-    const valor = document.getElementById('valor').value;
+    const descricao = document.getElementById('descricao').value;
+    const valor = parseFloat(document.getElementById('valor').value);
 
-    if (!valor) {
-        Swal.fire('Atenção', 'Preencha o valor', 'warning');
+    if (!valor || valor <= 0) {
+        Swal.fire('Atenção', 'Informe um valor válido maior que zero', 'warning');
         return;
+    }
+
+    // Se for saída, verificar se o caixa tem saldo suficiente
+    if (tipo === 'saida') {
+        const saldoAtual = <%= caixa.valor %>;
+        if (valor > saldoAtual) {
+            Swal.fire('Atenção', `Saldo insuficiente no caixa. Saldo atual: R$ ${saldoAtual.toFixed(2)}`, 'warning');
+            return;
+        }
     }
 
     try {
@@ -193,7 +210,8 @@ async function salvarMovimento() {
             },
             body: JSON.stringify({
                 tipo: tipo,
-                valor: parseFloat(valor),
+                descricao: descricao || null,
+                valor: valor,
                 idCaixa: <%= caixa.id %>
             })
         });

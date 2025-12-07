@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded',  function(){
                 caixa.textContent = 'Caixa: Fechado';
                 caixaModal.innerHTML = `<h5>Abrir Caixa</h5>
                                         <div class="form-floating">
-                                            <input type="number" name="valorInicialCaixa" class="form-control" placeholder=" " required id="valorInicialCaixa">
+                                            <input type="number" step="0.01" min="0" name="valorInicialCaixa" class="form-control" placeholder=" " required id="valorInicialCaixa" onkeydown="return event.keyCode !== 189 && event.keyCode !== 109">
                                             <label>Valor Inicial</label>
                                         </div>`;
                 let inputCaixaValor = document.getElementById('valorInicialCaixa');
@@ -131,55 +131,122 @@ document.addEventListener('DOMContentLoaded',  function(){
 
     function abrirCaixa(){
         let inputValor = document.getElementById('valorInicialCaixa');
-        let valor = inputValor.value;
-        if(Number(valor) && valor>0){
-            obj = {valor: valor}
-            fetch('/admin/caixa/abrir',{
-                method:'POST',
-                headers: {
-                    'Content-type':'application/json'                
-                },
-                body: JSON.stringify(obj)
-            })
-            .then(function(resposta){
-                return resposta.json()
-            })
-            .then(function (corpo){
-                alert(corpo.msg)
-                getCaixa();
-            })
+        let valor = parseFloat(inputValor.value);
+        
+        if(isNaN(valor) || valor < 0){
+            Swal.fire({
+                title: 'Atenção!',
+                text: 'Por favor, informe um valor válido (não pode ser negativo).',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Ok, entendi'
+            });
+            return;
         }
-        else{
-            alert('Valor Inválido!!');
-        }
+        
+        obj = {valor: valor}
+        fetch('/admin/caixa/abrir',{
+            method:'POST',
+            headers: {
+                'Content-type':'application/json'                
+            },
+            body: JSON.stringify(obj)
+        })
+        .then(function(resposta){
+            return resposta.json()
+        })
+        .then(function (corpo){
+            if(corpo.ok) {
+                Swal.fire({
+                    title: 'Caixa Aberto!',
+                    html: `
+                        <div class="text-center">
+                            <i class="bi bi-cash-coin" style="font-size: 3rem; color: #28a745;"></i>
+                            <p class="mt-3 mb-2">Caixa aberto com sucesso!</p>
+                            <p class="text-muted">Valor inicial: <strong>R$ ${parseFloat(valor).toFixed(2).replace('.', ',')}</strong></p>
+                        </div>
+                    `,
+                    confirmButtonColor: '#28a745',
+                    confirmButtonText: 'Começar a trabalhar'
+                }).then(() => {
+                    getCaixa();
+                });
+            } else {
+                Swal.fire({
+                    title: 'Erro!',
+                    text: corpo.msg,
+                    confirmButtonColor: '#d33'
+                });
+            }
+        })
     }
 
     function fecharCaixa(){
-        if(confirm('Confirma o fechamento do caixa?')){
-
-            fetch('/admin/caixa/getStatus')     //VERIFICA SE O FUNCIONARIO TEM UM CAIXA ABERTO E TRAZ ESTE CAIXA COMO OBJ
-            .then(function(resposta){
-                return resposta.json()
-            })
-            .then(function(corpo){
-                let caixaModel = corpo.caixa;
-                obj = {idCaixa: caixaModel.id}
-                fetch('/admin/caixa/fechar',{
-                    method:'POST',
-                    headers: {
-                        'Content-type':'application/json'                
-                    },
-                    body: JSON.stringify(obj)
-                })
-                .then(function(resposta){
-                    return resposta.json()
-                })
-                .then(function (corpo){
-                    alert(corpo.msg)
-                    getCaixa();
-                })
-            })
-        
-        }
+        fetch('/admin/caixa/getStatus')
+        .then(function(resposta){
+            return resposta.json()
+        })
+        .then(function(corpo){
+            let caixaModel = corpo.caixa;
+            let valorFinal = parseFloat(caixaModel.valor);
+            
+            Swal.fire({
+                title: 'Fechar Caixa?',
+                html: `
+                    <div class="text-center">
+                        <i class="bi bi-cash-stack" style="font-size: 3rem; color: #dc3545;"></i>
+                        <p class="mt-3 mb-2">Tem certeza que deseja fechar o caixa?</p>
+                        <div class="alert alert-info mt-3">
+                            <strong>Saldo Final:</strong> R$ ${valorFinal.toFixed(2).replace('.', ',')}
+                        </div>
+                        <p class="text-muted small">Após o fechamento, não será possível registrar novos movimentos.</p>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Sim, fechar caixa',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    obj = {idCaixa: caixaModel.id}
+                    fetch('/admin/caixa/fechar',{
+                        method:'POST',
+                        headers: {
+                            'Content-type':'application/json'                
+                        },
+                        body: JSON.stringify(obj)
+                    })
+                    .then(function(resposta){
+                        return resposta.json()
+                    })
+                    .then(function (corpo){
+                        if(corpo.ok) {
+                            Swal.fire({
+                                title: 'Caixa Fechado!',
+                                html: `
+                                    <div class="text-center">
+                                        <i class="bi bi-check-circle" style="font-size: 3rem; color: #28a745;"></i>
+                                        <p class="mt-3 mb-2">Caixa fechado com sucesso!</p>
+                                        <div class="alert alert-success mt-3">
+                                            <strong>Saldo Final:</strong> R$ ${valorFinal.toFixed(2).replace('.', ',')}
+                                        </div>
+                                    </div>
+                                `,
+                                confirmButtonColor: '#28a745',
+                                confirmButtonText: 'Ok'
+                            }).then(() => {
+                                getCaixa();
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Erro!',
+                                text: corpo.msg,
+                                confirmButtonColor: '#d33'
+                            });
+                        }
+                    })
+                }
+            });
+        })
     }
 })

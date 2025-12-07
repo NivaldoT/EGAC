@@ -162,7 +162,13 @@ class CaixaController{
     async abrir(req,res){
         let ok;
         let msg;
-        let valor = req.body.valor;
+        let valor = parseFloat(req.body.valor);
+        
+        // Validar valor
+        if (isNaN(valor) || valor < 0) {
+            return res.send({ok: false, msg: 'Valor inválido! O valor não pode ser negativo.'});
+        }
+        
         let func = new PFisicaModel(null,null,null,req.cookies.UsuarioEmail,req.cookies.UsuarioSenha);
         func = await func.logarEmailSenha();
 
@@ -209,15 +215,18 @@ class CaixaController{
 
     async registrarMovimento(req, res) {
         try {
-            const { tipo, valor, idCaixa } = req.body;
+            const { tipo, descricao, valor, idCaixa } = req.body;
 
             if (!tipo || !valor) {
                 return res.json({ ok: false, msg: 'Tipo e valor são obrigatórios' });
             }
 
+            if (valor <= 0) {
+                return res.json({ ok: false, msg: 'Valor deve ser maior que zero' });
+            }
+
             // Se não veio idCaixa, buscar caixa aberto
             let caixaId = idCaixa;
-            let valorCaixa;
 
             if (!caixaId) {
                 let caixaModel = new CaixaModel();
@@ -227,35 +236,32 @@ class CaixaController{
                     return res.json({ ok: false, msg: 'Nenhum caixa aberto no momento' });
                 }
                 caixaId = caixaAberto.id;
-                valorCaixa = caixaAberto.valor;
-            } else {
-                // Buscar valor atual do caixa
-                let banco = new Database();
-                let result = await banco.ExecutaComando('SELECT caixa_valor FROM tb_Caixa WHERE caixa_id = ?', [caixaId]);
-                valorCaixa = result[0].caixa_valor;
             }
 
-            // Registrar movimento (operacao: 3=entrada manual, 4=saída manual)
-            let operacao = tipo === 'entrada' ? 3 : 4;
-            
+            // Se for saída, verificar saldo
+            if (tipo === 'saida') {
+                let caixaModel = new CaixaModel(caixaId);
+                let caixaInfo = await caixaModel.obter();
+                
+                if (!caixaInfo || parseFloat(caixaInfo.valor) < parseFloat(valor)) {
+                    return res.json({ ok: false, msg: 'Saldo insuficiente no caixa' });
+                }
+            }
+
+            // Determinar operação: 3 = entrada manual, 4 = saída manual
+            const operacao = tipo === 'entrada' ? 3 : 4;
+
+            // Registrar movimento
             let banco = new Database();
-            let sql = `INSERT INTO tb_Movimento (movi_operacao, movi_valor, movi_data, movi_idCaixa) 
-                      VALUES (?, ?, NOW(), ?)`;
-            await banco.ExecutaComandoNonQuery(sql, [operacao, valor, caixaId]);
-
-            // Atualizar valor do caixa
-            let novoValor = tipo === 'entrada' 
-                ? parseFloat(valorCaixa) + parseFloat(valor)
-                : parseFloat(valorCaixa) - parseFloat(valor);
-
-            let sqlUpdate = `UPDATE tb_Caixa SET caixa_valor = ? WHERE caixa_id = ?`;
-            await banco.ExecutaComandoNonQuery(sqlUpdate, [novoValor, caixaId]);
+            let sql = `INSERT INTO tb_Movimento (movi_operacao, movi_valor, movi_data, movi_idCaixa, movi_descricao) 
+                      VALUES (?, ?, NOW(), ?, ?)`;
+            await banco.ExecutaComandoNonQuery(sql, [operacao, valor, caixaId, descricao || null]);
 
             return res.json({ ok: true, msg: 'Movimento registrado com sucesso!' });
 
         } catch (error) {
             console.error('Erro ao registrar movimento:', error);
-            return res.json({ ok: false, msg: 'Erro ao registrar movimento: ' + error.message });
+            return res.status(500).json({ ok: false, msg: 'Erro ao registrar movimento' });
         }
     }
 }

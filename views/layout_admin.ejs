@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/css/admin.css">
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/js/layout/layout_admin.js" defer></script>
   </head>
   <body class="admin-layout d-flex flex-column">
@@ -105,12 +106,11 @@
                   <div class="row p-3">
                     <div class="col-md-4">
                       <h6 class="dropdown-header">Caixa</h6>
-                      <a class="dropdown-item" href="/admin/controleCaixa">Controle de Caixa</a>
+                      <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">Controle de Caixa</a>
                       <a class="dropdown-item" href="/admin/caixa/historico">Histórico de Caixas</a>
                     </div>
                     <div class="col-md-4">
                       <h6 class="dropdown-header">Gestão Financeira</h6>
-                      <a class="dropdown-item" href="/admin/financeiro/movimentacoes">Movimentações Financeiras</a>
                       <a class="dropdown-item" href="/admin/pagamento">Efetuar Pagamento</a>
                       <a class="dropdown-item" href="/admin/contas/1">Contas a Pagar</a>
                       <a class="dropdown-item" href="/admin/contas/2">Contas a Receber</a>
@@ -121,7 +121,7 @@
             </li>
           </ul>
           <button class="btn btn-outline-success" id="caixaStatus" data-bs-toggle="modal" data-bs-target="#exampleModal">Caixa: Fechado </button>
-          <button class="btn btn-outline-success" id="caixaValor" data-bs-toggle="modal" data-bs-target="#exampleModal">Valor: R$00,00</button>
+          <button class="btn btn-outline-success" id="caixaValor" onclick="window.location.href='/admin/caixa/historico'">Valor: R$00,00</button>
 
           <ul class="navbar-nav ms-auto">
             <li class="nav-item dropdown">
@@ -160,7 +160,7 @@
         <div class="container">
           <div class="mb-3">
             <span id="nomeCaixaSpan"></span>
-            <a href="/admin/caixa/resumo" class="btn btn-secondary float-end">Histórico de Caixa</a><br>
+            <a href="/admin/caixa/historico" class="btn btn-secondary float-end">Histórico de Caixa</a><br>
             <span id="dataCaixaSpan"></span>
           </div>
           <div id="statusCaixa"></div>
