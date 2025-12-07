@@ -1,0 +1,214 @@
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Detalhes do Caixa #<%= caixa.id %></h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="/admin">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/admin/caixa/historico">Histórico de Caixas</a></li>
+                        <li class="breadcrumb-item active">Detalhes</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            
+            <!-- Informações do Caixa -->
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>Funcionário</h5>
+                            <p class="mb-0"><strong><%= caixa.nomeFuncionario %></strong></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>Abertura</h5>
+                            <p class="mb-0"><%= new Date(caixa.dataAbertura).toLocaleString('pt-BR') %></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>Fechamento</h5>
+                            <% if (caixa.dataFechamento) { %>
+                                <p class="mb-0"><%= new Date(caixa.dataFechamento).toLocaleString('pt-BR') %></p>
+                            <% } else { %>
+                                <span class="badge bg-success">Aberto</span>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body">
+                            <h5>Saldo Final</h5>
+                            <p class="mb-0"><strong>R$ <%= parseFloat(caixa.valor).toFixed(2).replace('.', ',') %></strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Movimentos -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3 class="card-title mb-0">Movimentos do Caixa</h3>
+                        <% if (!caixa.dataFechamento) { %>
+                        <div>
+                            <button class="btn btn-success btn-sm" onclick="abrirModalMovimento('entrada')">
+                                <i class="bi bi-plus-circle"></i> Registrar Entrada
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="abrirModalMovimento('saida')">
+                                <i class="bi bi-dash-circle"></i> Registrar Saída
+                            </button>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Data/Hora</th>
+                                    <th>Tipo</th>
+                                    <th>Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (movimentos && movimentos.length > 0) { %>
+                                    <% movimentos.forEach(function(mov) { %>
+                                        <tr>
+                                            <td><%= mov.id %></td>
+                                            <td><%= new Date(mov.data).toLocaleString('pt-BR') %></td>
+                                            <td>
+                                                <% if (mov.operacao == 0) { %>
+                                                    <span class="badge bg-info">Abertura</span>
+                                                <% } else if (mov.operacao == 1 || mov.operacao == 4) { %>
+                                                    <span class="badge bg-danger">Saída</span>
+                                                <% } else { %>
+                                                    <span class="badge bg-success">Entrada</span>
+                                                <% } %>
+                                            </td>
+                                            <td>
+                                                <% if (mov.operacao == 1 || mov.operacao == 4) { %>
+                                                    <span class="text-danger">- R$ <%= parseFloat(mov.valor).toFixed(2).replace('.', ',') %></span>
+                                                <% } else { %>
+                                                    <span class="text-success">+ R$ <%= parseFloat(mov.valor).toFixed(2).replace('.', ',') %></span>
+                                                <% } %>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted py-4">
+                                            <i class="fas fa-inbox fa-3x d-block mb-2"></i>
+                                            Nenhum movimento registrado
+                                        </td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <a href="/admin/caixa/historico" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Voltar
+                </a>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<!-- Modal para Registrar Movimento -->
+<div class="modal fade" id="modalMovimento" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitulo">Registrar Movimento</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formMovimento">
+                    <input type="hidden" id="tipoMovimento" name="tipo">
+                    <div class="mb-3">
+                        <label class="form-label">Valor</label>
+                        <input type="number" step="0.01" class="form-control" id="valor" name="valor" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="salvarMovimento()">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+let modalMovimento;
+
+document.addEventListener('DOMContentLoaded', function() {
+    modalMovimento = new bootstrap.Modal(document.getElementById('modalMovimento'));
+});
+
+function abrirModalMovimento(tipo) {
+    document.getElementById('tipoMovimento').value = tipo;
+    document.getElementById('modalTitulo').textContent = tipo === 'entrada' ? 'Registrar Entrada' : 'Registrar Saída';
+    document.getElementById('formMovimento').reset();
+    document.getElementById('tipoMovimento').value = tipo;
+    modalMovimento.show();
+}
+
+async function salvarMovimento() {
+    const tipo = document.getElementById('tipoMovimento').value;
+    const valor = document.getElementById('valor').value;
+
+    if (!valor) {
+        Swal.fire('Atenção', 'Preencha o valor', 'warning');
+        return;
+    }
+
+    try {
+        const response = await fetch('/admin/caixa/movimento', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                tipo: tipo,
+                valor: parseFloat(valor),
+                idCaixa: <%= caixa.id %>
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.ok) {
+            await Swal.fire('Sucesso!', 'Movimento registrado com sucesso', 'success');
+            location.reload();
+        } else {
+            Swal.fire('Erro!', data.msg || 'Erro ao registrar movimento', 'error');
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        Swal.fire('Erro!', 'Erro ao processar solicitação', 'error');
+    }
+}
+</script>

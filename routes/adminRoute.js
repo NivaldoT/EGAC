@@ -17,6 +17,7 @@ const ContasController = require("../controllers/contasController");
 const CaixaController = require("../controllers/caixaController");
 const DevolucaoController = require("../controllers/devolucaoController");
 const MovimentoController = require('../controllers/movimentoController');
+const FinanceiroController = require("../controllers/financeiroController");
 const router = express.Router();
 
 // Configuração do Multer para upload de imagens
@@ -58,6 +59,8 @@ const caixaController = new CaixaController();
 const movimentoController = new MovimentoController();
 
 const devolucaoController = new DevolucaoController();
+
+const financeiroController = new FinanceiroController();
 
 router.get("/", adminController.homeView);
 
@@ -154,12 +157,14 @@ router.get('/movimentos/buscarDeCaixa/:idCaixa', movimentoController.buscarDeCai
 
                 // CAIXA
 router.get('/caixa', caixaController.caixaView);
+router.get('/caixa/historico', caixaController.historicoView);
+router.get('/caixa/detalhes/:id', caixaController.detalhesView);
 router.get('/caixa/getStatus', caixaController.getStatus);
 // router.get('/caixa/resumo', caixaController.resumoCaixa);
 
 router.post('/caixa/abrir', caixaController.abrir);
 router.post('/caixa/fechar', caixaController.fechar);
-router.post('/caixa/movimento', movimentoController.registrarMovimento);
+router.post('/caixa/movimento', caixaController.registrarMovimento);
 
                 // DEVOLUÇÕES
 router.get('/devolucoes', devolucaoController.listarDevolucoes);
@@ -171,6 +176,12 @@ router.post('/devolucoes/:id/recusar', devolucaoController.recusarDevolucao);
 router.get('/dashboard/resumo', adminController.dashboardResumo);
 router.get('/dashboard/vendas', adminController.dashboardVendas);
 router.get('/dashboard/alertas-estoque', adminController.dashboardAlertasEstoque);
+
+                // FINANCEIRO
+router.get('/financeiro/movimentacoes', financeiroController.listarMovimentacoes);
+router.post('/financeiro/incluir', financeiroController.incluirLancamento);
+router.get('/financeiro/movimento/:id', financeiroController.detalharLancamento);
+router.get('/financeiro/pessoas', financeiroController.listarPessoas);
 
 // router.get('/alterarItem/:tipo/:id', adminController.alterarItemView);
 // router.get('/alterarCliente/:tipo/:id', adminController.alterarClienteView);

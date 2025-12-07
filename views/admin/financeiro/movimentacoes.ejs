@@ -1,0 +1,421 @@
+<style>
+.financeiro-container {
+    padding: 20px;
+}
+
+.info-cards {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.info-card {
+    flex: 1;
+    padding: 20px;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.info-card h6 {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.info-card .valor {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.info-card.entradas .valor {
+    color: #28a745;
+}
+
+.info-card.saidas .valor {
+    color: #dc3545;
+}
+
+.info-card.saldo .valor {
+    color: #007bff;
+}
+
+.nav-tabs {
+    border-bottom: 2px solid #dee2e6;
+    margin-bottom: 20px;
+}
+
+.nav-tabs .nav-link {
+    color: #666;
+    border: none;
+    padding: 12px 24px;
+}
+
+.nav-tabs .nav-link.active {
+    color: #007bff;
+    border-bottom: 3px solid #007bff;
+    font-weight: 600;
+}
+
+.sidebar-panel {
+    position: fixed;
+    right: -400px;
+    top: 0;
+    width: 400px;
+    height: 100vh;
+    background: white;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+    transition: right 0.3s ease;
+    z-index: 1050;
+    overflow-y: auto;
+}
+
+.sidebar-panel.active {
+    right: 0;
+}
+
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    z-index: 1040;
+}
+
+.sidebar-overlay.active {
+    display: block;
+}
+
+.sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid #dee2e6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sidebar-body {
+    padding: 20px;
+}
+
+.movimento-item {
+    padding: 15px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.movimento-item:hover {
+    background: #f8f9fa;
+}
+
+.movimento-item .tipo-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.movimento-item .tipo-badge.entrada {
+    background: #d4edda;
+    color: #155724;
+}
+
+.movimento-item .tipo-badge.saida {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.movimento-item .descricao {
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.movimento-item .valor {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.movimento-item .valor.entrada {
+    color: #28a745;
+}
+
+.movimento-item .valor.saida {
+    color: #dc3545;
+}
+
+.movimento-item .data {
+    font-size: 12px;
+    color: #666;
+}
+</style>
+
+<div class="content-wrapper financeiro-container">
+    
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Caixas e Bancos</h2>
+        <button class="btn btn-success" onclick="abrirPainelLancamento()">
+            + Incluir lançamento
+        </button>
+    </div>
+
+    <!-- Cards de Informação -->
+    <div class="info-cards">
+        <div class="info-card entradas">
+            <h6>Entradas</h6>
+            <div class="valor">R$ <%= totalEntradas.toFixed(2).replace('.', ',') %></div>
+        </div>
+        <div class="info-card saidas">
+            <h6>Saídas</h6>
+            <div class="valor">R$ <%= totalSaidas.toFixed(2).replace('.', ',') %></div>
+        </div>
+        <div class="info-card saldo">
+            <h6>Saldo atual da conta</h6>
+            <div class="valor">R$ <%= saldoAtual.toFixed(2).replace('.', ',') %></div>
+        </div>
+    </div>
+
+    <!-- Abas -->
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link <%= filtroAtivo === 'todas' ? 'active' : '' %>" href="/admin/financeiro/movimentacoes">
+                Movimentações
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link <%= filtroAtivo === 'entrada' ? 'active' : '' %>" href="/admin/financeiro/movimentacoes?tipo=entrada">
+                Entradas
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link <%= filtroAtivo === 'saida' ? 'active' : '' %>" href="/admin/financeiro/movimentacoes?tipo=saida">
+                Saídas
+            </a>
+        </li>
+    </ul>
+
+    <!-- Lista de Movimentações -->
+    <div class="movimentacoes-list">
+        <% if (movimentacoes && movimentacoes.length > 0) { %>
+            <% movimentacoes.forEach(function(mov) { %>
+                <div class="movimento-item" onclick="verDetalhes('<%= mov.id %>')">
+                    <span class="tipo-badge <%= mov.tipo %>">
+                        <%= mov.tipo === 'entrada' ? 'Entrada' : 'Saída' %>
+                    </span>
+                    <div class="descricao"><%= mov.descricao %></div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="valor <%= mov.tipo %>">
+                                <%= mov.tipo === 'entrada' ? '+' : '-' %> R$ <%= mov.valor.toFixed(2).replace('.', ',') %>
+                            </div>
+                        </div>
+                        <div class="col-6 text-end">
+                            <div class="data">
+                                <%= new Date(mov.data).toLocaleDateString('pt-BR') %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        <% } else { %>
+            <div class="text-center py-5">
+                <i class="bi bi-inbox" style="font-size: 48px; color: #ccc;"></i>
+                <p class="text-muted mt-3">Nenhum resultado encontrado.</p>
+            </div>
+        <% } %>
+    </div>
+
+</div>
+
+<!-- Overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="fecharPainel()"></div>
+
+<!-- Painel Lateral - Incluir Lançamento -->
+<div class="sidebar-panel" id="painelLancamento">
+    <div class="sidebar-header">
+        <h5>Incluir lançamento</h5>
+        <button type="button" class="btn-close" onclick="fecharPainel()"></button>
+    </div>
+    <div class="sidebar-body">
+        <form id="formLancamento">
+            <div class="mb-3">
+                <label class="form-label">Tipo *</label>
+                <select class="form-select" name="tipo" required>
+                    <option value="">Selecione...</option>
+                    <option value="entrada">Entrada</option>
+                    <option value="saida">Saída</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Descrição *</label>
+                <textarea class="form-control" name="descricao" rows="3" required></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Valor *</label>
+                <input type="number" class="form-control" name="valor" step="0.01" min="0.01" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Cliente/Fornecedor (opcional)</label>
+                <select class="form-select" name="idPessoa" id="selectPessoa">
+                    <option value="">Selecione...</option>
+                </select>
+            </div>
+
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-success">Salvar</button>
+                <button type="button" class="btn btn-secondary" onclick="fecharPainel()">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Painel Lateral - Detalhes -->
+<div class="sidebar-panel" id="painelDetalhes">
+    <div class="sidebar-header">
+        <h5>Detalhes do Movimento</h5>
+        <button type="button" class="btn-close" onclick="fecharPainel()"></button>
+    </div>
+    <div class="sidebar-body" id="detalhesContent">
+        <p class="text-center"><i class="spinner-border"></i></p>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+// Abrir painel de lançamento
+function abrirPainelLancamento() {
+    document.getElementById('sidebarOverlay').classList.add('active');
+    document.getElementById('painelLancamento').classList.add('active');
+    carregarPessoas();
+}
+
+// Fechar painéis
+function fecharPainel() {
+    document.getElementById('sidebarOverlay').classList.remove('active');
+    document.getElementById('painelLancamento').classList.remove('active');
+    document.getElementById('painelDetalhes').classList.remove('active');
+}
+
+// Carregar lista de pessoas
+async function carregarPessoas() {
+    try {
+        const response = await fetch('/admin/financeiro/pessoas');
+        const data = await response.json();
+        
+        if (data.ok) {
+            const select = document.getElementById('selectPessoa');
+            select.innerHTML = '<option value="">Selecione...</option>';
+            
+            data.pessoas.forEach(pessoa => {
+                const option = document.createElement('option');
+                option.value = pessoa.id;
+                option.textContent = `${pessoa.nome} (${pessoa.tipo})`;
+                select.appendChild(option);
+            });
+        }
+    } catch (error) {
+        console.error('Erro ao carregar pessoas:', error);
+    }
+}
+
+// Submeter formulário de lançamento
+document.getElementById('formLancamento').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const dados = {
+        tipo: formData.get('tipo'),
+        descricao: formData.get('descricao'),
+        valor: formData.get('valor'),
+        idPessoa: formData.get('idPessoa') || null
+    };
+    
+    try {
+        const response = await fetch('/admin/financeiro/incluir', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dados)
+        });
+        
+        const data = await response.json();
+        
+        if (data.ok) {
+            await Swal.fire('Sucesso!', data.msg, 'success');
+            location.reload();
+        } else {
+            Swal.fire('Erro!', data.msg, 'error');
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        Swal.fire('Erro!', 'Erro ao incluir lançamento', 'error');
+    }
+});
+
+// Ver detalhes do movimento
+async function verDetalhes(id) {
+    document.getElementById('sidebarOverlay').classList.add('active');
+    document.getElementById('painelDetalhes').classList.add('active');
+    document.getElementById('detalhesContent').innerHTML = '<p class="text-center"><i class="spinner-border"></i></p>';
+    
+    try {
+        const response = await fetch(`/admin/financeiro/movimento/${id}`);
+        const data = await response.json();
+        
+        if (data.ok) {
+            const mov = data.movimento;
+            let html = `
+                <div class="mb-3">
+                    <span class="tipo-badge ${mov.tipo}">
+                        ${mov.tipo === 'entrada' ? 'Entrada' : 'Saída'}
+                    </span>
+                </div>
+                <div class="mb-3">
+                    <h6>Descrição</h6>
+                    <p>${mov.descricao}</p>
+                </div>
+                <div class="mb-3">
+                    <h6>Valor</h6>
+                    <p class="valor ${mov.tipo}" style="font-size: 24px; font-weight: bold;">
+                        ${mov.tipo === 'entrada' ? '+' : '-'} R$ ${mov.valor.toFixed(2).replace('.', ',')}
+                    </p>
+                </div>
+                <div class="mb-3">
+                    <h6>Data</h6>
+                    <p>${new Date(mov.data).toLocaleString('pt-BR')}</p>
+                </div>
+                <div class="mb-3">
+                    <h6>Caixa</h6>
+                    <p>#${mov.idCaixa} - ${mov.caixa.status === 'aberto' ? 'Aberto' : 'Fechado'}</p>
+                </div>`;
+            
+            if (mov.pessoa) {
+                html += `
+                    <div class="mb-3">
+                        <h6>${mov.pessoa.cpf ? 'Cliente' : 'Fornecedor'}</h6>
+                        <p><strong>${mov.pessoa.nome}</strong><br>
+                        ${mov.pessoa.email || ''}<br>
+                        ${mov.pessoa.cpf || mov.pessoa.cnpj || ''}</p>
+                    </div>`;
+            }
+            
+            document.getElementById('detalhesContent').innerHTML = html;
+        } else {
+            document.getElementById('detalhesContent').innerHTML = '<p class="text-danger">Erro ao carregar detalhes</p>';
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        document.getElementById('detalhesContent').innerHTML = '<p class="text-danger">Erro ao carregar detalhes</p>';
+    }
+}
+</script>
