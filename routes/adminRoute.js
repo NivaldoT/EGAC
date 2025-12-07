@@ -164,6 +164,7 @@ router.post('/caixa/movimento', movimentoController.registrarMovimento);
 
                 // DEVOLUÇÕES
 router.get('/devolucoes', devolucaoController.listarDevolucoes);
+router.get('/devolucoesCompra', devolucaoController.listarDevolucoesCompra);
 router.post('/devolverCompra', devolucaoController.devolverCompra);
 router.get('/devolucoes/:id', devolucaoController.visualizarDevolucao);
 router.post('/devolucoes/:id/aprovar', devolucaoController.aprovarDevolucao);

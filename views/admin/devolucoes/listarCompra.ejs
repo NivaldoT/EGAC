@@ -3,12 +3,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Gerenciar Devoluções de Venda</h1>
+                    <h1 class="m-0">Gerenciar Devoluções de Compra</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="/admin">Home</a></li>
-                        <li class="breadcrumb-item active">Devoluções</li>
+                        <li class="breadcrumb-item active">Devoluções de Compra</li>
                     </ol>
                 </div>
             </div>
@@ -21,46 +21,13 @@
             <!-- Estatísticas -->
             <div class="row">
                 <div class="col-lg-3 col-6">
-                    <div class="small-box bg-warning">
-                        <div class="inner">
-                            <h3><%= devolucoes.filter(function(d) { return d.status === 'pendente'; }).length %></h3>
-                            <p>Pendentes</p>
-                        </div>
-                        <div class="icon">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-6">
                     <div class="small-box bg-success">
                         <div class="inner">
-                            <h3><%= devolucoes.filter(function(d) { return d.status === 'aprovada'; }).length %></h3>
-                            <p>Aprovadas</p>
+                            <h3><%= listaGeral.length %></h3>
+                            <p>total</p>
                         </div>
                         <div class="icon">
                             <i class="fas fa-check"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-6">
-                    <div class="small-box bg-danger">
-                        <div class="inner">
-                            <h3><%= devolucoes.filter(function(d) { return d.status === 'recusada'; }).length %></h3>
-                            <p>Recusadas</p>
-                        </div>
-                        <div class="icon">
-                            <i class="fas fa-times"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-6">
-                    <div class="small-box bg-info">
-                        <div class="inner">
-                            <h3><%= devolucoes.length %></h3>
-                            <p>Total</p>
-                        </div>
-                        <div class="icon">
-                            <i class="fas fa-undo"></i>
                         </div>
                     </div>
                 </div>
@@ -76,49 +43,28 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Data</th>
-                                <th>Cliente</th>
+                                <th>Data Compra</th>
+                                <th>Fornecedor</th>
                                 <th>Pedido</th>
                                 <th>Motivo</th>
-                                <th>Tipo Reembolso</th>
-                                <th>Status</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <% if (devolucoes && devolucoes.length > 0) { %>
-                                <% devolucoes.forEach(function(dev) { %>
+                            <% if (listaGeral && listaGeral.length > 0) { %>
+                                <% listaGeral.forEach(function(dev) { %>
                                     <tr>
                                         <td><%= dev.id %></td>
-                                        <td><%= new Date(dev.venda.data).toLocaleDateString('pt-BR') %></td>
+                                        <td><%= new Date(dev.dataCompra).toLocaleDateString('pt-BR') %></td>
                                         <td style="color: #212529;">
-                                            <%= dev.cliente.nome %><br>
-                                            <small class="text-muted"><%= dev.cliente.email %></small>
+                                            <%= dev.nomeFornecedor %><br>
                                         </td>
-                                        <td style="color: #212529;">#<%= dev.idVenda %></td>
-                                        <td><span class="badge bg-dark"><%= dev.motivo %></span></td>
-                                        <td><span class="badge bg-primary" ><%= dev.tipoReembolso.toUpperCase() %></span></td>
-                                        <td>
-                                            <% if (dev.status === 'pendente') { %>
-                                                <span class="badge bg-warning">Pendente</span>
-                                            <% } else if (dev.status === 'aprovada') { %>
-                                                <span class="badge bg-success">Aprovada</span>
-                                            <% } else { %>
-                                                <span class="badge bg-danger">Recusada</span>
-                                            <% } %>
-                                        </td>
+                                        <td style="color: #212529;">#<%= dev.idCompra %></td>
+                                        <td><span class="badge bg-dark"><%= dev.listaItensDevoCompra[0].motivo %></span></td>
                                         <td>
                                             <a href="/admin/devolucoes/<%= dev.id %>" class="btn btn-sm btn-info" title="Visualizar">
                                                 <i class="fas fa-eye">Visualizar</i>
                                             </a>
-                                            <% if (dev.status === 'pendente') { %>
-                                                <button class="btn btn-sm btn-success" onclick="aprovarDevolucao('<%= dev.id %>')" title="Aprovar">
-                                                    <i class="fas fa-check">Aprovar</i>
-                                                </button>
-                                                <button class="btn btn-sm btn-danger" onclick="recusarDevolucao('<%= dev.id %>')" title="Recusar">
-                                                    <i class="fas fa-times">Recusar</i>
-                                                </button>
-                                            <% } %>
                                         </td>
                                     </tr>
                                 <% }); %>

@@ -6,6 +6,7 @@ class DevolucaoCompraModel {
     #idFornecedor;
     #nomeFornecedor;
     #nomeFuncionario;
+    #dataCompra;
 
     get id() { return this.#id; }
     set id(value) { this.#id = value; }
@@ -22,12 +23,16 @@ class DevolucaoCompraModel {
     get nomeFuncionario() { return this.#nomeFuncionario; }
     set nomeFuncionario(value) { this.#nomeFuncionario = value; }
 
-    constructor(id, idCompra, idFornecedor, nomeFornecedor, nomeFuncionario) {
+    get dataCompra() { return this.#dataCompra; }
+    set dataCompra(value) { this.#dataCompra = value; }
+
+    constructor(id, idCompra, idFornecedor, nomeFornecedor, nomeFuncionario, dataCompra) {
         this.#id = id;
         this.#idCompra = idCompra;
         this.#idFornecedor = idFornecedor;
         this.#nomeFornecedor = nomeFornecedor;
         this.#nomeFuncionario = nomeFuncionario;
+        this.#dataCompra = dataCompra;
     }
 
     async gravar() {
@@ -40,7 +45,7 @@ class DevolucaoCompraModel {
     }
 
     async listar() {
-        let sql = `SELECT d.devo_id, d.devo_idCompra,forn.pessoa_id as idFornecedor, forn.pessoa_nome as nomeFornecedor, func.pessoa_nome as nomeFuncionario 
+        let sql = `SELECT d.devo_id, d.devo_idCompra,forn.pessoa_id as idFornecedor, forn.pessoa_nome as nomeFornecedor, func.pessoa_nome as nomeFuncionario, c.comp_data
                    FROM tb_DevolucaoCompra d
                    INNER JOIN tb_Compra c ON d.devo_idCompra = c.comp_id
                    INNER JOIN tb_Pessoa func ON c.comp_idFuncionario = func.pessoa_id
@@ -52,7 +57,7 @@ class DevolucaoCompraModel {
         let lista = [];
         if(rows.length > 0) {
             for(let i=0; i<rows.length; i++) {
-                lista.push(new DevolucaoCompraModel(rows[i]['devo_id'], rows[i]['devo_idCompra'], rows[i]['idFornecedor'], rows[i]['nomeFornecedor'], rows[i]['nomeFuncionario']));
+                lista.push(new DevolucaoCompraModel(rows[i]['devo_id'], rows[i]['devo_idCompra'], rows[i]['idFornecedor'], rows[i]['nomeFornecedor'], rows[i]['nomeFuncionario'], rows[i]['comp_data']));
             }
         }
         
@@ -69,105 +74,105 @@ class DevolucaoCompraModel {
         return null;
     }
 
-    async listarPorCliente(emailCliente) {
-        let sql = `SELECT d.devo_id, d.devo_idCompra, d.devo_status,
-                   v.ven_data, v.ven_valorTotal
-                   FROM tb_DevolucaoCompra d
-                   INNER JOIN tb_Compra v ON d.devo_idCompra = v.ven_idCompra
-                   INNER JOIN tb_Pessoa p ON v.ven_idPessoa = p.pessoa_id
-                   WHERE p.pessoa_email = ?
-                   ORDER BY d.devo_id DESC`;
+    // async listarPorCliente(emailCliente) {
+    //     let sql = `SELECT d.devo_id, d.devo_idCompra, d.devo_status,
+    //                v.ven_data, v.ven_valorTotal
+    //                FROM tb_DevolucaoCompra d
+    //                INNER JOIN tb_Compra v ON d.devo_idCompra = v.ven_idCompra
+    //                INNER JOIN tb_Pessoa p ON v.ven_idPessoa = p.pessoa_id
+    //                WHERE p.pessoa_email = ?
+    //                ORDER BY d.devo_id DESC`;
         
-        let banco = new Database();
-        let rows = await banco.ExecutaComando(sql, [emailCliente]);
+    //     let banco = new Database();
+    //     let rows = await banco.ExecutaComando(sql, [emailCliente]);
         
-        let listaDevolucoes = [];
-        for(let row of rows) {
-            listaDevolucoes.push({
-                id: row.devo_id,
-                idCompra: row.devo_idCompra,
-                motivo: 'Ver itens',
-                status: row.devo_status,
-                tipoReembolso: 'Ver itens',
-                foto: null,
-                Compra: {
-                    data: row.ven_data,
-                    valorTotal: row.ven_valorTotal
-                }
-            });
-        }
+    //     let listaDevolucoes = [];
+    //     for(let row of rows) {
+    //         listaDevolucoes.push({
+    //             id: row.devo_id,
+    //             idCompra: row.devo_idCompra,
+    //             motivo: 'Ver itens',
+    //             status: row.devo_status,
+    //             tipoReembolso: 'Ver itens',
+    //             foto: null,
+    //             Compra: {
+    //                 data: row.ven_data,
+    //                 valorTotal: row.ven_valorTotal
+    //             }
+    //         });
+    //     }
         
-        return listaDevolucoes;
-    }
+    //     return listaDevolucoes;
+    // }
 
-    async buscarPorId(id) {
-        let sql = `SELECT d.devo_id, d.devo_idCompra, d.devo_status,
-                   v.ven_data, v.ven_valorTotal,
-                   p.pessoa_nome as cliente_nome, p.pessoa_email as cliente_email, p.pessoa_id as cliente_id,
-                   p.pessoa_telefone as cliente_telefone
-                   FROM tb_DevolucaoCompra d
-                   INNER JOIN tb_Compra v ON d.devo_idCompra = v.ven_idCompra
-                   INNER JOIN tb_Pessoa p ON v.ven_idPessoa = p.pessoa_id
-                   WHERE d.devo_id = ?`;
+    // async buscarPorId(id) {
+    //     let sql = `SELECT d.devo_id, d.devo_idCompra, d.devo_status,
+    //                v.ven_data, v.ven_valorTotal,
+    //                p.pessoa_nome as cliente_nome, p.pessoa_email as cliente_email, p.pessoa_id as cliente_id,
+    //                p.pessoa_telefone as cliente_telefone
+    //                FROM tb_DevolucaoCompra d
+    //                INNER JOIN tb_Compra v ON d.devo_idCompra = v.ven_idCompra
+    //                INNER JOIN tb_Pessoa p ON v.ven_idPessoa = p.pessoa_id
+    //                WHERE d.devo_id = ?`;
         
-        let banco = new Database();
-        let rows = await banco.ExecutaComando(sql, [id]);
+    //     let banco = new Database();
+    //     let rows = await banco.ExecutaComando(sql, [id]);
         
-        if(rows.length > 0) {
-            let row = rows[0];
-            return {
-                id: row.devo_id,
-                idCompra: row.devo_idCompra,
-                motivo: 'Veja Itens',
-                status: row.devo_status,
-                tipoReembolso: 'Veja Itens',
-                foto: null,
-                Compra: {
-                    data: row.ven_data,
-                    valorTotal: row.ven_valorTotal
-                },
-                cliente: {
-                    id: row.cliente_id,
-                    nome: row.cliente_nome,
-                    email: row.cliente_email
-                }
-            };
-        }
+    //     if(rows.length > 0) {
+    //         let row = rows[0];
+    //         return {
+    //             id: row.devo_id,
+    //             idCompra: row.devo_idCompra,
+    //             motivo: 'Veja Itens',
+    //             status: row.devo_status,
+    //             tipoReembolso: 'Veja Itens',
+    //             foto: null,
+    //             Compra: {
+    //                 data: row.ven_data,
+    //                 valorTotal: row.ven_valorTotal
+    //             },
+    //             cliente: {
+    //                 id: row.cliente_id,
+    //                 nome: row.cliente_nome,
+    //                 email: row.cliente_email
+    //             }
+    //         };
+    //     }
         
-        return null;
-    }
+    //     return null;
+    // }
 
-    async aprovar() {
-        let sql = `UPDATE tb_DevolucaoCompra 
-                   SET devo_status = 'aprovada'
-                   WHERE devo_id = ?`;
+    // async aprovar() {
+    //     let sql = `UPDATE tb_DevolucaoCompra 
+    //                SET devo_status = 'aprovada'
+    //                WHERE devo_id = ?`;
         
-        let banco = new Database();
-        let result = await banco.ExecutaComandoNonQuery(sql, [this.#id]);
-        return result;
-    }
+    //     let banco = new Database();
+    //     let result = await banco.ExecutaComandoNonQuery(sql, [this.#id]);
+    //     return result;
+    // }
 
-    async recusar() {
-        let sql = `UPDATE tb_DevolucaoCompra 
-                   SET devo_status = 'recusada'
-                   WHERE devo_id = ?`;
+    // async recusar() {
+    //     let sql = `UPDATE tb_DevolucaoCompra 
+    //                SET devo_status = 'recusada'
+    //                WHERE devo_id = ?`;
         
-        let banco = new Database();
-        let result = await banco.ExecutaComandoNonQuery(sql, [this.#id]);
-        return result;
-    }
+    //     let banco = new Database();
+    //     let result = await banco.ExecutaComandoNonQuery(sql, [this.#id]);
+    //     return result;
+    // }
 
-    async verificarDevolucaoExistente(idCompra) {
-        let sql = `SELECT devo_id, devo_status 
-                   FROM tb_DevolucaoCompra 
-                   WHERE devo_idCompra = ?
-                   AND devo_status IN ('pendente', 'aprovada')`;
+    // async verificarDevolucaoExistente(idCompra) {
+    //     let sql = `SELECT devo_id, devo_status 
+    //                FROM tb_DevolucaoCompra 
+    //                WHERE devo_idCompra = ?
+    //                AND devo_status IN ('pendente', 'aprovada')`;
         
-        let banco = new Database();
-        let rows = await banco.ExecutaComando(sql, [idCompra]);
+    //     let banco = new Database();
+    //     let rows = await banco.ExecutaComando(sql, [idCompra]);
         
-        return rows.length > 0 ? rows[0] : null;
-    }
+    //     return rows.length > 0 ? rows[0] : null;
+    // }
 }
 
 module.exports = DevolucaoCompraModel;
