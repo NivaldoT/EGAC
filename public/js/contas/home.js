@@ -13,6 +13,23 @@ document.addEventListener("DOMContentLoaded", function() {
         XLSX.writeFile(wb, "pedidos-vendas.xlsx");
     }
 
+    window.imprimirContas = function() {
+        const tipoBusca = selectTipoBusca.value;
+        if (tipoBusca == 0) {
+            alert("Selecione o tipo de conta antes de imprimir.");
+            return;
+        }
+        
+        const tbody = document.querySelector("#pedidos > tbody");
+        const temDados = tbody && tbody.innerHTML.trim() !== "" && !tbody.innerHTML.includes("Carregando");
+        
+        if (!temDados) {
+            alert("Aguarde o carregamento das contas antes de imprimir.");
+            return;
+        }
+        window.print();
+    }
+
     let btnsRE = [];
     let btnsPG = [];
     function carregarPedidos() {

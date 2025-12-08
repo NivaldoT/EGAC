@@ -24,7 +24,7 @@
                         <button class="btn btn-success" id="excel">
                             <i class="bi bi-file-earmark-excel"></i> Excel
                         </button>
-                        <button onclick="window.print()" class="btn btn-info" id="pdf">
+                        <button onclick="imprimirPedidos()" class="btn btn-info" id="pdf">
                             <i class="bi bi-file-earmark-pdf"></i> PDF
                         </button>
                     </div>
@@ -61,12 +61,20 @@
 
 <style>
     @media print {
-        .btn-group, .card-header, label {
-            display: none !important;
+        body * {
+            visibility: hidden !important;
         }
-        .card {
-            border: none !important;
-            box-shadow: none !important;
+        .table-responsive, .table-responsive * {
+            visibility: visible !important;
+        }
+        .table-responsive {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+        }
+        .btn, button {
+            display: none !important;
         }
     }
 </style>
