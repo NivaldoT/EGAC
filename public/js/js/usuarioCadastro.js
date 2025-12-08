@@ -34,17 +34,26 @@ document.addEventListener('DOMContentLoaded', function(){
         if(!nome.value){
             erroNome.textContent = 'O campo de nome é obrigatório.';
             valido = false;
-        }else if(nome.value.length < 10){
-            erroNome.textContent = 'Por favor insira o nome completo.';
+        }else if(nome.value.trim().length < 3){
+            erroNome.textContent = 'O nome deve ter pelo menos 3 caracteres.';
+            valido = false;
+        }else if(nome.value.trim().split(/\s+/).length < 2){
+            erroNome.textContent = 'Por favor insira o nome e sobrenome.';
+            valido = false;
+        }else if(nome.value.length > 100){
+            erroNome.textContent = 'O nome não pode ter mais de 100 caracteres.';
             valido = false;
         }
 
         if(!telefone.value){
             erroTelefone.textContent = 'O campo de telefone é obrigatório.';
             valido = false;
-        }else if(isNaN(telefone.value) || telefone.value.length!=11 || telefone.value.split(' ').length > 1){
-            erroTelefone.textContent = 'Por favor insira um telefone válido.';
-            valido = false;
+        }else{
+            const telefoneNumeros = telefone.value.replace(/\D/g, '');
+            if(telefoneNumeros.length < 10 || telefoneNumeros.length > 11){
+                erroTelefone.textContent = 'Por favor insira um telefone válido (10 ou 11 dígitos).';
+                valido = false;
+            }
         }
 
         if(!cpf.value){
@@ -57,8 +66,14 @@ document.addEventListener('DOMContentLoaded', function(){
         if(!endereco.value){
             erroEndereco.textContent = 'O campo de endereço é obrigatório.';
             valido = false;
-        }else if(endereco.value.length < 10){
-            erroEndereco.textContent = 'Por favor insira o endereço completo.';
+        }else if(endereco.value.trim().length < 10){
+            erroEndereco.textContent = 'O endereço deve ter pelo menos 10 caracteres.';
+            valido = false;
+        }else if(endereco.value.trim().split(/\s+/).length < 3){
+            erroEndereco.textContent = 'Insira um endereço completo (rua, número, bairro).';
+            valido = false;
+        }else if(endereco.value.length > 200){
+            erroEndereco.textContent = 'O endereço não pode ter mais de 200 caracteres.';
             valido = false;
         }
 
@@ -77,6 +92,9 @@ document.addEventListener('DOMContentLoaded', function(){
             valido = false;
         } else if (senha.value.length < 6) {
             erroSenha.textContent = 'A senha deve ter pelo menos 6 caracteres.';
+            valido = false;
+        } else if (senha.value.length > 30) {
+            erroSenha.textContent = 'A senha não pode ter mais de 30 caracteres.';
             valido = false;
         }
 
@@ -126,6 +144,28 @@ document.addEventListener('DOMContentLoaded', function(){
     nome.addEventListener('keydown', function() {
         erroNome.textContent = '';
     });
+    
+    // Máscara de telefone
+    telefone.addEventListener('input', function(e) {
+        let valor = e.target.value.replace(/\D/g, '');
+        if (valor.length <= 11) {
+            if (valor.length === 11) {
+                valor = valor.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+            } else if (valor.length === 10) {
+                valor = valor.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+            } else if (valor.length > 6) {
+                valor = valor.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+            } else if (valor.length > 2) {
+                valor = valor.replace(/(\d{2})(\d{0,5})/, '($1) $2');
+            } else if (valor.length > 0) {
+                valor = valor.replace(/(\d*)/, '($1');
+            }
+            e.target.value = valor;
+        } else {
+            e.target.value = e.target.value.slice(0, -1);
+        }
+    });
+    
     telefone.addEventListener('keydown', function() {
         erroTelefone.textContent = '';
     });
