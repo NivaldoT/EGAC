@@ -619,8 +619,23 @@
 
 <script>
 function fecharModal() {
-    document.getElementById('modalConfirmacao').style.display = 'none';
+    const modal = document.getElementById('modalConfirmacao');
+    if (modal) {
+        modal.style.display = 'none';
+    }
 }
+
+// Fechar modal ao clicar no overlay
+document.addEventListener('DOMContentLoaded', function() {
+    const modalOverlay = document.getElementById('modalConfirmacao');
+    if (modalOverlay) {
+        modalOverlay.addEventListener('click', function(e) {
+            if (e.target === modalOverlay) {
+                fecharModal();
+            }
+        });
+    }
+});
 
 function mostrarModal(titulo, mensagem, estoqueAtual, quantidade, callback) {
     document.getElementById('modalTitulo').textContent = titulo;
