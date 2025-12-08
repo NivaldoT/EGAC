@@ -11,6 +11,17 @@ document.addEventListener("DOMContentLoaded", function() {
         XLSX.writeFile(wb, "pedidos-vendas.xlsx");
     }
 
+    window.imprimirPedidos = function() {
+        const tbody = document.querySelector("#pedidos > tbody");
+        const temDados = tbody && tbody.innerHTML.trim() !== "" && !tbody.innerHTML.includes("Carregando");
+        
+        if (!temDados) {
+            alert("Aguarde o carregamento dos pedidos antes de imprimir.");
+            return;
+        }
+        window.print();
+    }
+
     function carregarPedidos() {
         let query = "";
         let termo = document.getElementById("inputBusca");
