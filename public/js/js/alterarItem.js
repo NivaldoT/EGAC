@@ -167,7 +167,8 @@ document.addEventListener('DOMContentLoaded', function(){
             categoria: !!categoria
         });
 
-        if(!nome || !preco || !descricao || !tipoItem) {
+        // Validação básica apenas do nome e tipoItem (sempre necessários)
+        if(!nome || !tipoItem) {
             console.error('Elementos obrigatórios não encontrados');
             alert('Erro: Elementos do formulário não encontrados!');
             return;
@@ -179,9 +180,10 @@ document.addEventListener('DOMContentLoaded', function(){
         else
             nome.style.borderColor = '';
 
-        if(!isFinite(Number(preco.value)) || !preco.value || preco.value < 0)
+        // Validar preço apenas se o campo existir (não existe para Marca e Categoria)
+        if(preco && (!isFinite(Number(preco.value)) || !preco.value || preco.value < 0))
             vetorVal.push(preco);
-        else
+        else if(preco)
             preco.style.borderColor = '';
 
         if(pessoaEl && pessoaEl.value == 0)
@@ -189,9 +191,10 @@ document.addEventListener('DOMContentLoaded', function(){
         else if(pessoaEl)
             pessoaEl.style.borderColor = '';
             
-        if(!descricao.value)
+        // Validar descrição apenas se o campo existir (não existe para Marca e Categoria)
+        if(descricao && !descricao.value)
             vetorVal.push(descricao);
-        else
+        else if(descricao)
             descricao.style.borderColor = '';
 
         if(marca && marca.value == 0)
@@ -212,8 +215,8 @@ document.addEventListener('DOMContentLoaded', function(){
         console.log('Valores:', {
             tipoItem: tipoItem.value,
             nome: nome.value, 
-            preco: preco.value, 
-            descricao: descricao.value, 
+            preco: preco?.value, 
+            descricao: descricao?.value, 
             categoria: categoria?.value, 
             marca: marca?.value
         });
@@ -294,7 +297,12 @@ document.addEventListener('DOMContentLoaded', function(){
                         return resposta.json(); //converte o corpo da resposta para json (gera uma nova promise)
                     })
                     .then(function(corpo) {//recebe o corpo em formato de obj genérico
-                        alert(corpo.msg);
+                        if(corpo.msg && corpo.msg.includes('Sucesso')) {
+                            showToast('Sucesso', 'Serviço alterado com sucesso!', 'success');
+                            setTimeout(() => window.location.href = '/admin/listagem/3', 1500);
+                        } else {
+                            showToast('Erro', corpo.msg || 'Erro ao alterar serviço', 'error');
+                        }
                 })
                 return
             }
@@ -320,7 +328,12 @@ document.addEventListener('DOMContentLoaded', function(){
                         return resposta.json(); //converte o corpo da resposta para json (gera uma nova promise)
                     })
                     .then(function(corpo) {//recebe o corpo em formato de obj genérico
-                        alert(corpo.msg)
+                        if(corpo.msg && corpo.msg.includes('Sucesso')) {
+                            showToast('Sucesso', 'Equipamento Agrícola alterado com sucesso!', 'success');
+                            setTimeout(() => window.location.href = '/admin/listagem/4', 1500);
+                        } else {
+                            showToast('Erro', corpo.msg || 'Erro ao alterar equipamento', 'error');
+                        }
                 })
                 return
             }
@@ -343,7 +356,12 @@ document.addEventListener('DOMContentLoaded', function(){
                         return resposta.json(); //converte o corpo da resposta para json (gera uma nova promise)
                     })
                     .then(function(corpo) {//recebe o corpo em formato de obj genérico
-                        alert(corpo.msg);
+                        if(corpo.msg && corpo.msg.includes('Sucesso')) {
+                            showToast('Sucesso', 'Marca alterada com sucesso!', 'success');
+                            setTimeout(() => window.location.href = '/admin/listagem/5', 1500);
+                        } else {
+                            showToast('Erro', corpo.msg || 'Erro ao alterar marca', 'error');
+                        }
                 })
                 return
             }
@@ -366,8 +384,12 @@ document.addEventListener('DOMContentLoaded', function(){
                         return resposta.json(); //converte o corpo da resposta para json (gera uma nova promise)
                     })
                     .then(function(corpo) {//recebe o corpo em formato de obj genérico
-                        alert(corpo.msg);
-                        window.location.reload();
+                        if(corpo.msg && corpo.msg.includes('Sucesso')) {
+                            showToast('Sucesso', 'Categoria alterada com sucesso!', 'success');
+                            setTimeout(() => window.location.href = '/admin/listagem/6', 1500);
+                        } else {
+                            showToast('Erro', corpo.msg || 'Erro ao alterar categoria', 'error');
+                        }
                 })
                 return
             }

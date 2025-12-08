@@ -1,6 +1,111 @@
 <script src="/js/js/listagem.js" defer></script>
 <script src="/js/js/listagem-header.js" defer></script>
 
+<style>
+.delete-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    animation: fadeIn 0.2s ease-out;
+}
+.delete-modal.show {
+    display: flex;
+}
+.delete-box {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 450px;
+    width: 90%;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    animation: slideUp 0.3s ease-out;
+}
+.delete-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 32px;
+    background: #f8d7da;
+    color: #dc3545;
+}
+.delete-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 12px;
+    text-align: center;
+}
+.delete-message {
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    margin-bottom: 8px;
+}
+.delete-item-name {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 12px;
+    margin: 16px 0;
+    text-align: center;
+    font-weight: 600;
+    color: #dc3545;
+}
+.delete-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+.delete-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+}
+.delete-btn.cancel {
+    background: #f5f5f5;
+    color: #666;
+}
+.delete-btn.cancel:hover {
+    background: #e0e0e0;
+}
+.delete-btn.confirm {
+    background: #dc3545;
+    color: white;
+}
+.delete-btn.confirm:hover {
+    background: #c82333;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes slideUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+</style>
+
 <div class="container-fluid">
     <div class="d-flex align-items-center mb-4" style="gap:12px;">
         <h2 class="mb-0" style="font-size: 24px; font-weight: 600; flex-shrink:0;">
@@ -220,4 +325,20 @@
             <%}%>
         </tbody>
     </table>
+</div>
+
+<!-- Modal de Confirmação de Exclusão -->
+<div class="delete-modal" id="deleteModal">
+    <div class="delete-box">
+        <div class="delete-icon">
+            <i class="bi bi-exclamation-triangle"></i>
+        </div>
+        <div class="delete-title">Confirmar Exclusão</div>
+        <div class="delete-message" id="deleteMessage">Tem certeza que deseja excluir este item?</div>
+        <div class="delete-item-name" id="deleteItemName">Nome do Item</div>
+        <div class="delete-buttons">
+            <button class="delete-btn cancel" onclick="closeDeleteModal()">Cancelar</button>
+            <button class="delete-btn confirm" id="deleteConfirmBtn">Excluir</button>
+        </div>
+    </div>
 </div>

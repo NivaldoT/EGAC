@@ -528,7 +528,7 @@
 
                     <div class="form-row-custom" id="precoRow">
                         <div class="form-group-custom">
-                            <label for="precoval">Preço de Venda</label>
+                            <label for="precoval" id="precoLabel">Preço de Venda</label>
                             <input type="number" step="0.01" class="form-control" id="precoval" value="<%=prod.preco%>">
                         </div>
                     </div>
@@ -718,7 +718,7 @@
             <!-- Botões de Ação -->
             <div class="action-buttons">
                 <button class="btn-save" id="cadastrar">
-                    <i class="bi bi-check-lg me-2"></i>Salvar produto
+                    <i class="bi bi-check-lg me-2"></i>Salvar
                 </button>
                 <a id="voltar" href="/admin/listagem/1" class="btn-cancel">
                     Cancelar
@@ -821,14 +821,19 @@ document.addEventListener('DOMContentLoaded', function() {
         estoqueSection?.remove();
         document.getElementById('tabImagens')?.remove();
         document.getElementById('tabEstoque')?.remove();
+        // Mudar label do preço
+        const precoLabel = document.getElementById('precoLabel');
+        if(precoLabel) precoLabel.textContent = 'Preço';
     } else if(tipoItem === 4) { // Equipamento Agrícola
-        // Mostrar proprietário
-        if(proprietarioSection) proprietarioSection.style.display = 'block';
+        // Não mostrar proprietário
+        proprietarioSection?.remove();
         estoqueSection?.remove();
         document.getElementById('tab-imagens')?.remove();
         document.getElementById('tab-estoque')?.remove();
         document.getElementById('tabImagens')?.remove();
         document.getElementById('tabEstoque')?.remove();
+        // Não mostrar preço
+        document.getElementById('precoRow')?.remove();
     } else if(tipoItem === 5 || tipoItem === 6) { // Marca ou Categoria
         document.getElementById('tab-imagens')?.remove();
         document.getElementById('tab-estoque')?.remove();

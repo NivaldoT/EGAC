@@ -18,6 +18,7 @@ const CaixaController = require("../controllers/caixaController");
 const DevolucaoController = require("../controllers/devolucaoController");
 const MovimentoController = require('../controllers/movimentoController');
 const FinanceiroController = require("../controllers/financeiroController");
+const BaixaController = require("../controllers/baixaController");
 const router = express.Router();
 
 // Configuração do Multer para upload de imagens
@@ -61,6 +62,8 @@ const movimentoController = new MovimentoController();
 const devolucaoController = new DevolucaoController();
 
 const financeiroController = new FinanceiroController();
+
+const baixaController = new BaixaController();
 
 router.get("/", adminController.homeView);
 
@@ -185,6 +188,14 @@ router.get('/financeiro/movimentacoes', financeiroController.listarMovimentacoes
 router.post('/financeiro/incluir', financeiroController.incluirLancamento);
 router.get('/financeiro/movimento/:id', financeiroController.detalharLancamento);
 router.get('/financeiro/pessoas', financeiroController.listarPessoas);
+
+                // BAIXA DE ESTOQUE
+router.get('/baixa/cadastrar', baixaController.cadastrarView);
+router.post('/baixa/gravar', baixaController.gravar);
+router.get('/baixa/listar', baixaController.listarView);
+router.get('/baixa/api/listar', baixaController.listar);
+router.get('/baixa/buscarProdutos', baixaController.buscarProdutos);
+router.get('/baixa/detalhes/:id', baixaController.detalhesView);
 
 // router.get('/alterarItem/:tipo/:id', adminController.alterarItemView);
 // router.get('/alterarCliente/:tipo/:id', adminController.alterarClienteView);

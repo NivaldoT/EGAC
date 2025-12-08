@@ -101,8 +101,9 @@ document.addEventListener('DOMContentLoaded', function(){
         if(tipo == 5){aux = 'da Marca'}
         if(tipo == 6){aux = 'da Categoria'}
 
-        let msg = 'Confirma a excluisão '+aux+': '+nome+'?';
-        if(confirm(msg)) {
+        let msg = 'Confirma a exclusão '+aux+':';
+        
+        showDeleteModal(nome, msg, function() {
             let obj = {
                 tipo: tipo,
                 id: id
@@ -120,11 +121,40 @@ document.addEventListener('DOMContentLoaded', function(){
             .then(function(corpo) {
                 alert(corpo.msg);
                 if(corpo.ok) {
-                    btn.parentElement.parentElement.remove()
+                    // Remover card ou linha da tabela
+                    let elementoRemover = btn.closest('.col-12') || btn.closest('tr');
+                    if(elementoRemover) {
+                        elementoRemover.remove();
+                    }
                 }
             })
-        }
+        });
     }
+    
+    // Funções do modal de exclusão
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').classList.remove('show');
+    }
+    
+    function showDeleteModal(itemName, message, callback) {
+        const modal = document.getElementById('deleteModal');
+        const itemNameEl = document.getElementById('deleteItemName');
+        const messageEl = document.getElementById('deleteMessage');
+        const confirmBtn = document.getElementById('deleteConfirmBtn');
+        
+        itemNameEl.textContent = itemName;
+        messageEl.textContent = message;
+        
+        confirmBtn.onclick = function() {
+            callback();
+            closeDeleteModal();
+        };
+        
+        modal.classList.add('show');
+    }
+    
+    // Tornar funções globais para uso no HTML
+    window.closeDeleteModal = closeDeleteModal;
 
     // PESQUISA SIMPLES
     const campoPesquisa = document.getElementById('searchItens');

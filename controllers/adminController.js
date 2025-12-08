@@ -240,8 +240,8 @@ class adminController {
             const clientes = await banco.ExecutaComando(sqlClientes);
             console.log('Clientes:', clientes);
             
-            // Produtos com estoque baixo (menos de 10 unidades)
-            const sqlEstoque = `SELECT COUNT(*) as total FROM tb_Produto WHERE prod_estoque < 10 AND prod_estoque > 0`;
+            // Produtos com estoque baixo (menos de 4 unidades)
+            const sqlEstoque = `SELECT COUNT(*) as total FROM tb_Produto WHERE prod_estoque < 4 AND prod_estoque > 0`;
             const estoque = await banco.ExecutaComando(sqlEstoque);
             console.log('Estoque:', estoque);
             
@@ -331,11 +331,11 @@ class adminController {
         try {
             const banco = new Database();
             
-            // Produtos com estoque baixo (menos de 10 unidades)
+            // Produtos com estoque baixo (menos de 4 unidades)
             const sql = `
                 SELECT prod_id, prod_nome as nome, prod_estoque as estoque
                 FROM tb_Produto
-                WHERE prod_estoque < 10 AND prod_estoque > 0
+                WHERE prod_estoque < 4 AND prod_estoque > 0
                 ORDER BY prod_estoque ASC
                 LIMIT 10
             `;

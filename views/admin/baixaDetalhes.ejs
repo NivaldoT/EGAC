@@ -1,0 +1,237 @@
+<style>
+.detalhes-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.page-header {
+    background: #28a745;
+    color: white;
+    padding: 30px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.page-header h1 {
+    margin: 0 0 10px 0;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.page-header p {
+    margin: 0;
+    opacity: 0.9;
+}
+
+.info-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 25px;
+    margin-bottom: 20px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.info-item {
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.info-item label {
+    display: block;
+    font-size: 12px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+}
+
+.info-item .value {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #667eea;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.itens-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.itens-table thead {
+    background: #f8f9fa;
+}
+
+.itens-table th {
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.itens-table td {
+    padding: 12px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.itens-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.badge-motivo {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.resumo-total {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    text-align: right;
+}
+
+.resumo-total .total-label {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.resumo-total .total-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #333;
+}
+
+.btn-voltar {
+    background: #6c757d;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    transition: background 0.3s ease;
+}
+
+.btn-voltar:hover {
+    background: #5a6268;
+    color: white;
+    text-decoration: none;
+}
+
+.action-buttons {
+    margin-top: 30px;
+}
+</style>
+
+<div class="detalhes-container">
+    <div class="page-header">
+        <h1><i class="bi bi-file-text"></i> Detalhes da Baixa #<%= baixa.id %></h1>
+    </div>
+
+    <div class="info-card">
+        <div class="section-title">
+            <i class="bi bi-info-circle"></i>
+            Informações da Baixa
+        </div>
+
+        <div class="info-grid">
+            <div class="info-item">
+                <label>ID da Baixa</label>
+                <div class="value">#<%= baixa.id %></div>
+            </div>
+            <div class="info-item">
+                <label>Data e Hora</label>
+                <div class="value">
+                    <%= new Date(baixa.data).toLocaleDateString('pt-BR') %>
+                    <%= new Date(baixa.data).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) %>
+                </div>
+            </div>
+            <div class="info-item">
+                <label>Funcionário Responsável</label>
+                <div class="value"><%= baixa.funcionario || 'N/A' %></div>
+            </div>
+            <div class="info-item">
+                <label>Total de Itens</label>
+                <div class="value"><%= itens.length %></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="section-title">
+            <i class="bi bi-list-ul"></i>
+            Itens da Baixa
+        </div>
+
+        <table class="itens-table">
+            <thead>
+                <tr>
+                    <th>Produto</th>
+                    <th>Tipo</th>
+                    <th>Quantidade</th>
+                    <th>Valor Unitário</th>
+                    <th>Valor Total</th>
+                    <th>Motivo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% 
+                let valorTotalBaixa = 0;
+                itens.forEach(item => { 
+                    valorTotalBaixa += item.valorTotal;
+                    const tipoNome = item.produtoTipo === 1 ? 'Produto' : 'Insumo';
+                %>
+                <tr>
+                    <td><strong><%= item.produtoNome %></strong></td>
+                    <td><%= tipoNome %></td>
+                    <td><%= item.quantidade %> un</td>
+                    <td>R$ <%= item.valorUnitario.toFixed(2) %></td>
+                    <td><strong>R$ <%= item.valorTotal.toFixed(2) %></strong></td>
+                    <td><span class="badge-motivo"><%= item.motivo %></span></td>
+                </tr>
+                <% }); %>
+            </tbody>
+        </table>
+
+        <div class="resumo-total">
+            <div class="total-label">Valor Total da Baixa</div>
+            <div class="total-value">R$ <%= valorTotalBaixa.toFixed(2) %></div>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <a href="/admin/baixa/listar" class="btn-voltar">
+            <i class="bi bi-arrow-left"></i>
+            Voltar para Listagem
+        </a>
+    </div>
+</div>
