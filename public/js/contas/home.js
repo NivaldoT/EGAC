@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 return resposta.json();
             })
             .then(function(corpo){
-                alert(corpo.ok+corpo.msg);
+                alert(corpo.msg);
                 carregarPedidos();
                 getCaixa();
             })
