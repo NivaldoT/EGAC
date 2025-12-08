@@ -167,20 +167,20 @@
 
 <!-- Modal Caixa -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" id="modalDialog">
-    <div class="modal-content border-0 shadow">
-      <div class="modal-header bg-white border-bottom py-3">
-        <h5 class="modal-title fw-bold" id="exampleModalLabel">Controle de Caixa</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <div class="modal-dialog" id="modalDialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title fw-bold" id="exampleModalLabel">
+          <i class="bi bi-cash-stack"></i> Controle de Caixa
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <div class="container">
           <div class="row mb-3">
             <div class="col-md-8">
-              <div>
-                <span id="nomeCaixaSpan" class="d-block fw-semibold"></span>
-                <span id="dataCaixaSpan" class="text-muted small"></span>
-              </div>
+              <p class="mb-1"><strong id="nomeCaixaSpan"></strong></p>
+              <p class="text-muted small mb-0" id="dataCaixaSpan"></p>
             </div>
             <div class="col-md-4 text-end">
               <a href="/admin/caixa/historico" class="btn btn-outline-secondary btn-sm">
@@ -192,16 +192,16 @@
         </div>
         <div id="caixaModal"></div>
       </div>
-      <div class="modal-footer bg-white border-top">
-        <div class="btn-group" role="group">
-          <button class="btn btn-success" id="excelCaixa">
+      <div class="modal-footer bg-light">
+        <div class="btn-group" role="group" id="exportarCaixa" style="display: none;">
+          <button class="btn btn-success btn-sm" id="excelCaixa">
             <i class="bi bi-file-earmark-excel"></i> Excel
           </button>
-          <button onclick="window.print()" class="btn btn-info" id="printCaixaPDF">
+          <button onclick="window.print()" class="btn btn-info btn-sm" id="printCaixaPDF">
             <i class="bi bi-file-earmark-pdf"></i> PDF
           </button>
         </div>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Voltar</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
         <button type="button" class="btn btn-success" id="acaoBtnCaixa"></button>
       </div>
     </div>
@@ -216,6 +216,35 @@
     visibility: visible !important;
   }
 }
-</style>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+.modal-header.bg-primary {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
+}
+
+#statusCaixa .alert {
+  border-left: 4px solid;
+  font-weight: 500;
+}
+
+#statusCaixa .alert-warning {
+  border-left-color: #ffc107;
+  background-color: #fff3cd;
+}
+
+#statusCaixa .alert-success {
+  border-left-color: #28a745;
+  background-color: #d4edda;
+}
+
+#caixaModal .form-floating label {
+  color: #6c757d;
+}
+
+#caixaModal .table {
+  font-size: 0.9rem;
+}
+
+#caixaModal .table thead {
+  background-color: #f8f9fa;
+}
+</style>
