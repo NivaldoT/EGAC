@@ -37,7 +37,7 @@
                         <button class="btn btn-success" id="excel">
                             <i class="bi bi-file-earmark-excel"></i> Excel
                         </button>
-                        <button onclick="window.print()" class="btn btn-info" id="pdf">
+                        <button onclick="imprimirOS()" class="btn btn-info" id="pdf">
                             <i class="bi bi-file-earmark-pdf"></i> PDF
                         </button>
                     </div>
@@ -103,12 +103,41 @@
 
 <style>
     @media print {
-        .btn-group, .card-header, label {
+        body * {
+            visibility: hidden !important;
+        }
+        .table-responsive, .table-responsive * {
+            visibility: visible !important;
+        }
+        .table-responsive {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            overflow: visible !important;
+        }
+        table {
+            width: 100% !important;
+            font-size: 8px !important;
+            page-break-inside: auto;
+        }
+        thead {
+            display: table-header-group;
+        }
+        tr {
+            page-break-inside: avoid;
+            page-break-after: auto;
+        }
+        th, td {
+            padding: 3px !important;
+            font-size: 8px !important;
+        }
+        .btn, button {
             display: none !important;
         }
-        .card {
-            border: none !important;
-            box-shadow: none !important;
+        @page {
+            size: landscape;
+            margin: 1cm;
         }
     }
 </style>
