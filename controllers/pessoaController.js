@@ -34,39 +34,6 @@ class pessoaController{
             res.cookie('UsuarioNome', usuario.nome);
             ok = true;
             msg = 'Login Realizado com Sucesso!';
-            // if(usuario.tipo == 1){
-            //     let func = new PFisicaModel(null,null,null,usuario.email,usuario.senha,null,null);
-            //     func = await func.logarEmailSenha();
-            //     if(func.isFunc){// Se for funcionario Manda para Página admin
-            //         res.clearCookie('UsuarioEmail');
-            //         res.clearCookie('UsuarioSenha');
-            //         res.cookie('FuncionarioEmail', usuario.email);
-            //         res.cookie('FuncionarioSenha', usuario.senha);
-            //         ok = true;
-            //         msg = 'Login de Funcionário realizado com Sucesso!';
-            //         redirecionarPara = '/admin';
-            //     } else {
-            //         // Se for tipo 1 mas não é funcionário, é um cliente comum
-            //         res.clearCookie('FuncionarioEmail');
-            //         res.clearCookie('FuncionarioSenha');
-            //         res.cookie('UsuarioEmail', usuario.email);
-            //         res.cookie('UsuarioSenha', usuario.senha);
-            //         res.cookie('UsuarioNome', usuario.nome);
-            //         ok = true;
-            //         msg = 'Login realizado com Sucesso!';
-            //         redirecionarPara = '/';
-            //     }
-            // } else {
-            //     // Se for tipo != 1 (pessoa jurídica ou outro), salva os cookies e redireciona para '/'
-            //     res.clearCookie('FuncionarioEmail');
-            //     res.clearCookie('FuncionarioSenha');
-            //     res.cookie('UsuarioEmail', usuario.email);
-            //     res.cookie('UsuarioSenha', usuario.senha);
-            //     res.cookie('UsuarioNome', usuario.nome);
-            //     ok = true;
-            //     msg = 'Login realizado com Sucesso!';
-            //     redirecionarPara = '/';
-            // }
         } else {
            
             ok = false; //credencial invalida
