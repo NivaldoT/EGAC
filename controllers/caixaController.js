@@ -214,6 +214,7 @@ class CaixaController{
     }
 
     async registrarMovimento(req, res) {
+        let banco;
         try {
             const { tipo, descricao, valor, idCaixa } = req.body;
 
@@ -240,8 +241,8 @@ class CaixaController{
 
             // Se for saída, verificar saldo
             if (tipo === 'saida') {
-                let caixaModel = new CaixaModel(caixaId);
-                let caixaInfo = await caixaModel.obter();
+                let caixaModel = new CaixaModel();
+                let caixaInfo = await caixaModel.buscarCaixaAberto();
                 
                 if (!caixaInfo || parseFloat(caixaInfo.valor) < parseFloat(valor)) {
                     return res.json({ ok: false, msg: 'Saldo insuficiente no caixa' });
@@ -252,16 +253,43 @@ class CaixaController{
             const operacao = tipo === 'entrada' ? 3 : 4;
 
             // Registrar movimento
-            let banco = new Database();
+            banco = new Database();
             let sql = `INSERT INTO tb_Movimento (movi_operacao, movi_valor, movi_data, movi_idCaixa, movi_descricao) 
                       VALUES (?, ?, NOW(), ?, ?)`;
-            await banco.ExecutaComandoNonQuery(sql, [operacao, valor, caixaId, descricao || null]);
-
-            return res.json({ ok: true, msg: 'Movimento registrado com sucesso!' });
+            
+            const resultado = await banco.ExecutaComandoNonQuery(sql, [operacao, valor, caixaId, descricao || null]);
+            
+            if (resultado) {
+                // Atualizar saldo do caixa
+                const valorAjuste = tipo === 'entrada' ? valor : -valor;
+                let sqlUpdate = `UPDATE tb_Caixa SET caixa_valor = caixa_valor + ? WHERE caixa_id = ?`;
+                await banco.ExecutaComandoNonQuery(sqlUpdate, [valorAjuste, caixaId]);
+                
+                return res.json({ ok: true, msg: 'Movimento registrado com sucesso!' });
+            } else {
+                return res.json({ ok: false, msg: 'Falha ao registrar movimento' });
+            }
 
         } catch (error) {
             console.error('Erro ao registrar movimento:', error);
-            return res.status(500).json({ ok: false, msg: 'Erro ao registrar movimento' });
+            console.error('Detalhes do erro:', {
+                message: error.message,
+                code: error.code,
+                errno: error.errno,
+                sqlMessage: error.sqlMessage
+            });
+            
+            let mensagemErro = 'Erro ao registrar movimento';
+            
+            if (error.code === 'ECONNRESET' || error.code === 'PROTOCOL_CONNECTION_LOST') {
+                mensagemErro = 'Conexão com o banco perdida. Tente novamente.';
+            } else if (error.code === 'ER_DUP_ENTRY') {
+                mensagemErro = 'Registro duplicado';
+            } else if (error.sqlMessage) {
+                mensagemErro = `Erro no banco: ${error.sqlMessage}`;
+            }
+            
+            return res.status(500).json({ ok: false, msg: mensagemErro });
         }
     }
 }

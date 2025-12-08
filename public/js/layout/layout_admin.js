@@ -45,7 +45,9 @@ document.addEventListener('DOMContentLoaded',  function(){
 
                 caixaValor.textContent = 'Valor: R$00,00';
 
-                document.getElementById('exportarCaixa').style.display = 'none';  //ESCONDE BOTÃO EXPORTAR CAIXA
+                // Botões Excel e PDF ficam visíveis, mas desabilitados quando caixa fechado
+                document.getElementById('excelCaixa').disabled = true;
+                document.getElementById('printCaixaPDF').disabled = true;
 
                 document.getElementById('statusCaixa').innerHTML = htmlAlert;
             }
@@ -119,7 +121,9 @@ document.addEventListener('DOMContentLoaded',  function(){
                     acaoBtnCaixa.textContent = 'Fechar Caixa';
                     acaoBtnCaixa.removeEventListener('click', abrirCaixa);
 
-                    document.getElementById('exportarCaixa').style.display = 'inline-flex';   //MOSTRA BOTÃO EXPORTAR CAIXA
+                    // Habilita botões Excel e PDF quando caixa está aberto
+                    document.getElementById('excelCaixa').disabled = false;
+                    document.getElementById('printCaixaPDF').disabled = false;
 
                     document.getElementById('modalDialog').classList.add('modal-xl'); // AUMENTA O TAMANHO DO MODAL
                     document.getElementById('statusCaixa').innerHTML = htmlAlert;
