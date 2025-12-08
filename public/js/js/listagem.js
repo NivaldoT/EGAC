@@ -119,13 +119,15 @@ document.addEventListener('DOMContentLoaded', function(){
                 return resposta.json();
             })
             .then(function(corpo) {
-                alert(corpo.msg);
                 if(corpo.ok) {
+                    showToast('Sucesso!', corpo.msg, 'success');
                     // Remover card ou linha da tabela
                     let elementoRemover = btn.closest('.col-12') || btn.closest('tr');
                     if(elementoRemover) {
                         elementoRemover.remove();
                     }
+                } else {
+                    showToast('Erro!', corpo.msg, 'error');
                 }
             })
         });
@@ -205,3 +207,27 @@ document.addEventListener('DOMContentLoaded', function(){
         });
     }
 })
+
+function showToast(title, message, type) {
+    const toast = document.createElement('div');
+    toast.className = `toast-notification ${type}`;
+    
+    const icon = type === 'success' ? '✓' : '✕';
+    const iconColor = type === 'success' ? '#28a745' : '#dc3545';
+    
+    toast.innerHTML = `
+        <div class="toast-icon" style="color: ${iconColor}; font-size: 24px; font-weight: bold;">${icon}</div>
+        <div class="toast-content">
+            <div class="toast-title">${title}</div>
+            <div class="toast-message">${message}</div>
+        </div>
+        <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.classList.add('hiding');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}

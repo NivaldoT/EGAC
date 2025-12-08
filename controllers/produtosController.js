@@ -21,11 +21,21 @@ class produtosController{
         const tipoItem = req.body.tipoItem;
         const nome = req.body.nome;
         const preco = req.body.preco;
-        const estoque = req.body.estoque;
+        const estoque = req.body.estoque || 0;
         const descricao = req.body.descricao;
         const categoria = req.body.categoria;
         const marca = req.body.marca;
         const imagem = req.file ? req.file.filename : null;
+
+        // Validação de campos obrigatórios
+        if(!tipoItem || !nome || !preco || estoque === '' || !descricao || !categoria || !marca || !imagem) {
+            return res.send({ok: false, msg: 'Todos os campos são obrigatórios!'});
+        }
+
+        // Validação de estoque negativo
+        if(parseFloat(estoque) < 0) {
+            return res.send({ok: false, msg: 'Estoque não pode ser negativo!'});
+        }
 
         let prod = new produtoModel(null,tipoItem,nome,preco,descricao,categoria,null,marca,null,estoque,imagem);
         

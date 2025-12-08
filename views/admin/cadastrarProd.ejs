@@ -1,72 +1,352 @@
 <script src="/js/js/cadastrarProd.js" defer></script>
-<div class="container">
-    <h1>Cadastro de Itens</h1>
-    <div id="form">
-        <div class="form-floating mb-3">
-            <select name="tipoItem" id="tipoItem" class="form-control">
-                <option value="0" disabled selected>Selecione...</option>
-                <option value="1">Produto</option>
-                <option value="2">Insumo</option>
-            </select>
-            <label for="tipoItem">Tipo de Item</label>
-        </div>
-        <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="nomeval" placeholder=" " maxlength="50">
-            <label for="nome">Nome:</label>
-        </div>
-        <div class="form-floating mb-3" id="preco">
-            <input type="number" class="form-control" id="precoval" placeholder=" ">
-            <label for="preco">Preço:</label>
-        </div>
-        <div class="form-floating mb-3" id="descricao">
-            <input type="text" class="form-control" id="descricaoval" placeholder=" " maxlength="1000">
-            <label for="descricao">Descrição:</label>
-        </div>
-        <div class="row align-items-center">
-            <div class="form-floating mb-3 col-md-11" id="categoria">
-                <select name="categoria" id="categoriaval" class="form-control">
-                    <option value="0" selected>...</option>
-                    <% for(let i=0; i<listaCategorias.length ; i++) {%>
-                        <option value="<%=listaCategorias[i].id%>"><%=listaCategorias[i].nome%></option>
-                        <%}%>
+
+<style>
+.toast-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: white;
+    padding: 16px 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 9999;
+    animation: slideIn 0.3s ease-out;
+    min-width: 300px;
+}
+.toast-notification.success {
+    border-left: 4px solid #28a745;
+}
+.toast-notification.error {
+    border-left: 4px solid #dc3545;
+}
+.toast-notification .toast-icon {
+    font-size: 24px;
+}
+.toast-notification.success .toast-icon {
+    color: #28a745;
+}
+.toast-notification.error .toast-icon {
+    color: #dc3545;
+}
+.toast-notification .toast-content {
+    flex: 1;
+}
+.toast-notification .toast-title {
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #333;
+}
+.toast-notification .toast-message {
+    font-size: 14px;
+    color: #666;
+}
+.toast-notification .toast-close {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+}
+@keyframes slideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+}
+.toast-notification.hiding {
+    animation: slideOut 0.3s ease-in forwards;
+}
+.page-header {
+    background: white;
+    padding: 20px 0;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 24px;
+}
+.page-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+.page-subtitle {
+    font-size: 14px;
+    color: #666;
+    margin-top: 4px;
+}
+.card-section {
+    background: white;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.form-row-custom {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+}
+.form-group-custom {
+    margin-bottom: 16px;
+}
+.form-group-custom label {
+    display: block;
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+.form-group-custom label .required {
+    color: #dc3545;
+}
+.form-group-custom input,
+.form-group-custom select,
+.form-group-custom textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d0d0d0;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+.form-group-custom input:focus,
+.form-group-custom select:focus,
+.form-group-custom textarea:focus {
+    outline: none;
+    border-color: #28a745;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+}
+.image-upload-area {
+    border: 2px dashed #d0d0d0;
+    border-radius: 8px;
+    padding: 24px;
+    text-align: center;
+    background: #fafafa;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+.image-upload-area:hover {
+    border-color: #28a745;
+    background: #f0f9f0;
+}
+.image-preview {
+    max-width: 200px;
+    border-radius: 8px;
+    background: white;
+    padding: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin: 16px auto 0;
+}
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    padding: 20px 0;
+    border-top: 1px solid #e0e0e0;
+    margin-top: 24px;
+}
+.btn-save {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.btn-save:hover {
+    background: #218838;
+}
+.btn-cancel {
+    background: white;
+    color: #666;
+    border: 1px solid #d0d0d0;
+    padding: 12px 32px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s;
+}
+.btn-cancel:hover {
+    background: #f5f5f5;
+    color: #333;
+    text-decoration: none;
+}
+.add-new-btn {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+.add-new-btn:hover {
+    background: #218838;
+    color: white;
+    text-decoration: none;
+}
+.select-with-add {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+}
+.select-with-add select {
+    flex: 1;
+}
+</style>
+
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="page-header">
+        <h1 class="page-title">Cadastrar Novo Item</h1>
+        <p class="page-subtitle">Preencha todos os campos obrigatórios para cadastrar um novo produto ou insumo</p>
+    </div>
+
+    <!-- Formulário -->
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Informações Básicas -->
+            <div class="card-section">
+                <h2 class="section-title">
+                    <i class="bi bi-info-circle"></i>
+                    Informações Básicas
+                </h2>
+
+                <div class="form-group-custom">
+                    <label for="tipoItem">Tipo de Item <span class="required">*</span></label>
+                    <select name="tipoItem" id="tipoItem" class="form-control" required>
+                        <option value="0" disabled selected>Selecione o tipo...</option>
+                        <option value="1">Produto</option>
+                        <option value="2">Insumo</option>
                     </select>
-                    <label for="categoria">Categoria:</label>
+                </div>
+
+                <div class="form-group-custom">
+                    <label for="nomeval">Nome <span class="required">*</span></label>
+                    <input type="text" class="form-control" id="nomeval" placeholder="Digite o nome do item" maxlength="50" required>
+                </div>
+
+                <div class="form-row-custom">
+                    <div class="form-group-custom">
+                        <label for="precoval">Preço de Venda <span class="required">*</span></label>
+                        <input type="number" class="form-control" id="precoval" placeholder="0.00" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group-custom">
+                        <label for="estoqueval">Estoque Inicial <span class="required">*</span></label>
+                        <input type="number" class="form-control" id="estoqueval" placeholder="0" min="0" value="0" required>
+                    </div>
+                </div>
+
+                <div class="form-group-custom">
+                    <label for="descricaoval">Descrição <span class="required">*</span></label>
+                    <textarea class="form-control" id="descricaoval" placeholder="Descreva o item..." maxlength="1000" rows="3" required></textarea>
+                </div>
             </div>
-            <div class="col-md-1 align-self-center mb-3">
-                <a class="btn btn-success btn-lg" href="/admin/cadastrarCategoria"><i class="bi bi-plus-lg"></i></a>
+
+            <!-- Classificação -->
+            <div class="card-section">
+                <h2 class="section-title">
+                    <i class="bi bi-tags"></i>
+                    Classificação
+                </h2>
+
+                <div class="form-group-custom">
+                    <label for="categoriaval">Categoria <span class="required">*</span></label>
+                    <div class="select-with-add">
+                        <select name="categoria" id="categoriaval" class="form-control" required>
+                            <option value="0" disabled selected>Selecione uma categoria...</option>
+                            <% for(let i=0; i<listaCategorias.length ; i++) {%>
+                                <option value="<%=listaCategorias[i].id%>"><%=listaCategorias[i].nome%></option>
+                            <%}%>
+                        </select>
+                        <a class="add-new-btn" href="/admin/cadastrarCategoria">
+                            <i class="bi bi-plus-lg"></i> Nova
+                        </a>
+                    </div>
+                </div>
+
+                <div class="form-group-custom">
+                    <label for="marcaval">Marca <span class="required">*</span></label>
+                    <div class="select-with-add">
+                        <select name="marca" id="marcaval" class="form-control" required>
+                            <option value="0" disabled selected>Selecione uma marca...</option>
+                            <% for(let i=0; i<listaMarcas.length ; i++) {%>
+                                <option value="<%=listaMarcas[i].id%>"><%=listaMarcas[i].nome%></option>
+                            <%}%>
+                        </select>
+                        <a class="add-new-btn" href="/admin/cadastrarMarca">
+                            <i class="bi bi-plus-lg"></i> Nova
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="row align-items-center">
-            <div class="form-floating mb-3 col-md-11" id="marca">
-                <select name="marca" id="marcaval" class="form-control">
-                <option value="0" selected>...</option>
-                <% for(let i=0; i<listaMarcas.length ; i++) {%>
-                    <option value="<%=listaMarcas[i].id%>"><%=listaMarcas[i].nome%></option>
-                    <%}%>
-                </select>
-                <label for="tipoItem">Marca:</label>
-            </div>
-            <div class="col-md-1 align-self-center mb-3">
-                <a class="btn btn-success btn-lg" href="/admin/cadastrarMarca"><i class="bi bi-plus-lg"></i></a>
-            </div>
-        </div>
-        <div class="form-group mb-3">
-            <label>Imagem do Produto:</label>
-            <input class="form-control" type="file" id="inputImagem" accept="image/jpeg,image/jpg,image/png,image/webp">
-            <small class="form-text text-muted">Formatos aceitos: JPG, JPEG, PNG, WebP (máx. 2MB)</small>
-        </div>
-        <div class="form-group mb-3" id="divPrevia" style="display:none;">
-            <label>Prévia da Imagem</label>
-            <div>
-                <img width="250" id="previaImagem" class="img-thumbnail">
+
+        <div class="col-lg-4">
+            <!-- Imagens -->
+            <div class="card-section">
+                <h2 class="section-title">
+                    <i class="bi bi-image"></i>
+                    Imagem do Produto <span class="required">*</span>
+                </h2>
+
+                <div class="image-upload-area" onclick="document.getElementById('inputImagem').click()">
+                    <i class="bi bi-cloud-upload" style="font-size: 48px; color: #28a745;"></i>
+                    <p style="margin: 12px 0 4px; font-weight: 500; color: #333;">Clique para selecionar</p>
+                    <p style="font-size: 12px; color: #666; margin: 0;">JPG, JPEG, PNG, WebP (máx. 2MB)</p>
+                    <input class="form-control" type="file" id="inputImagem" accept="image/jpeg,image/jpg,image/png,image/webp" style="display: none;" required>
+                </div>
+
+                <div id="divPrevia" style="display:none;">
+                    <img id="previaImagem" class="image-preview">
+                </div>
             </div>
         </div>
-        <button class="btn btn-success" id="cadastrar">Cadastrar Item</button>
-        <a id="voltar" href="/admin/listagem/1" class="btn btn-secondary">Voltar</a>
+    </div>
+
+    <!-- Botões de Ação -->
+    <div class="action-buttons">
+        <button class="btn-save" id="cadastrar">
+            <i class="bi bi-check-circle"></i>
+            Cadastrar Item
+        </button>
+        <a id="voltar" href="/admin/listagem/1" class="btn-cancel">Cancelar</a>
     </div>
 </div>
-<style>
-    .row label{
-        padding-left: 1.5rem
-    }
-</style>

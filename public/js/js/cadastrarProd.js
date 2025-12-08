@@ -20,11 +20,24 @@ document.addEventListener('DOMContentLoaded', function(){
             precomax.value = 0;
     })
     
+    let estoqueInput = document.getElementById('estoqueval');
+    estoqueInput.addEventListener('input', function(){
+        if(estoqueInput.value < 0)
+            estoqueInput.value = 0;
+    })
+    estoqueInput.addEventListener('keydown', function(e){
+        // Bloqueia teclas de menos (189 = -, 109 = - do numpad)
+        if(e.keyCode === 189 || e.keyCode === 109) {
+            e.preventDefault();
+        }
+    })
+    
     let btn = document.getElementById('cadastrar');
     btn.addEventListener('click', function(){
 
         const nome = document.getElementById('nomeval');
         const preco = document.getElementById('precoval');
+        const estoque = document.getElementById('estoqueval');
         const descricao = document.getElementById('descricaoval');
         const tipoItem = document.getElementById('tipoItem');
         const categoria = document.getElementById('categoriaval');
@@ -41,6 +54,11 @@ document.addEventListener('DOMContentLoaded', function(){
             vetorVal.push(preco);
         else
             preco.style.borderColor = '';
+
+        if(!isFinite(Number(estoque.value)) || estoque.value === '' || estoque.value < 0)
+            vetorVal.push(estoque);
+        else
+            estoque.style.borderColor = '';
 
         if(!descricao.value)
             vetorVal.push(descricao);
@@ -67,12 +85,13 @@ document.addEventListener('DOMContentLoaded', function(){
             inputImagem.style.borderColor = '';
 
         if(vetorVal.length == 0){
-            if(nome.value && isFinite(Number(preco.value)) && preco.value && descricao.value && inputImagem.files.length > 0){
+            if(nome.value && isFinite(Number(preco.value)) && preco.value && isFinite(Number(estoque.value)) && estoque.value !== '' && estoque.value >= 0 && descricao.value && inputImagem.files.length > 0){
                 // Usar FormData para enviar arquivo
                 let formData = new FormData();
                 formData.append('tipoItem', tipoItem.value);
                 formData.append('nome', nome.value);
                 formData.append('preco', preco.value);
+                formData.append('estoque', estoque.value);
                 formData.append('descricao', descricao.value);
                 formData.append('categoria', categoria.value);
                 formData.append('marca', marca.value);
@@ -86,28 +105,50 @@ document.addEventListener('DOMContentLoaded', function(){
                         return resposta.json();
                     })
                     .then(function(corpo) {
-                        alert(corpo.msg);
                         if(corpo.ok) {
-                            nome.value='';
-                            preco.value='';
-                            descricao.value='';
-                            categoria.value='0';
-                            marca.value='0';
-                            inputImagem.value='';
-                            document.getElementById('divPrevia').style.display = 'none';
+                            showToast('Sucesso!', corpo.msg, 'success');
+                            setTimeout(() => {
+                                window.location.href = '/admin/listagem/' + tipoItem.value;
+                            }, 1000);
+                        } else {
+                            showToast('Erro!', corpo.msg, 'error');
                         }
                 })
                 return
             }
         }
         else{
-            alert('Favor Preencher os Campos Obrigatórios!');
+            showToast('Atenção!', 'Favor preencher todos os campos obrigatórios!', 'error');
             for(let i=0; i<vetorVal.length; i++){
                 vetorVal[i].style.borderColor = 'red';
             }
         }
     })
 })
+
+function showToast(title, message, type) {
+    const toast = document.createElement('div');
+    toast.className = `toast-notification ${type}`;
+    
+    const icon = type === 'success' ? '✓' : '✕';
+    const iconColor = type === 'success' ? '#28a745' : '#dc3545';
+    
+    toast.innerHTML = `
+        <div class="toast-icon" style="color: ${iconColor}; font-size: 24px; font-weight: bold;">${icon}</div>
+        <div class="toast-content">
+            <div class="toast-title">${title}</div>
+            <div class="toast-message">${message}</div>
+        </div>
+        <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.classList.add('hiding');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
 
 function carregarPrevia() {
     if(this.files.length > 0) {
