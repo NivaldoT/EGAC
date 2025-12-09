@@ -15,8 +15,19 @@ document.addEventListener("DOMContentLoaded", function() {
 
     document.getElementById("excel").addEventListener("click", exportarExcel);
     function exportarExcel() {
-        var wb = XLSX.utils.table_to_book(document.getElementById("pedidos"));
+        var wb = XLSX.utils.table_to_book(document.getElementById("tableOS"));
         XLSX.writeFile(wb, "Relátorio-OS-"+new Date().toLocaleString('pt-br')+".xlsx");
+    }
+
+    window.imprimirOS = function() {
+        const tbody = document.querySelector("#tableOS > tbody");
+        const temDados = tbody && tbody.innerHTML.trim() !== "" && !tbody.innerHTML.includes("Carregando");
+        
+        if (!temDados) {
+            alert("Aguarde o carregamento das ordens de serviço antes de imprimir.");
+            return;
+        }
+        window.print();
     }
 
     carregarPedidos();

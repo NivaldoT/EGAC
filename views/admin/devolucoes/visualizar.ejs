@@ -228,9 +228,6 @@
                             <a href="/admin/devolucoes" class="btn btn-secondary btn-block">
                                 <i class="fas fa-arrow-left"></i> Voltar para Lista
                             </a>
-                            <a href="/admin/pedidos/<%= devolucao.idVenda %>" class="btn btn-info btn-block">
-                                <i class="fas fa-shopping-cart"></i> Ver Pedido Original
-                            </a>
                             <% if (devolucao.status === 'aprovada') { %>
                                 <a href="/admin/contas-pagar" class="btn btn-warning btn-block">
                                     <i class="fas fa-dollar-sign"></i> Ver Contas a Pagar
