@@ -72,7 +72,7 @@ class OrdemDeServicoController{
         let comentario = req.body.comentario;
         console.log(idOS,listaInsumo,listaSubItem,comentario)
 
-        let os = new OrdemDeServicoModel(idOS,null,null,null,null,null,null,null,comentario);
+        let os = new OrdemDeServicoModel(idOS,null,null,null,null,null,null,null,null,null,comentario);
         let result = await os.concluirOS(); 
         if(result){
             ok = true;

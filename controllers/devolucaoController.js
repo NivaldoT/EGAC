@@ -374,7 +374,7 @@ class DevolucaoController {
 
                     //DEVOLUÇÃO DE COMPRA
     async devolverCompra(req,res){
-        let ok;
+        let ok = true;
         let msg;
 
         let itensDevolucao = req.body.itensDevolucao;
@@ -384,27 +384,44 @@ class DevolucaoController {
         compra = await compra.buscarPorId();
         if(compra){
             let DevoCompra = new DevolucaoCompraModel(null,compra.id);
-            let idDevolucao = await DevoCompra.gravar();        //grava a devolução
-            if(idDevolucao){
-                for(let i=0; i<itensDevolucao.length; i++){
-                    let itemDevoCompraModel = new ItemDevoCompraModel(null,idDevolucao,itensDevolucao[i].id,itensDevolucao[i].qtd,itensDevolucao[i].preco,itensDevolucao[i].motivo);   //criar item de devolução
-                    ok = await itemDevoCompraModel.gravar();
-                    if(ok){          //grava o item da devolução, atualiza estoque(diminuindo)
-                        let prod = new produtoModel(itensDevolucao[i].id);
-                        ok = await prod.atualizarEstoque(-itensDevolucao[i].qtd);
-                        if(!ok){msg = 'Erro ao atualizar estoque!'; i = itensDevolucao.length;}
-                    }
-                    else{msg = 'Erro ao gravar item de devolução!'; i = itensDevolucao.length;};
-
-                    if(ok){         //cria e grava a conta a receber
-                        let dataVencimento = new Date(new Date().setMonth(new Date().getMonth()+1));//data de vencimento 1 mês após hoje
-                        let contaReceber = new ContaReceberModel(null,3,null,null,idDevolucao,itensDevolucao[i].preco*itensDevolucao[i].qtd,new Date(dataVencimento),0,1,1);
-                        ok = await contaReceber.gravar();
-                        if(!ok){msg = 'Erro ao gravar conta a receber!'; i = itensDevolucao.length;}
+            DevoCompra = await DevoCompra.buscarPorIdCompra()
+            if(DevoCompra){    //verifica se esta compra já tem devolução
+                let itensDevoCompra = new ItemDevoCompraModel(null,DevoCompra.id);
+                let listaItensDevoCompra = await itensDevoCompra.listarPorDevolucaoId();
+                for(let i=0; i<itensDevolucao.length;i++){
+                    for(let j=0; j<listaItensDevoCompra.length;j++){
+                        if(listaItensDevoCompra[i].idProduto == itensDevolucao[j].id){
+                            let prod = new produtoModel();
+                            prod = await prod.buscarId(itensDevolucao[j].id);
+                            msg = 'Dentre os itens selecionados, o produto: '+prod.nome+' já possui devolução em andamento!';
+                            ok = false;
+                        }
                     }
                 }
-                if(ok){
-                    msg = 'Devolução registrada com sucesso!';
+            }
+            if(ok){
+                let idDevolucao = await DevoCompra.gravar();        //grava a devolução
+                if(idDevolucao){
+                    for(let i=0; i<itensDevolucao.length; i++){
+                        let itemDevoCompraModel = new ItemDevoCompraModel(null,idDevolucao,itensDevolucao[i].id,itensDevolucao[i].qtd,itensDevolucao[i].preco,itensDevolucao[i].motivo);   //criar item de devolução
+                        ok = await itemDevoCompraModel.gravar();
+                        if(ok){          //grava o item da devolução, atualiza estoque(diminuindo)
+                            let prod = new produtoModel(itensDevolucao[i].id);
+                            ok = await prod.atualizarEstoque(-itensDevolucao[i].qtd);
+                            if(!ok){msg = 'Erro ao atualizar estoque!'; i = itensDevolucao.length;}
+                        }
+                        else{msg = 'Erro ao gravar item de devolução!'; i = itensDevolucao.length;};
+
+                        if(ok){         //cria e grava a conta a receber
+                            let dataVencimento = new Date(new Date().setMonth(new Date().getMonth()+1));//data de vencimento 1 mês após hoje
+                            let contaReceber = new ContaReceberModel(null,3,null,null,idDevolucao,itensDevolucao[i].preco*itensDevolucao[i].qtd,new Date(dataVencimento),0,1,1);
+                            ok = await contaReceber.gravar();
+                            if(!ok){msg = 'Erro ao gravar conta a receber!'; i = itensDevolucao.length;}
+                        }
+                    }
+                    if(ok){
+                        msg = 'Devolução registrada com sucesso!';
+                    }
                 }
             }
         }

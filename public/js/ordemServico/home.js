@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             <td>${OS.nomeMarca}</td>
                             <td>${OS.nomeFuncionario}</td>
                             <td>${OS.status == 0? 'A Realizar Serviço': OS.status == 1?'Concluída':'Pagamento Recebido'}</td>
-                            <td>${OS.comentario?OS.comentario:'Não informado'}</td>
+                            <td>${OS.comentario? OS.comentario:'Não informado'}</td>
                             <td>${new Date(OS.dataAbertura).toLocaleString('pt-br')}</td>
                             <td>${new Date(OS.dataAgendada).toLocaleDateString('pt-br')}</td>
                             <td>${OS.status == 0?'À Concluir' : new Date(OS.dataConclusao).toLocaleString('pt-br')}</td>

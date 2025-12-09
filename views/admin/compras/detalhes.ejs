@@ -55,14 +55,14 @@
                                     var itemDevolvido = false; 
                                     if(listaItensDevolucao){ 
                                         for(let j=0; j < listaItensDevolucao.length; j++){ 
-                                            if(listaItens[i].id == listaItensDevolucao[j].idProduto){ 
+                                            if(listaItens[i].idProduto == listaItensDevolucao[j].idProduto){ 
                                                 itemDevolvido = true;
                                             } 
                                         } 
                                     }%>
                                     <tr>
                                         <td>
-                                            <input name="nomeProduto" class="form-check-input checkItens " type="checkbox" value="<%= listaItens[i].id %>" <%if(itemDevolvido){%> disabled <%}%> data-nome="<%=listaItens[i].nomeProduto%>">
+                                            <input name="nomeProduto" class="form-check-input checkItens " type="checkbox" value="<%=listaItens[i].idProduto %>" <%if(itemDevolvido){%> disabled <%}%> data-nome="<%=listaItens[i].nomeProduto%>">
                                             <label class="form-check-label" for="nomeProduto" >
                                                 <%= listaItens[i].nomeProduto %><%if(itemDevolvido){%>(Item já devolvido! Não será possivel nova devolução)<%}%>
                                             </label>

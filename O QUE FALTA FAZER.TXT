@@ -29,4 +29,4 @@ SERIA BOM SE DER TEMPO:
     -Nas listagens, exibir 10 por vez pra evitar pesquisas muito grandes
     -Detalhes nas contas a pagar e receber ao clicar
 
-PDF OS Bugado
+Fazer detalhes OS
