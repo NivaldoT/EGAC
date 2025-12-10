@@ -62,6 +62,16 @@ class marcaModel{
         let result = await banco.ExecutaComandoNonQuery(sql,valores);
         return result;
     }
+
+    async verificarChild(){
+        let sql = `select count(*) as total from tb_Marca m
+                    left join tb_Produto p on p.prod_marca = m.marca_id
+                    left join tb_EquipamentoAgricola eq on eq.eq_marcaId = m.marca_id where marca_id = ?`
+        let valores = [this.#id];
+        let banco = new Database();
+        let result = await banco.ExecutaComando(sql, valores);
+        return result[0].total;
+    }
 }
 
 module.exports = marcaModel;

@@ -129,12 +129,22 @@ class adminController {
                 res.send({ok: false, msg: 'Falha na Exclusão do Equipamento Agrícola!'});
         }
         if(tipo == 5){
-            prod = new marcaModel();
-            let result = await prod.excluir(id);
-            if(result)
-                res.send({ok: true , msg: 'Marca Excluida com Sucesso!'});
-            else
-                res.send({ok: false, msg: 'Falha na Exclusão do Marca!'});
+            let ok = true;
+            let msg;
+            prod = new marcaModel(id);
+
+            let childs = await prod.verificarChild()
+            if(childs > 0){
+                ok = false;
+                msg = 'Não é possível excluir esta marca! Existem ' + childs + ' produto(s) vinculado(s) a ela.';
+            }
+
+            if(ok){
+                let result = await prod.excluir(id);
+                if(result){ok = true; msg = 'Marca Excluida com Sucesso!'}
+                else{ok = false; msg = 'Falha na Exclusão da Marca!'};
+            }
+            res.send({ok,msg})
         }
         
         if(tipo == 6){
