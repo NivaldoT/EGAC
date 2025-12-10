@@ -65,18 +65,18 @@ document.addEventListener("DOMContentLoaded", function() {
                         let OS = corpo.lista[i];
                         //  onclick="window.location.href='/admin/vendas/detalhes/${conta.id}'"
                         html +=`
-                        <tr style="cursor: pointer;" onmouseover="this.style.backgroundColor='#f5f5f5'" onmouseout="this.style.backgroundColor=''">
+                        <tr style="cursor: pointer;" onclick="window.location.href='/admin/ordemServicos/detalhes/${OS.id}'" onmouseover="this.style.backgroundColor='#f5f5f5'" onmouseout="this.style.backgroundColor=''">
                             <td><strong>#${OS.id}</strong></td>
                             <td>${OS.nomePessoa}</td>
                             <td>${OS.nomeServico}</td>
                             <td>${OS.nomeEqAgricola}</td>
                             <td>${OS.nomeMarca}</td>
                             <td>${OS.nomeFuncionario}</td>
-                            <td>${OS.status == 0? 'A Realizar Serviço': OS.status == 1?'Concluída':'Pagamento Recebido'}</td>
+                            <td>${OS.status == 0? 'A Realizar Serviço': OS.status == 1?'Concluída':'OS Recebida'}</td>
                             <td>${OS.comentario? OS.comentario:'Não informado'}</td>
                             <td>${new Date(OS.dataAbertura).toLocaleString('pt-br')}</td>
                             <td>${new Date(OS.dataAgendada).toLocaleDateString('pt-br')}</td>
-                            <td>${OS.status == 0?'À Concluir' : new Date(OS.dataConclusao).toLocaleString('pt-br')}</td>
+                            <td>${OS.status == 0?'A Concluir' : new Date(OS.dataConclusao).toLocaleString('pt-br')}</td>
                             <td>
                                 <a href="/admin/OrdemServicos/concluir/${OS.id}" class="btn btn-primary ${OS.status!=0? 'disabled':''}"><i class"bi bi-pencil-square"></i>Concluir OS</a>
                                 <a href="/admin/OrdemServicos/receber/${OS.id}" class="btn btn-primary ${OS.status!=1?'disabled':''}"><i class"bi bi-pencil-square"></i>Receber OS</a>

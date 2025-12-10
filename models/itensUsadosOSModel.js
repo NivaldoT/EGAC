@@ -42,7 +42,7 @@ class itensUsadosOSModel{
     async listar(){
         let sql = `
         select * from tb_ItensUsadosOS its 
-        inner join tb_Produtos p on p.prod_id = its.itserv_idProd
+        inner join tb_Produto p on p.prod_id = its.itos_idProd
         where itos_id = ?`;
         let valores = [this.#id];
         let banco = new Database();
@@ -53,6 +53,25 @@ class itensUsadosOSModel{
             lista.push(new itensUsadosOSModel(rows[i]['itos_id'],rows[i]['itos_idOS'],rows[i]['itos_idProd'],rows[i]['prod_nome'],rows[i]['itos_qtd'],rows[i]['itos_precoUni']));
         }
         return lista;
+    }
+
+    async listarPorIdOS(){
+        let sql = `
+        select * from tb_ItensUsadosOS its 
+        inner join tb_Produto p on p.prod_id = its.itos_idProd
+        where itos_idOS = ?`;
+        let valores = [this.#idOS];
+        let banco = new Database();
+        let rows = await banco.ExecutaComando(sql,valores);
+        
+        let lista = [];
+        if(rows.length > 0){
+        for(let i=0;i<rows.length;i++){
+                lista.push(new itensUsadosOSModel(rows[i]['itos_id'],rows[i]['itos_idOS'],rows[i]['itos_idProd'],rows[i]['prod_nome'],rows[i]['itos_qtd'],rows[i]['itos_precoUni']));
+            }
+            return lista;
+        }else
+            return null;
     }
 
 }
