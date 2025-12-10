@@ -7,11 +7,14 @@ const ContaPagarModel = require("../models/contaPagarModel");
 const ItemDevoCompraModel = require("../models/itemDevoCompraModel");
 const DevolucaoCompraModel = require("../models/devolucaoCompraModel");
 const ContaReceberModel = require("../models/contaReceberModel");
+const PJModel = require("../models/pjuridicaModel");
 
 class CompraController{
 
-    homeView(req,res){
-        res.render('admin/compras/home.ejs', {layout:'layout_admin'});
+    async homeView(req,res){
+        let listaFornecedor = new PJModel();
+        listaFornecedor = await listaFornecedor.listar()
+        res.render('admin/compras/home.ejs', {layout:'layout_admin', listaFornecedor});
     }
     async comprarView(req,res){
         let func = new PFisicaModel(null,null,null,req.cookies.UsuarioEmail,req.cookies.UsuarioSenha,null,null);
@@ -20,12 +23,17 @@ class CompraController{
     }
 
     async listar(req, res) {
-        let termo = null;
-        if(req.query.termo) {
-            termo = req.query.termo;
-        }
+        let termo = req.query.termo;
+
+        let filtro = req.query.filtro;
+        let fornecedor = req.query.fornecedor;
+        let dataInicial = req.query.dataInicial;
+        let dataFinal = req.query.dataFinal;
+        if(dataFinal)
+            dataFinal = dataFinal + ' 23:59:59';  
+
         let itemCompra = new ItensCompraModel();
-        let listaItens = await itemCompra.listar(termo);
+        let listaItens = await itemCompra.listar(termo,filtro,fornecedor,dataInicial,dataFinal);
 
         let compra = new CompraModel();
         let listaCompra = await compra.listar();

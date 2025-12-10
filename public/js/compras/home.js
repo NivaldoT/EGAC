@@ -25,8 +25,22 @@ document.addEventListener("DOMContentLoaded", function() {
     function carregarPedidos() {
         let query = "";
         let termo = document.getElementById("inputBusca");
-        if(termo.value != "") {
-            query = "?termo=" + termo.value;
+        let filtro = document.getElementById("selectFiltro");
+        let fornecedor = document.getElementById("selectFornecedor");
+        let dataInicial = document.getElementById("inputDataInicial");
+        let dataFinal = document.getElementById("inputDataFinal");
+            query += "?termo=" + termo.value;
+        if(filtro.value != "") {
+            query += "&filtro=" + filtro.value;
+        }
+        if(fornecedor.value != "") {
+            query += "&fornecedor=" + fornecedor.value;
+        }
+        if(dataInicial.value != "") {
+            query += "&dataInicial=" + dataInicial.value;
+        }
+        if(dataFinal.value != "") {
+            query += "&dataFinal=" + dataFinal.value;
         }
         //faz o fetch para obter a lista de pedidos
         fetch("/admin/compras/listar" + query)
@@ -65,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function() {
             } if(corpo.listaItens.length == 0) {
                 document.querySelector("#pedidos > tbody").innerHTML = `
                     <tr>
-                        <td colspan="7" class="text-center text-muted py-4">
+                        <td colspan="8" class="text-center text-muted py-4">
                             <i class="bi bi-inbox fs-3 d-block mb-2"></i>
                             Nenhuma venda encontrada
                         </td>
@@ -77,7 +91,7 @@ document.addEventListener("DOMContentLoaded", function() {
             console.error('Erro ao carregar vendas:', erro);
             document.querySelector("#pedidos > tbody").innerHTML = `
                 <tr>
-                    <td colspan="7" class="text-center text-danger py-4">
+                    <td colspan="8" class="text-center text-danger py-4">
                         <i class="bi bi-exclamation-triangle fs-3 d-block mb-2"></i>
                         Erro ao carregar vendas
                     </td>
