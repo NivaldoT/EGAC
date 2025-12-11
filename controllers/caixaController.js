@@ -117,12 +117,12 @@ class CaixaController{
                     // Buscar origem da conta a receber
                     let sqlOrigem = `SELECT 
                         CASE 
-                            WHEN cr.contaRC_operacao = 1 THEN CONCAT('Venda #', cr.contaRC_idVenda)
-                            WHEN cr.contaRC_operacao = 2 THEN CONCAT('OS #', cr.contaRC_idOS)
-                            WHEN cr.contaRC_operacao = 3 THEN 'Devolução Compra'
+                            WHEN cr.contaRE_operacao = 1 THEN CONCAT('OS #', cr.contaRE_idOS)
+                            WHEN cr.contaRE_operacao = 2 THEN CONCAT('Venda #', cr.contaRE_idVenda)
+                            WHEN cr.contaRE_operacao = 3 THEN CONCAT('Devolução Compra #', cr.contaRE_idDevoCompra)
                         END as origem
                         FROM tb_ContaReceber cr
-                        WHERE cr.contaRC_id = ?`;
+                        WHERE cr.contaRE_id = ?`;
                     let origemRows = await banco.ExecutaComando(sqlOrigem, [row.movi_idContaReceber]);
                     origem = origemRows.length > 0 ? origemRows[0].origem : 'N/A';
                 }

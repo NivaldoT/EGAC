@@ -114,7 +114,6 @@ document.addEventListener("DOMContentLoaded", function() {
         let id = {id : this.dataset.id};
         const result = await Swal.fire({
             title: 'Confirma o Recebimento da Conta ID: ' + id.id + '?',
-            icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'OK',
             cancelButtonText: 'Cancelar',
@@ -231,10 +230,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 let inputCaixaValor = document.getElementById('valorInicialCaixa');
                 inputCaixaValor.addEventListener('keypress', validarInicialCaixa);
 
-                acaoBtnCaixa.addEventListener('click', abrirCaixa);         //MUDA O BOTÃO DE AÇÃO DO MODAL
                 acaoBtnCaixa.classList = 'btn btn-success';
                 acaoBtnCaixa.textContent = 'Abrir Caixa';
-                acaoBtnCaixa.removeEventListener('click', fecharCaixa);
+                acaoBtnCaixa.onclick = abrirCaixa;
 
                 caixaValor.textContent = 'Valor: R$00,00';
 
@@ -286,10 +284,9 @@ document.addEventListener("DOMContentLoaded", function() {
                     caixaValor.style.display = 'block';
                     caixaValor.textContent = 'Valor: R$'+caixaModel.valor;
 
-                    acaoBtnCaixa.addEventListener('click', fecharCaixa);
                     acaoBtnCaixa.classList = 'btn btn-danger';
                     acaoBtnCaixa.textContent = 'Fechar Caixa';
-                    acaoBtnCaixa.removeEventListener('click', abrirCaixa);
+                    acaoBtnCaixa.onclick = null;
 
                     document.getElementById('exportarCaixa').style.display = 'inline-flex';   //MOSTRA BOTÃO EXPORTAR CAIXA
 

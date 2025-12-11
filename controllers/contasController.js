@@ -69,6 +69,7 @@ class ContasController{
                 if(await movimento.gravar()){ // GRAVA O MOVIMENTO NO BANCO DE DADOS
 
                     if(await caixa.atualizarSaldo(contaRE.valor)){ // FINALMENTE ATUALIZA SALDO CAIXA
+                        ok = true;
                         msg = 'Conta Recebida com Sucesso!';
 
                     }else{ok = false; msg = 'Falha ao Atualizar Saldo do Caixa!'}
