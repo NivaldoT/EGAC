@@ -125,18 +125,14 @@ document.addEventListener('DOMContentLoaded', function(){
                 return resposta.json();
             })
             .then(function(corpo) {
-                let msgfinal = document.getElementById('mensagem-sucesso');
-                msgfinal.style.display = 'block';
                 if(corpo.ok){
-                    msgfinal.textContent = corpo.msg;
-                    msgfinal.classList = 'text-success';
+                    showToast('Sucesso!', corpo.msg, 'success');
                     setTimeout(function(){
                         window.location.href = '/usuario/login';
                     }, 2000);
                 }
                 else{
-                    msgfinal.textContent = corpo.msg;
-                    msgfinal.classList = 'text-danger';
+                    showToast('Erro!', corpo.msg, 'error');
                 }
             })
         }
@@ -234,5 +230,24 @@ document.addEventListener('DOMContentLoaded', function(){
             return false
 
         return true
+    }
+
+    function showToast(title, message, type) {
+        const toast = document.createElement('div');
+        toast.className = `toast-notification ${type}`;
+        const icon = type === 'success' ? '✓' : '✕';
+        toast.innerHTML = `
+            <div class="toast-icon">${icon}</div>
+            <div class="toast-content">
+                <div class="toast-title">${title}</div>
+                <div class="toast-message">${message}</div>
+            </div>
+            <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.classList.add('hiding');
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
     }
 });

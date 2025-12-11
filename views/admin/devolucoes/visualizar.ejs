@@ -229,7 +229,7 @@
                                 <i class="fas fa-arrow-left"></i> Voltar para Lista
                             </a>
                             <% if (devolucao.status === 'aprovada') { %>
-                                <a href="/admin/contas-pagar" class="btn btn-warning btn-block">
+                                <a href="/admin/contas/1" class="btn btn-warning btn-block">
                                     <i class="fas fa-dollar-sign"></i> Ver Contas a Pagar
                                 </a>
                             <% } %>
@@ -248,12 +248,20 @@
 <script>
 async function aprovarDevolucao(id) {
     const result = await Swal.fire({
-        title: 'Aprovar Devolução?',
-        text: 'Uma conta a pagar será gerada automaticamente para o reembolso.',
+        title: 'Deseja realmente aprovar esta devolução?',
+        html: '<p style="margin: 10px 0;">Uma conta a pagar será gerada automaticamente.</p>',
         icon: 'question',
         showCancelButton: true,
-        confirmButtonText: 'Aprovar',
-        cancelButtonText: 'Cancelar'
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: '#28a745',
+        cancelButtonColor: '#6c757d',
+        customClass: {
+            popup: 'swal-wide',
+            title: 'swal-title',
+            confirmButton: 'btn btn-success btn-lg',
+            cancelButton: 'btn btn-secondary btn-lg'
+        }
     });
 
     if (!result.isConfirmed) return;
@@ -267,10 +275,24 @@ async function aprovarDevolucao(id) {
         const data = await response.json();
         
         if (data.ok) {
-            await Swal.fire('Aprovado!', data.msg, 'success');
+            await Swal.fire({
+                title: 'Devolução aprovada e conta a pagar gerada com sucesso!',
+                icon: 'success',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#28a745',
+                customClass: {
+                    confirmButton: 'btn btn-success btn-lg'
+                }
+            });
             location.reload();
         } else {
-            Swal.fire('Erro!', data.msg || 'Erro ao aprovar devolução', 'error');
+            Swal.fire({
+                title: 'Erro!',
+                text: data.msg || 'Erro ao aprovar devolução',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#dc3545'
+            });
         }
     } catch (error) {
         Swal.fire('Erro!', 'Erro ao processar solicitação', 'error');
@@ -279,12 +301,19 @@ async function aprovarDevolucao(id) {
 
 async function recusarDevolucao(id) {
     const result = await Swal.fire({
-        title: 'Recusar Devolução?',
-        text: 'O cliente será notificado sobre a recusa.',
+        title: 'Deseja realmente recusar esta devolução?',
+        html: '<p style="margin: 10px 0;">O cliente será notificado sobre a recusa.</p>',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Recusar',
-        cancelButtonText: 'Cancelar'
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        customClass: {
+            popup: 'swal-wide',
+            confirmButton: 'btn btn-danger btn-lg',
+            cancelButton: 'btn btn-secondary btn-lg'
+        }
     });
 
     if (!result.isConfirmed) return;

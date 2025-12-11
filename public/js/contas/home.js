@@ -110,46 +110,104 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         }
     }
-    function Receber(){
+    async function Receber(){
         let id = {id : this.dataset.id};
-        if(confirm('Confirma o Recebimento da Conta ID: '+id.id+'?')){
-            fetch('/admin/contas/receber',{
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(id)
-            })
-            .then(function(resposta) {
-                return resposta.json();
-            })
-            .then(function(corpo) {
-                alert(corpo.msg);
-                carregarPedidos();
-                getCaixa();
-            })
-        }
+        const result = await Swal.fire({
+            title: 'Confirma o Recebimento da Conta ID: ' + id.id + '?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#28a745',
+            cancelButtonColor: '#6c757d',
+            customClass: {
+                confirmButton: 'btn btn-success btn-lg',
+                cancelButton: 'btn btn-secondary btn-lg'
+            }
+        });
+        
+        if(!result.isConfirmed) return;
+        
+        fetch('/admin/contas/receber',{
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(id)
+        })
+        .then(function(resposta) {
+            return resposta.json();
+        })
+        .then(function(corpo) {
+            if(corpo.ok) {
+                Swal.fire({
+                    title: corpo.msg,
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#28a745'
+                });
+            } else {
+                Swal.fire({
+                    title: 'Erro!',
+                    text: corpo.msg,
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#dc3545'
+                });
+            }
+            carregarPedidos();
+            getCaixa();
+        })
     }
 
-    function Pagar(){
+    async function Pagar(){
         let id = {id: this.dataset.id};
-        if(confirm('Confirma o Pagamento da Conta ID: '+id.id+'?')){
-            fetch('/admin/contas/pagar',{
-                method:'POST',
-                headers:{
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(id)
-            })
-            .then(function(resposta){
-                return resposta.json();
-            })
-            .then(function(corpo){
-                alert(corpo.msg);
-                carregarPedidos();
-                getCaixa();
-            })
-        }
+        const result = await Swal.fire({
+            title: 'Confirma o Pagamento da Conta ID: ' + id.id + '?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#28a745',
+            cancelButtonColor: '#6c757d',
+            customClass: {
+                confirmButton: 'btn btn-success btn-lg',
+                cancelButton: 'btn btn-secondary btn-lg'
+            }
+        });
+        
+        if(!result.isConfirmed) return;
+        
+        fetch('/admin/contas/pagar',{
+            method:'POST',
+            headers:{
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(id)
+        })
+        .then(function(resposta){
+            return resposta.json();
+        })
+        .then(function(corpo){
+            if(corpo.ok) {
+                Swal.fire({
+                    title: corpo.msg,
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#28a745'
+                });
+            } else {
+                Swal.fire({
+                    title: 'Erro!',
+                    text: corpo.msg,
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#dc3545'
+                });
+            }
+            carregarPedidos();
+            getCaixa();
+        })
     }
 
     let caixa = document.getElementById('caixaStatus');
