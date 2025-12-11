@@ -218,14 +218,14 @@ class DevolucaoController {
         }
     }
     async listarDevolucoesCompra(req, res) {
-        let devolucaoCompraModel = new DevolucaoCompraModel();
+        let devolucaoCompraModel = new DevolucaoCompraModel();  //acha as Devoluções
         let listaDevoCompra = await devolucaoCompraModel.listar();
-        let listaGeral = listaDevoCompra;
-        for(let i=0; i<listaDevoCompra.length;i++){
-            let itemDevoCompraModel = new ItemDevoCompraModel(null,listaDevoCompra[i].id);
-            listaGeral[i].listaItensDevoCompra = await itemDevoCompraModel.listarPorDevolucaoId();
-        }
-        res.render('admin/devolucoes/listarCompra',{layout: 'layout_admin', listaGeral: listaGeral});
+
+        let listaItensDevoCompra = [];
+        let itemDevoCompraModel = new ItemDevoCompraModel();    //acha os Itens das Devoluções
+        listaItensDevoCompra = await itemDevoCompraModel.listar();
+
+        res.render('admin/devolucoes/listarCompra',{layout: 'layout_admin', listaDevoCompra: listaDevoCompra, listaItensDevoCompra: listaItensDevoCompra});
     }
 
     // Visualizar detalhes da devolução (Admin)
@@ -400,6 +400,7 @@ class DevolucaoController {
                 }
             }
             if(ok){
+                let DevoCompra = new DevolucaoCompraModel(null,compra.id);
                 let idDevolucao = await DevoCompra.gravar();        //grava a devolução
                 if(idDevolucao){
                     for(let i=0; i<itensDevolucao.length; i++){

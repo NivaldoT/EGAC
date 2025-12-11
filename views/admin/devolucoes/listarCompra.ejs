@@ -21,9 +21,9 @@
             <!-- Estatísticas -->
             <div class="row">
                 <div class="col-lg-3 col-6">
-                    <div class="small-box bg-success">
+                    <div class="small-box bg-success rounded-3 p-1 mb-3">
                         <div class="inner">
-                            <h3><%= listaGeral.length %></h3>
+                            <h3><%= listaDevoCompra.length %></h3>
                             <p>total</p>
                         </div>
                         <div class="icon">
@@ -45,29 +45,39 @@
                                 <th>#</th>
                                 <th>Data Compra</th>
                                 <th>Fornecedor</th>
-                                <th>Pedido</th>
+                                <th>Produto</th>
+                                <th>ID Compra</th>
                                 <th>Motivo</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <% if (listaGeral && listaGeral.length > 0) { %>
-                                <% listaGeral.forEach(function(dev) { %>
+                            <% if (listaDevoCompra && listaDevoCompra.length > 0) { %>
+                                <%# listaDevoCompra.forEach(function(dev) { %>
+                                <% for(let i=0; i < listaDevoCompra.length; i++) { let dev = listaDevoCompra[i]; %>
+
+                                    <% for( let j = 0; j < listaItensDevoCompra.length; j++) {
+                                        if(dev.id == listaItensDevoCompra[j].idDevolucao){
+                                            var itemDevo = listaItensDevoCompra[j];
+                                            var motivo = listaItensDevoCompra[j].motivo;
+                                        }
+                                    }%>
                                     <tr>
                                         <td><%= dev.id %></td>
                                         <td><%= new Date(dev.dataCompra).toLocaleDateString('pt-BR') %></td>
                                         <td style="color: #212529;">
                                             <%= dev.nomeFornecedor %><br>
                                         </td>
+                                        <td><%= itemDevo.nomeProduto%></td>
                                         <td style="color: #212529;">#<%= dev.idCompra %></td>
-                                        <td><span class="badge bg-dark"><%= dev.listaItensDevoCompra[0].motivo %></span></td>
+                                        <td><span class="badge bg-dark"><%= motivo %></span></td>
                                         <td>
                                             <a href="/admin/devolucoes/<%= dev.id %>" class="btn btn-sm btn-info" title="Visualizar">
                                                 <i class="fas fa-eye">Visualizar</i>
                                             </a>
                                         </td>
                                     </tr>
-                                <% }); %>
+                                <% }; %>
                             <% } else { %>
                                 <tr>
                                     <td colspan="8" class="text-center py-4">

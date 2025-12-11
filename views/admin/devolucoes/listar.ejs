@@ -21,7 +21,7 @@
             <!-- Estatísticas -->
             <div class="row">
                 <div class="col-lg-3 col-6">
-                    <div class="small-box bg-warning">
+                    <div class="small-box bg-warning rounded-3 p-1 mb-3">
                         <div class="inner">
                             <h3><%= devolucoes.filter(function(d) { return d.status === 'pendente'; }).length %></h3>
                             <p>Pendentes</p>
@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-6">
-                    <div class="small-box bg-success">
+                    <div class="small-box bg-success rounded-3 p-1 mb-3">
                         <div class="inner">
                             <h3><%= devolucoes.filter(function(d) { return d.status === 'aprovada'; }).length %></h3>
                             <p>Aprovadas</p>
@@ -43,7 +43,7 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-6">
-                    <div class="small-box bg-danger">
+                    <div class="small-box bg-danger rounded-3 p-1 mb-3">
                         <div class="inner">
                             <h3><%= devolucoes.filter(function(d) { return d.status === 'recusada'; }).length %></h3>
                             <p>Recusadas</p>
@@ -54,7 +54,7 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-6">
-                    <div class="small-box bg-info">
+                    <div class="small-box bg-info rounded-3 p-1 mb-3">
                         <div class="inner">
                             <h3><%= devolucoes.length %></h3>
                             <p>Total</p>
