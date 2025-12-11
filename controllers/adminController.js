@@ -100,18 +100,41 @@ class adminController {
     res.render('admin/alterarItem', {prod: prod, tipo: tipo,listaMarcas: listaMarcas, listaCategorias: listaCategorias, layout: 'layout_admin'});
     }
     async excluirItem(req,res){
-        let tipo = req.body.obj.tipo;
-        let id = req.body.obj.id;
+        try {
+            let tipo = req.body.obj.tipo;
+            let id = req.body.obj.id;
 
-        let prod;
-        if(tipo == 1 || tipo == 2){
-            prod = new produtoModel();
-            let result = await prod.excluir(id);
-            if(result)
-                res.send({ok: true , msg: 'Produto Excluido com Sucesso!'});
-            else
-                res.send({ok: false, msg: 'Falha na Exclusão do Produto!'});
-        }
+            let prod;
+            if(tipo == 1 || tipo == 2){
+                prod = new produtoModel();
+                
+                // Verificar se o produto está em vendas, devoluções ou OS
+                let db = new Database();
+                let checkVendas = await db.ExecutaComando('SELECT COUNT(*) as total FROM tb_ItemVenda WHERE itven_idProduto = ?', [id]);
+                let checkDevolucoes = await db.ExecutaComando('SELECT COUNT(*) as total FROM tb_ItemDevoVenda WHERE itdevo_idProd = ?', [id]);
+                let checkOS = await db.ExecutaComando('SELECT COUNT(*) as total FROM tb_ItensUsadosOS WHERE itos_idProd = ?', [id]);
+                
+                let totalVendas = checkVendas[0].total;
+                let totalDevolucoes = checkDevolucoes[0].total;
+                let totalOS = checkOS[0].total;
+                
+                if(totalVendas > 0 || totalDevolucoes > 0 || totalOS > 0){
+                    let msg = 'Não é possível excluir este ' + (tipo == 1 ? 'produto' : 'insumo') + '! Ele está vinculado a: ';
+                    let vinculos = [];
+                    if(totalVendas > 0) vinculos.push(totalVendas + ' venda(s)');
+                    if(totalDevolucoes > 0) vinculos.push(totalDevolucoes + ' devolução(ões)');
+                    if(totalOS > 0) vinculos.push(totalOS + ' ordem(ns) de serviço');
+                    msg += vinculos.join(', ') + '.';
+                    res.send({ok: false, msg: msg});
+                    return;
+                }
+                
+                let result = await prod.excluir(id);
+                if(result)
+                    res.send({ok: true , msg: (tipo == 1 ? 'Produto' : 'Insumo') + ' Excluído com Sucesso!'});
+                else
+                    res.send({ok: false, msg: 'Falha na Exclusão do ' + (tipo == 1 ? 'Produto' : 'Insumo') + '!'});
+            }
         if(tipo == 3){
             prod = new ServicoModel();
             let result = await prod.excluir(id);
@@ -176,6 +199,10 @@ class adminController {
                 res.send({ok: true , msg: 'Categoria Excluida com Sucesso!'});
             else
                 res.send({ok: false, msg: 'Falha na Exclusão da Categoria!'});
+        }
+        } catch (error) {
+            console.error('Erro ao excluir item:', error);
+            res.send({ok: false, msg: 'Erro ao excluir: ' + error.message});
         }
     }
 
