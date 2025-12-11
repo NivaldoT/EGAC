@@ -178,10 +178,10 @@ class CaixaController{
                 // Buscar o ID do caixa recém criado
                 await caixa.buscarCaixaFunc();
                 
-                // Criar movimento de abertura de caixa
+                // Criar movimento de abertura de caixa (operação 0)
                 let banco = new Database();
-                let sqlMovimento = `INSERT INTO tb_Movimento (movi_operacao, movi_valor, movi_data, movi_idCaixa, movi_descricao) 
-                                   VALUES (0, ?, NOW(), ?, 'Abertura de Caixa')`;
+                let sqlMovimento = `INSERT INTO tb_Movimento (movi_operacao, movi_idContaPagar, movi_idContaReceber, movi_valor, movi_data, movi_idCaixa, movi_descricao) 
+                                   VALUES (0, NULL, NULL, ?, NOW(), ?, 'Abertura de Caixa')`;
                 await banco.ExecutaComandoNonQuery(sqlMovimento, [valor, caixa.id]);
                 
                 ok = true;
