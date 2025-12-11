@@ -104,9 +104,10 @@ document.addEventListener('DOMContentLoaded', function(){
         }
 
         if(valido){
+            let telefoneNumeros = telefone.value.replace(/\D/g, '');
             let obj = {
                 nome: nome.value,
-                telefone: telefone.value,
+                telefone: telefoneNumeros,
                 cpf: cpf.value,
                 endereco: endereco.value,
                 email: email.value,
@@ -165,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function(){
             e.target.value = e.target.value.slice(0, -1);
         }
     });
-    
+
     telefone.addEventListener('keydown', function() {
         erroTelefone.textContent = '';
     });

@@ -121,7 +121,12 @@ class adminController {
                 res.send({ok: false, msg: 'Falha na Exclusão do Serviço!'});
         }
         if(tipo == 4){
-            prod = new equipAgricolaModel();
+            prod = new equipAgricolaModel(id);
+            let temOS = await prod.verificarTemOS();
+            if(temOS > 0){
+                res.send({ok: false, msg: 'Não é possível excluir este equipamento agrícola! Existem ' + temOS + ' ordem(s) de serviço vinculada(s) a ele.'});
+                return;
+            }
             let result = await prod.excluir(id);
             if(result)
                 res.send({ok: true , msg: 'Equipamento Agrícola Excluido com Sucesso!'});
