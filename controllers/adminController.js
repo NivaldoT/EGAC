@@ -203,18 +203,53 @@ class adminController {
     }
 
     async excluirCliente(req,res){
-        let ok;
+        let ok = true;
         let msg; 
         let id = req.body.obj.id;
         let pessoa = new pessoaModel(id);
-        let result = await pessoa.excluir();
-        if(result){
-            ok = true;
-            msg = 'Exclusão concluída com Sucesso!';
-        }
-        else{
+        pessoa = await pessoa.buscarPorId(id);
+
+        let Vendeu = await pessoa.verificarVendas();        //verifica se o cliente tem vendas ou OS
+        if(Vendeu > 0){
             ok = false;
-            msg = 'Falha na Exclusão do Cliente!';
+            msg = 'Não é possível excluir este Cliente! Ele possui registros de vendas ou Ordem de Serviço dele no sistema.';
+        }
+
+        let pessoaAux;
+        if(pessoa.tipo == 1){
+            pessoaAux = new PFModel(id);
+            pessoaAux = await pessoaAux.buscarId();
+            
+            if(pessoaAux.isFunc){
+                let Trabalhou = await pessoaAux.verificarTrabalho();    //verifica se o funcionario tem registros de trabalho
+                if(Trabalhou > 0){
+                    ok = false;
+                    msg = 'Não é possível excluir este Funcionario! Ele possui registros de trabalho no sistema.';
+                }
+            }
+        }
+
+        if(pessoa.tipo == 2){
+            pessoaAux = new PJModel(id);
+            pessoaAux = await pessoaAux.buscarId();
+
+            let Comprou = await pessoaAux.verificarCompras();   //verifica se já compramos deste fornecedor
+            if(Comprou > 0){
+                ok = false;
+                msg = 'Não é possível excluir este Fornecedor! Possuimos registros de compras que fizemos com ele no sistema.';
+            }
+        }
+        
+        if(ok){
+            let result = await pessoa.excluir();
+            if(result){
+                ok = true;
+                msg = 'Exclusão concluída com Sucesso!';
+            }
+            else{
+                ok = false;
+                msg = 'Falha na Exclusão do Cliente!';
+            }
         }
         res.send({ok,msg});
     }

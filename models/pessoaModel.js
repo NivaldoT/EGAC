@@ -118,6 +118,20 @@ class pessoaModel{
         return result;
     }
 
+    async verificarVendas(){
+        let sql = 'select count(*) as total from tb_Venda where ven_idPessoa = ?'
+        let valores = [this.#id];
+        const banco = new Database();
+        let result = await banco.ExecutaComando(sql, valores);
+
+
+        sql = `select count(*) as total from tb_OrdemDeServico where os_idPessoa = ?;`
+
+        let result2 = await banco.ExecutaComando(sql, valores);
+        return result[0].total + result2[0].total;
+
+    }
+
     toJSON(){
         return{
             id : this.#id,

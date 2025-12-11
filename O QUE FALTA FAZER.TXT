@@ -30,4 +30,4 @@ SERIA BOM SE DER TEMPO:
     -Detalhes nas contas a pagar e receber ao clicar
 
 Feito - Fazer detalhes OS
-Validação ao excluir marcas e categoria (mostrar que não pode pois tem produtos)
+Feito - Validação ao excluir marcas e categoria (mostrar que não pode pois tem produtos)
