@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
     function gravar(){
         const idOS = document.getElementById('idOS');
-        const comentario = document.getElementById('comentarioval');
+        let comentario = document.getElementById('comentarioval');
         
         if(listaSubItem.length>0 && confirm('Confirma a conclusão da Ordem de Serviço?')){
             obj = {

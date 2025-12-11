@@ -2,18 +2,30 @@
 <script src="/js/compras/home.js" defer></script>
 
 <div class="container-fluid mt-4">
-    <a href="/admin/comprar" class="btn btn-success ms-auto">Efetuar Compra</a>
     <div class="card border-0 shadow-sm">
         <div class="card-header bg-white py-3">
-            <h3 class="mb-0">Pedidos de Compras</h3>
-
+            <div class="row mx-5">
+                <h3 class="mb-0 col-md-4">Pedidos de Compras</h3>
+                <a href="/admin/comprar" class="btn btn-success ms-auto col-md-2"> + Efetuar Compra</a>
+            </div>
         </div>
         <div class="card-body">
             <div class="row mb-3">
-                <div class="col-md-8">
+                <div class="col-md-4">
                     <div class="form-group">
-                        <label>Busca (Nome do Produto ou Nro. Pedido)</label>
-                        <input id="inputBusca" class="form-control" placeholder="Digite o nome do produto ou número do pedido..." />
+                        <label>Busca (Número da Compra)</label>
+                        <input id="inputBusca" class="form-control" placeholder="Digite o número da Compra..." />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="selectFiltro">Filtro</label>
+                        <select class="form-control" name="selectFiltro" id="selectFiltro">
+                            <option value="">Mais Antigos</option>
+                            <option value="1">Mais Recentes</option>
+                            <option value="2">Valor Total - Crescente</option>
+                            <option value="3">Valor Total - Decrescente</option>
+                        </select>
                     </div>
                 </div>
                 <div class="col-md-4 d-flex align-items-end">
@@ -27,6 +39,31 @@
                         <button onclick="imprimirPedidos()" class="btn btn-info" id="pdf">
                             <i class="bi bi-file-earmark-pdf"></i> PDF
                         </button>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="selectFornecedor">Fornecedor</label>
+                        <select class="form-control" name="selectFornecedor" id="selectFornecedor">
+                            <option value="">Qualquer</option>
+                            <%for(let i=0;i<listaFornecedor.length;i++){%>
+                                <option value="<%=listaFornecedor[i].id%>"><%=listaFornecedor[i].nome%></option>
+                            <%}%>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="inputDataInicial">Data Inicial:</label>
+                        <input class="form-control" type="date" name="inputDataInicial" id="inputDataInicial">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="inputDataFinal">Data Final:</label>
+                        <input class="form-control" type="date" name="inputDataFinal" id="inputDataFinal">
                     </div>
                 </div>
             </div>

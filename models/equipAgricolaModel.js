@@ -104,6 +104,13 @@ class equipAgricolaModel{
         }
         return lista;
     }
+    async verificarTemOS(){
+        let sql = `select count(*) as total from tb_OrdemDeServico where os_IdEqAgricola = ?`;
+        let valores = [this.#id];
+        let banco = new Database();
+        let result = await banco.ExecutaComando(sql, valores);
+        return result[0].total;
+    }
 
     toJSON(){
         return{

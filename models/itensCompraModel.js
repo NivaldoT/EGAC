@@ -39,10 +39,50 @@ class ItensCompraModel{
         return result;
     }
 
-    async listar(){
-        let sql = 'select * from tb_ItemCompra it inner join tb_Produto p on p.prod_id = it.itcomp_idProduto;';
+    async listar(termoFiltragem,filtro,fornecedor,dataInicial,dataFinal){
+
+        let sqlWhere = "";
+        let sqlOrder = "";
+        let valores = [];
+        if(termoFiltragem) {
+            //sql para filtrar pelo nro da OS
+            sqlWhere = " where it.itcomp_id = " + termoFiltragem;
+        }
+        
+        if (filtro) {
+            if(filtro == 1){
+                sqlOrder = 'order by it.itcomp_id desc'; 
+            }
+            if(filtro == 2){
+                sqlOrder = 'order by c.comp_valorTotal asc'; 
+            }
+            if(filtro == 3){
+                sqlOrder = 'order by c.comp_valorTotal desc'; 
+            }
+        }
+        if(fornecedor){
+            let separador = sqlWhere ? " and " : " where ";
+            sqlWhere+= `${separador}c.comp_idFornecedor = ?`;
+            valores.push(fornecedor);
+        }
+        
+        if (dataInicial) {
+            let separador = sqlWhere ? " and " : " where "; 
+            sqlWhere += `${separador}c.comp_data >= ?`;
+            valores.push(dataInicial);
+        }
+
+        if (dataFinal) {
+            let separador = sqlWhere ? " and " : " where "; 
+            sqlWhere += `${separador}c.comp_data <= ?`; 
+            valores.push(dataFinal);
+        }
+
+        let sql = `select * from tb_ItemCompra it 
+                    inner join tb_Produto p on p.prod_id = it.itcomp_idProduto 
+                    inner join tb_Compra c on c.comp_id = it.itcomp_idCompra ${sqlWhere} ${sqlOrder};`;
         let banco = new Database();
-        let rows = await banco.ExecutaComando(sql);
+        let rows = await banco.ExecutaComando(sql,valores);
         let lista = [];
 
         for(let i=0;i<rows.length;i++){

@@ -121,8 +121,8 @@ document.addEventListener('DOMContentLoaded', function(){
                     <td>${selectProduto.value}</td>
                     <td>${selectProduto[selectProduto.selectedIndex].textContent}</td>
                     <td>${inputProdutoQtd.value}</td>
-                    <td>${precoProduto.value}</td>
-                    <td>${precoProduto.value * inputProdutoQtd.value}</td>
+                    <td>R$${parseFloat(precoProduto.value).toFixed(2)}</td>
+                    <td>R$${(precoProduto.value * inputProdutoQtd.value).toFixed(2)}</td>
                     <td><button class='btn btn-danger btnExcluirProduto' data-id='${selectProduto.value}'><i class="bi bi-trash-fill"></i></button></td>
                     </tr>`;
         
@@ -193,11 +193,14 @@ document.addEventListener('DOMContentLoaded', function(){
             })
         }
         else{
-            if(listaProduto.length==0)
+            if(listaProduto.length==0){
                 msgErro.textContent = 'Favor Inserir ao menos um Produto a Compra!';
-            if(selectFornecedor.value==0)
+                msgErro.classList = 'alert alert-danger d-block';
+            }
+            if(selectFornecedor.value==0){
                 msgErro.textContent = 'Favor selecionar o Fornecedor!';
-            msgErro.classList = 'alert alert-danger d-block';
+                msgErro.classList = 'alert alert-danger d-block';
+            }
         }
     }
 });

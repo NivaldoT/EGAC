@@ -7,7 +7,7 @@
             <h3 class="mb-0">Pedidos de Venda</h3>
         </div>
         <div class="card-body">
-            <div class="row mb-3">
+            <!-- <div class="row mb-3">
                 <div class="col-md-8">
                     <div class="form-group">
                         <label>Busca (Nome do Produto ou Nro. Venda)</label>
@@ -25,6 +25,58 @@
                         <button onclick="imprimirVendas()" class="btn btn-info" id="pdf">
                             <i class="bi bi-file-earmark-pdf"></i> PDF
                         </button>
+                    </div>
+                </div>
+            </div> -->
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Busca (Número da Compra)</label>
+                        <input id="inputNumCompra" class="form-control" placeholder="Digite o número da Compra..." />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="selectFiltro">Filtro</label>
+                        <select class="form-control" name="selectFiltro" id="selectFiltro">
+                            <option value="">ID - Crescente</option>
+                            <option value="1">ID - Decrescente</option>
+                            <option value="2">Valor Total - Crescente</option>
+                            <option value="3">Valor Total - Decrescente</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <div class="btn-group w-100" role="group">
+                        <button id="buscar" class="btn btn-primary">
+                            <i class="bi bi-search"></i> Buscar
+                        </button>
+                        <button class="btn btn-success" id="excel">
+                            <i class="bi bi-file-earmark-excel"></i> Excel
+                        </button>
+                        <button onclick="imprimirVendas()" class="btn btn-info" id="pdf">
+                            <i class="bi bi-file-earmark-pdf"></i> PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Busca (Nome do Cliente )</label>
+                        <input id="inputNomeCliente" class="form-control" placeholder="Digite o nome do Cliente..." />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="inputDataInicial">Data Inicial:</label>
+                        <input class="form-control" type="date" name="inputDataInicial" id="inputDataInicial">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label for="inputDataFinal">Data Final:</label>
+                        <input class="form-control" type="date" name="inputDataFinal" id="inputDataFinal">
                     </div>
                 </div>
             </div>

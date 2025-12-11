@@ -49,6 +49,21 @@ class subItemModel{
         }
         return lista;
     }
+    async listarPorIdOS(){
+        let sql = `
+        select * from tb_ItemServico its 
+        inner join tb_Pessoa p on p.pessoa_id = its.itserv_idFunc
+        where itserv_idOS = ?`;
+        let valores = [this.idOS];
+        let banco = new Database();
+        let rows = await banco.ExecutaComando(sql,valores);
+        
+        let lista = [];
+        for(let i=0;i<rows.length;i++){
+            lista.push(new subItemModel(rows[i]['itserv_id'],rows[i]['itserv_idOS'],rows[i]['itserv_idFunc'],rows[i]['pessoa_nome'],rows[i]['itserv_nome']));
+        }
+        return lista;
+    }
 
 }
 module.exports = subItemModel;

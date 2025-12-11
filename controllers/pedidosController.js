@@ -11,13 +11,21 @@ class PedidosController {
     }
 
     async listarPedidos(req, res) {
-        let termo = null;
-        if(req.query.termo) {
-            termo = req.query.termo;
-        }
+        let termo = req.query.termo
+
+        let filtro = req.query.filtro;
+        let nomeCliente = req.query.nomeCliente;
+        let dataInicial = req.query.dataInicial;
+        let dataFinal = req.query.dataFinal;
+        if(dataFinal)
+            dataFinal = dataFinal + ' 23:59:59';  
+        
         let itemVenda = new ItemVendaModel();
-        let lista = await itemVenda.listar(termo);
-        res.send({lista});
+        let lista = await itemVenda.listar(termo, filtro, nomeCliente, dataInicial, dataFinal);
+
+        let listaVendas = new VendaModel();
+        listaVendas = await listaVendas.listar()
+        res.send({lista, listaVendas});
     }
 
     async detalhesView(req, res) {

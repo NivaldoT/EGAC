@@ -103,7 +103,7 @@ class pessoaModel{
         let result = await banco.ExecutaComando(sql,valores);
 
         if(result.length>0){
-            return result[0];
+            return new pessoaModel(result['0']['pessoa_id'],result['0']['pessoa_nome'],result['0']['pessoa_telefone'],result['0']['pessoa_tipo'], result['0']['pessoa_email'],result['0']['pessoa_senha'],result['0']['pessoa_endereco']);
         }
         else
             return null;
@@ -116,6 +116,20 @@ class pessoaModel{
         let result = await banco.ExecutaComandoNonQuery(sql, valores);
         
         return result;
+    }
+
+    async verificarVendas(){
+        let sql = 'select count(*) as total from tb_Venda where ven_idPessoa = ?'
+        let valores = [this.#id];
+        const banco = new Database();
+        let result = await banco.ExecutaComando(sql, valores);
+
+
+        sql = `select count(*) as total from tb_OrdemDeServico where os_idPessoa = ?;`
+
+        let result2 = await banco.ExecutaComando(sql, valores);
+        return result[0].total + result2[0].total;
+
     }
 
     toJSON(){

@@ -13,9 +13,13 @@ class PFController{
         const isFunc = req.body.isFunc;
 
         let ok = true;
+        if(!nome || !telefone || !cpf || !email || !senha || !endereco){
+            ok = false;
+            msg = 'Preencha todos os campos obrigatórios!';
+        }
         let msg;
         let PF = new PFisicaModel(null,nome,telefone,email,senha,endereco,cpf,isFunc); //ANTES DE CADASTRAR DEVE VERIFICAR EMAIL E CPF 
-        if(await PF.procurarCpf()){
+        if(ok && await PF.procurarCpf()){
             ok = false;
             msg = 'Já existe um Usuário com este CPF!';
         }

@@ -1,7 +1,11 @@
 const ContaReceberModel = require("../models/contaReceberModel");
+const equipAgricolaModel = require("../models/equipAgricolaModel");
 const itensUsadosOSModel = require("../models/itensUsadosOSModel");
 const marcaModel = require("../models/marcaModel");
 const OrdemDeServicoModel = require("../models/ordemServicoModel");
+const pessoaModel = require("../models/pessoaModel");
+const PFisicaModel = require("../models/pfisicaModel");
+const PJModel = require("../models/pjuridicaModel");
 const produtoModel = require("../models/produtoModel");
 const ServicoModel = require("../models/servicoModel");
 const subItemModel = require("../models/subItemModel");
@@ -72,7 +76,7 @@ class OrdemDeServicoController{
         let comentario = req.body.comentario;
         console.log(idOS,listaInsumo,listaSubItem,comentario)
 
-        let os = new OrdemDeServicoModel(idOS,null,null,null,null,null,null,null,comentario);
+        let os = new OrdemDeServicoModel(idOS,null,null,null,null,null,null,null,null,null,comentario);
         let result = await os.concluirOS(); 
         if(result){
             ok = true;
@@ -144,6 +148,35 @@ class OrdemDeServicoController{
         let OS = new OrdemDeServicoModel();
         let lista = await OS.listar(termo,filtro,marca,dataInicial,dataFinal);
         res.send({lista});
+    }
+    
+    async detalhesView(req,res){
+        let id = req.params.id;
+        let OS = new OrdemDeServicoModel(id);
+        OS = await OS.buscarId();
+
+        let cli = new pessoaModel();
+        cli = await cli.buscarPorId(OS.idPessoa);
+        let cliente;
+        if(cli.tipo == 1){
+            cliente = new PFisicaModel(OS.idPessoa);
+            cliente = await cliente.buscarId();
+        }else if(cli.tipo == 2){
+            cliente = new PJModel(OS.idPessoa);
+            cliente = await cliente.buscarId();
+        }
+        // let servico = new ServicoModel(OS.idServico); TEM NA OS
+        // servico = await servico.buscarId(OS.idServico);
+        let EqAg = new equipAgricolaModel(OS.idEqAgricola);
+        EqAg = await EqAg.buscarId(OS.idEqAgricola);
+
+        let itensUsadosOS = new itensUsadosOSModel(null,id);
+        let listaItensUsados = await itensUsadosOS.listarPorIdOS();
+
+        let listaSubItens = new subItemModel(null,OS.id);
+        listaSubItens = await listaSubItens.listarPorIdOS();
+
+        res.render('admin/OrdemServico/detalhes.ejs',{layout: 'layout_admin', OS, cliente, listaItensUsados, EqAg, listaSubItens});
     }
 }
 module.exports = OrdemDeServicoController;

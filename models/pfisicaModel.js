@@ -22,7 +22,7 @@ class PFisicaModel extends pessoaModel{
         await banco.ExecutaComandoNonQuery(sql);
 
         sql = 'insert into tb_Pessoa(pessoa_nome, pessoa_telefone, pessoa_tipo, pessoa_email, pessoa_senha, pessoa_endereco) values(?,?,?,?,?,?);'
-        let valores = [this.nome, this.telefone, this.tipo, this.email, this.senha, ''];
+        let valores = [this.nome, this.telefone, this.tipo, this.email, this.senha, this.endereco];
         await banco.ExecutaComandoNonQuery(sql,valores);
 
         sql = 'set @last_id = last_insert_id();'
@@ -111,6 +111,24 @@ class PFisicaModel extends pessoaModel{
             lista.push(new pessoaModel(rows[i]['pessoa_id'],rows[i]['pessoa_nome']));
         }
         return lista;
+    }
+
+    async verificarTrabalho(){
+        let sql = `select count(*) as total from tb_Caixa where caixa_idFunc = ?`;
+        let valores = [this.id];
+        const banco = new Database();
+        let result = await banco.ExecutaComando(sql, valores);
+
+        sql = 'select count(*) as total from tb_Compra where comp_idFuncionario = ?';
+        let result2 = await banco.ExecutaComando(sql, valores);
+
+        sql = 'select count(*) as total from tb_ItemServico where itserv_idFunc = ?';
+        let result3 = await banco.ExecutaComando(sql, valores);
+
+        sql = 'select count(*) as total from tb_OrdemDeServico where os_idFuncionario = ?';
+        let result4 = await banco.ExecutaComando(sql, valores);
+        
+        return result[0].total + result2[0].total + result3[0].total + result4[0].total;
     }
 }
 module.exports = PFisicaModel;

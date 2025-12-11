@@ -101,20 +101,40 @@ class ItemVendaModel {
         this.#pessoaNome = pessoaNome;
     }
 
-    async listar(termoFiltragem) {
+    async listar(termoFiltragem, filtro, nomeCliente, dataInicial, dataFinal) {
 
         let sqlWhere = "";
+        let sqlOrder = "";
         let valores = [];
-        if(termoFiltragem) {
-            if(isNaN(termoFiltragem)){
-                //sql para filtrar pelo nome do produto
-                sqlWhere = " where p.prod_nome like ? ";
-                valores.push('%'+ termoFiltragem +'%')
+        if(termoFiltragem) {        //nro da venda
+            sqlWhere = " where v.ven_idVenda = " + termoFiltragem;
+        }
+        if(nomeCliente){
+            let separador = sqlWhere ? " and " : " where "; //verifica se já existe variavel where
+            sqlWhere+= `${separador} pes.pessoa_nome like ?`;
+            valores.push("%"+ nomeCliente +"%");
+        }
+        if (filtro) {
+            if(filtro == 1){    //1 = ID Descrecente 2 = Valor Total Crescente 3 = Valor Total Descrecente
+                sqlOrder = 'order by v.ven_idVenda desc'; 
             }
-            else {
-                //sql para filtrar pelo nro da venda
-                sqlWhere = " where v.ven_idVenda = " + termoFiltragem;
+            if(filtro == 2){
+                sqlOrder = 'order by v.ven_valorTotal asc'; 
             }
+            if(filtro == 3){
+                sqlOrder = 'order by v.ven_valorTotal desc'; 
+            }
+        }
+        if (dataInicial) {
+            let separador = sqlWhere ? " and " : " where "; 
+            sqlWhere += `${separador}v.ven_data >= ?`;
+            valores.push(dataInicial);
+        }
+
+        if (dataFinal) {
+            let separador = sqlWhere ? " and " : " where "; 
+            sqlWhere += `${separador}v.ven_data <= ?`; 
+            valores.push(dataFinal);
         }
 
         let sql = `select v.ven_idVenda, v.ven_data, v.ven_valorTotal, 
@@ -124,10 +144,7 @@ class ItemVendaModel {
                     inner join tb_ItemVenda iv on v.ven_idVenda = iv.itven_idVenda
                     inner join tb_Produto p on p.prod_id = iv.itven_idProduto
                     left join tb_Pessoa pes on pes.pessoa_id = v.ven_idPessoa
-                    ${sqlWhere}
-                    order by v.ven_data desc`;
-
-        
+                    ${sqlWhere} ${sqlOrder};`;
 
         let rows = await banco.ExecutaComando(sql, valores);
 

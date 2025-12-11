@@ -7,6 +7,7 @@ class ItemDevoCompraModel {
     #quantidade;
     #preco;
     #motivo;
+    #nomeProduto;
 
     get id() { return this.#id; }
     set id(value) { this.#id = value; }
@@ -25,6 +26,9 @@ class ItemDevoCompraModel {
     
     get motivo() { return this.#motivo; }
     set motivo(value) { this.#motivo = value; }
+
+    get nomeProduto() { return this.#nomeProduto; }
+    set nomeProduto(value) { this.#nomeProduto = value; }
 
     constructor(id, idDevolucao, idProduto, quantidade, preco, motivo) {
         this.#id = id;
@@ -54,6 +58,19 @@ class ItemDevoCompraModel {
         if(rows.length > 0) {
             for(let i=0; i<rows.length; i++) {
                 lista.push(new ItemDevoCompraModel(rows[i]['itdevo_id'], rows[i]['itdevo_idDevo'], rows[i]['itdevo_idProd'], rows[i]['itdevo_qtd'], rows[i]['itdevo_preco'], rows[i]['itdevo_motivo']));
+            }
+        }
+        return lista;
+    }
+    async listar(){
+        let sql = `SELECT * FROM tb_ItemDevoCompra inner join tb_Produto on tb_ItemDevoCompra.itdevo_idProd = tb_Produto.prod_id;`;
+        let banco = new Database();
+        let rows = await banco.ExecutaComando(sql, []);
+        let lista = [];
+        if(rows.length > 0) {
+            for(let i=0; i<rows.length; i++) {
+                lista.push(new ItemDevoCompraModel(rows[i]['itdevo_id'], rows[i]['itdevo_idDevo'], rows[i]['itdevo_idProd'], rows[i]['itdevo_qtd'], rows[i]['itdevo_preco'], rows[i]['itdevo_motivo']));
+                lista[i].nomeProduto = rows[i]['prod_nome'];
             }
         }
         return lista;

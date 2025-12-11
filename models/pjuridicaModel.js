@@ -92,6 +92,13 @@ class PJModel extends pessoaModel{
         }
         return lista;
     }
+    async verificarCompras(){
+        let sql = `select count(*) as total from tb_Compra where comp_idFornecedor = ?;`
+        let valores = [this.id];
+        const banco = new Database();
+        let result = await banco.ExecutaComando(sql, valores);
+        return result[0].total;
+    }
 }
 
 module.exports = PJModel;

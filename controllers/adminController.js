@@ -121,7 +121,12 @@ class adminController {
                 res.send({ok: false, msg: 'Falha na Exclusão do Serviço!'});
         }
         if(tipo == 4){
-            prod = new equipAgricolaModel();
+            prod = new equipAgricolaModel(id);
+            let temOS = await prod.verificarTemOS();
+            if(temOS > 0){
+                res.send({ok: false, msg: 'Não é possível excluir este equipamento agrícola! Existem ' + temOS + ' ordem(s) de serviço vinculada(s) a ele.'});
+                return;
+            }
             let result = await prod.excluir(id);
             if(result)
                 res.send({ok: true , msg: 'Equipamento Agrícola Excluido com Sucesso!'});
@@ -129,12 +134,22 @@ class adminController {
                 res.send({ok: false, msg: 'Falha na Exclusão do Equipamento Agrícola!'});
         }
         if(tipo == 5){
-            prod = new marcaModel();
-            let result = await prod.excluir(id);
-            if(result)
-                res.send({ok: true , msg: 'Marca Excluida com Sucesso!'});
-            else
-                res.send({ok: false, msg: 'Falha na Exclusão do Marca!'});
+            let ok = true;
+            let msg;
+            prod = new marcaModel(id);
+
+            let childs = await prod.verificarChild()
+            if(childs > 0){
+                ok = false;
+                msg = 'Não é possível excluir esta marca! Existem ' + childs + ' produto(s) vinculado(s) a ela.';
+            }
+
+            if(ok){
+                let result = await prod.excluir(id);
+                if(result){ok = true; msg = 'Marca Excluida com Sucesso!'}
+                else{ok = false; msg = 'Falha na Exclusão da Marca!'};
+            }
+            res.send({ok,msg})
         }
         
         if(tipo == 6){
@@ -188,18 +203,53 @@ class adminController {
     }
 
     async excluirCliente(req,res){
-        let ok;
+        let ok = true;
         let msg; 
         let id = req.body.obj.id;
         let pessoa = new pessoaModel(id);
-        let result = await pessoa.excluir();
-        if(result){
-            ok = true;
-            msg = 'Exclusão concluída com Sucesso!';
-        }
-        else{
+        pessoa = await pessoa.buscarPorId(id);
+
+        let Vendeu = await pessoa.verificarVendas();        //verifica se o cliente tem vendas ou OS
+        if(Vendeu > 0){
             ok = false;
-            msg = 'Falha na Exclusão do Cliente!';
+            msg = 'Não é possível excluir este Cliente! Ele possui registros de vendas ou Ordem de Serviço dele no sistema.';
+        }
+
+        let pessoaAux;
+        if(pessoa.tipo == 1){
+            pessoaAux = new PFModel(id);
+            pessoaAux = await pessoaAux.buscarId();
+            
+            if(pessoaAux.isFunc){
+                let Trabalhou = await pessoaAux.verificarTrabalho();    //verifica se o funcionario tem registros de trabalho
+                if(Trabalhou > 0){
+                    ok = false;
+                    msg = 'Não é possível excluir este Funcionario! Ele possui registros de trabalho no sistema.';
+                }
+            }
+        }
+
+        if(pessoa.tipo == 2){
+            pessoaAux = new PJModel(id);
+            pessoaAux = await pessoaAux.buscarId();
+
+            let Comprou = await pessoaAux.verificarCompras();   //verifica se já compramos deste fornecedor
+            if(Comprou > 0){
+                ok = false;
+                msg = 'Não é possível excluir este Fornecedor! Possuimos registros de compras que fizemos com ele no sistema.';
+            }
+        }
+        
+        if(ok){
+            let result = await pessoa.excluir();
+            if(result){
+                ok = true;
+                msg = 'Exclusão concluída com Sucesso!';
+            }
+            else{
+                ok = false;
+                msg = 'Falha na Exclusão do Cliente!';
+            }
         }
         res.send({ok,msg});
     }

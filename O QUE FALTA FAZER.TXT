@@ -29,4 +29,5 @@ SERIA BOM SE DER TEMPO:
     -Nas listagens, exibir 10 por vez pra evitar pesquisas muito grandes
     -Detalhes nas contas a pagar e receber ao clicar
 
-PDF OS Bugado
+Feito - Fazer detalhes OS
+Feito - Validação ao excluir marcas e categoria (mostrar que não pode pois tem produtos)

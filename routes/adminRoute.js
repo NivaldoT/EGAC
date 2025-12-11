@@ -124,6 +124,7 @@ router.get('/ordemServicos/abrir', ordemServicoController.abrirView);
 router.get('/ordemServicos/listar',ordemServicoController.listar);
 router.get('/ordemServicos/concluir/:id', ordemServicoController.concluirView);
 router.get('/ordemServicos/receber/:id', ordemServicoController.receberView);
+router.get('/ordemServicos/detalhes/:id', ordemServicoController.detalhesView);
 
 
 router.post('/ordemServicos/abrir', ordemServicoController.abrirOS);

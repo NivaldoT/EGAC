@@ -120,7 +120,14 @@ class VendaModel {
         
         return listaVendas;
     }
-
+    toJSON(){
+        return{
+            vendaId : this.#vendaId,
+            vendaData : this.#vendaData,
+            vendaIdPessoa : this.#vendaIdPessoa,
+            vendaValorTotal : this.#vendaValorTotal
+        }
+    }
 }
 
 module.exports = VendaModel;
