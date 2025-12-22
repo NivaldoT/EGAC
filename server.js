@@ -1,3 +1,6 @@
+require('dotenv').config()   // CONFIGURAÇÃO DOTENV
+//console.log(process.env)
+
 const express = require('express');
 const path = require('path');
 const expressEjsLayouts = require('express-ejs-layouts');
@@ -9,7 +12,9 @@ const routerPedidos = require("./routes/pedidosRoute");
 const cookieParser = require('cookie-parser');
 const authMiddleware = require('./middlewares/authMiddleware');
 
+
 const server = express();
+
 
 //configurações do EJS
 server.set("view engine", 'ejs')
