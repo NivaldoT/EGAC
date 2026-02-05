@@ -45,9 +45,9 @@ document.addEventListener('DOMContentLoaded', function(){
             ok = false;
             msgErroInsumo.textContent = 'Selecione um Item para adicionar!';
         }
-        if(ok && !inputInsumoQtd.value || inputInsumoQtd.value == '0'){
+        if(ok && !inputInsumoQtd.value || inputInsumoQtd.value < 1){
             ok = false;
-            msgErroInsumo.textContent = 'Insira a Quantidade do insumo!';
+            msgErroInsumo.textContent = 'Insira uma quantidade válida ao insumo!';
         }
         if(ok){
             for(i in listaInsumo){
